@@ -92,10 +92,31 @@ export default defineConfig({
       ],
     },
     {
-      name: '市场',
-      icon: 'shoppingCart',
-      path: '/market',
-      component: './market',
+      name: '我的课程',
+      icon: 'book',
+      path: '/myCourses',
+      access: 'canStudent' || 'canTeacher',
+      component: './myCourses',
+    },
+    {
+      name: '我的消息',
+      icon: 'message',
+      path: '/myMessages',
+      component: './myMessages',
+    },
+    {
+      name: '日历',
+      icon: 'calendar',
+      path: '/calendar',
+      access: 'canStudent' || 'canTeacher',
+      component: './calendar',
+    },
+    {
+      name: '帮助中心',
+      icon: 'questionCircle',
+      path: '/wiki',
+      access: 'canStudent' || 'canTeacher',
+      component: './wiki',
     },
     {
       path: '/workpanel',
@@ -250,7 +271,7 @@ export default defineConfig({
     },
     {
       path: '/',
-      redirect: '/market',
+      redirect: '/myCourses',
     },
     {
       component: '404',

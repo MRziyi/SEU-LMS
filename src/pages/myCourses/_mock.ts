@@ -2,14 +2,14 @@ import type { Request, Response } from 'express';
 import type { ItemData } from './data.d';
 
 const itemName = [
-  'Alipay',
-  'Angular',
-  'Ant Design',
-  'Ant Design Pro',
-  'Bootstrap',
-  'React',
-  'Vue',
-  'Webpack',
+  '数据结构',
+  '离散数学',
+  '操作系统',
+  '软件工程导论',
+  'Java程序设计',
+  '编译原理',
+  '数据库原理',
+  '计算机网络与应用',
 ];
 const ownerUrl = [
   'https://gw.alipayobjects.com/zos/rmsportal/WdGqmHpayyMjiEhcKoVE.png', // Alipay
@@ -59,7 +59,7 @@ function fakeItemList(count: number): ItemData[] {
       description: description[i % 5],
       price: i * 10,
       status: i,
-      uploadedTime: new Date(new Date().getTime() - 1000 * 60 * 60 * 2 * i).toString(),
+      uploadTime: new Date(new Date().getTime() - 1000 * 60 * 60 * 2 * i).toLocaleString(),
       ownerName: ownerName[i % 10],
       ownerUrl: ownerUrl[i % 8],
     });

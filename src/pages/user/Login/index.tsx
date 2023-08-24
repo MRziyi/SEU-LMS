@@ -52,8 +52,8 @@ const Login: React.FC = () => {
       <div className={styles.content}>
         <LoginForm
           logo={<img alt="logo" src="/logo.svg" />}
-          title="东南大学二手市场"
-          subTitle="专为东大人服务的校内二手物品交易平台"
+          title="东南大学教学管理系统 SEU-LMS"
+          subTitle="专为东大师生服务的教学管理系统"
           onFinish={async (values) => {
             await handleSubmit(values as API.LoginParams);
           }}

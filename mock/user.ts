@@ -70,7 +70,16 @@ export default {
   ],
   'POST /api/user/login': async (req: Request, res: Response) => {
     const { userPassword, userAccount, type } = req.body;
-    await waitTime(2000);
+    if (userPassword === 'ant.design' && userAccount === 'teacher') {
+      res.send({
+        data: {
+          type,
+        },
+        code: 0,
+      });
+      access = 'teacher';
+      return;
+    }
     if (userPassword === 'ant.design' && userAccount === 'admin') {
       res.send({
         data: {
@@ -81,14 +90,14 @@ export default {
       access = 'admin';
       return;
     }
-    if (userPassword === 'ant.design' && userAccount === 'user') {
+    if (userPassword === 'ant.design' && userAccount === 'student') {
       res.send({
         data: {
           type,
         },
         code: 0,
       });
-      access = 'user';
+      access = 'student';
       return;
     }
     res.send({

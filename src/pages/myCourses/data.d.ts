@@ -31,3 +31,15 @@ export type CurrentUser = {
   phone?: string;
   credit: number;
 };
+
+export type Course = {
+  courseName?: string;
+  teacher?: Teacher;
+  //...
+};
+
+export type Teacher = {
+  name?: string;
+  ID?: string;
+  //...
+};

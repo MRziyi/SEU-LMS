@@ -12,9 +12,9 @@ const Settings: LayoutSettings & {
   fixedHeader: false,
   fixSiderbar: true,
   colorWeak: false,
-  title: '东南大学二手市场',
+  title: '东南大学教学管理平台 SEU-LMS',
   pwa: false,
-  logo: 'https://i.328888.xyz/2023/05/11/iqxMVZ.png',
+  logo: 'https://pic.imgdb.cn/item/64e60c4a661c6c8e54319b65.png',
   iconfontUrl: '',
 };
 

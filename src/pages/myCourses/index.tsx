@@ -1,5 +1,4 @@
 import { Avatar, Button, Card, List, Typography } from 'antd';
-import moment from 'moment';
 import type { FC } from 'react';
 import { Link, useModel, useRequest } from 'umi';
 import type { ItemData } from './data.d';
@@ -13,7 +12,7 @@ import { useState } from 'react';
 
 const { Paragraph } = Typography;
 
-const Projects: FC = () => {
+const MyCourses: FC = () => {
   const [pageSize, setPageSize] = useState<number>(8);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [listData, setListData] = useState<ItemData[]>([]);
@@ -105,11 +104,8 @@ const Projects: FC = () => {
                 }
                 description={
                   <div>
-                    <b style={{ color: 'darkblue', fontWeight: 'bolder', fontSize: '15px' }}>
-                      ¥ {item.price}
-                    </b>
                     <Paragraph
-                      style={{ marginTop: 3, whiteSpace: 'pre-wrap' }}
+                      style={{ marginTop: 10, whiteSpace: 'pre-wrap' }}
                       className={styles.item}
                       ellipsis={false}
                     >
@@ -146,9 +142,9 @@ const Projects: FC = () => {
       <PageContainer
         content={
           <div style={{ textAlign: 'center' }}>
-            <span style={{ marginRight: '10%' }}>
+            {/* <span style={{ marginRight: '10%' }}>
               {initialState?.currentUser?.access !== 'admin' ? uploadForm : ''}
-            </span>
+            </span> */}
             <Input.Search
               placeholder="请输入"
               enterButton="搜索"
@@ -167,4 +163,4 @@ const Projects: FC = () => {
   );
 };
 
-export default Projects;
+export default MyCourses;

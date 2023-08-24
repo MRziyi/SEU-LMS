@@ -15,15 +15,15 @@ const Footer: React.FC = () => {
       copyright={`${currentYear} ${defaultMessage}`}
       links={[
         {
-          key: 'SEU-SM',
-          title: 'SEU-SM',
-          href: 'https://seu-sm.netlify.app',
+          key: 'SEU-LMS',
+          title: 'SEU-LMS',
+          href: 'https://seu-lms.netlify.app',
           blankTarget: true,
         },
         {
           key: 'github',
           title: <GithubOutlined />,
-          href: 'https://github.com/MRziyi/SEU-SM',
+          href: 'https://github.com/MRziyi/SEU-LMS',
           blankTarget: true,
         },
       ]}

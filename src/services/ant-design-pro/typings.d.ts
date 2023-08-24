@@ -8,7 +8,6 @@ declare namespace API {
     imgUrl?: string;
     access?: string;
     phone?: string;
-    credit: number;
   };
 
   type LoginResult = {

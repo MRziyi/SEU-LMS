@@ -1,6 +1,6 @@
-# SEU-SM
+# SEU-LMS
 
-the front-end of Southeast University Secondary Market is initialized with [Ant Design Pro](https://pro.ant.design). Follow is the quick guide for how to use.
+The front-end of Learning Management System for Southeast University by Undefined Group. This project is initialized with [Ant Design Pro](https://pro.ant.design). Follow is the quick guide for how to use.
 
 test
 
