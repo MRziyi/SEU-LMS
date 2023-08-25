@@ -1,50 +1,54 @@
 @import '~antd/es/style/themes/default.less';
 
-.filterCardList {
-  :global {
-    .ant-card-meta-content {
-      margin-top: 0;
-    }
-    // disabled white space
-    .ant-card-meta-avatar {
-      font-size: 0;
+.coverCardList {
+  .card {
+    :global {
+      .ant-card-meta-title {
+        margin-bottom: 4px;
+        & > a {
+          display: inline-block;
+          max-width: 100%;
+          color: @heading-color;
+        }
+      }
+      .ant-card-meta-description {
+        height: 44px;
+        overflow: hidden;
+        line-height: 22px;
+      }
     }
 
-    .ant-list .ant-list-item-content-single {
-      max-width: 100%;
+    &:hover {
+      :global {
+        .ant-card-meta-title > a {
+          color: @primary-color;
+        }
+      }
     }
   }
-  .cardInfo {
+
+  .cardItemContent {
+    display: flex;
+    height: 20px;
     margin-top: 16px;
-    margin-left: 40px;
-    zoom: 1;
-    &::before,
-    &::after {
-      display: table;
-      content: ' ';
+    margin-bottom: -4px;
+    line-height: 20px;
+    & > span {
+      flex: 1;
+      color: @text-color-secondary;
+      font-size: 12px;
     }
-    &::after {
-      clear: both;
-      height: 0;
-      font-size: 0;
-      visibility: hidden;
+    .avatarList {
+      flex: 0 1 auto;
     }
-    & > div {
-      position: relative;
-      float: left;
-      width: 50%;
-      text-align: left;
-      p {
-        margin: 0;
-        font-size: 14px;
-        line-height: 32px;
-      }
-      p:first-child {
-        margin-bottom: 4px;
-        color: @text-color-secondary;
-        font-size: 12px;
-        line-height: 20px;
-      }
+  }
+  .cardList {
+    margin-top: 24px;
+  }
+
+  :global {
+    .ant-list .ant-list-item-content-single {
+      max-width: 100%;
     }
   }
 }

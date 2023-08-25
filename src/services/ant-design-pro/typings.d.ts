@@ -7,8 +7,8 @@ declare namespace API {
     id: string;
     imgUrl: string;
     access: string;
-    phone?: string;
-    email?: string;
+    phone: string;
+    email: string;
   };
 
   type LoginResult = {

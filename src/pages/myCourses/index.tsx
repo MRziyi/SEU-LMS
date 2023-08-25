@@ -4,8 +4,6 @@ import { Link, useModel, useRequest } from 'umi';
 import styles from './style.less';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Input } from 'antd';
-import { ShopOutlined } from '@ant-design/icons';
-import UploadForm from './components/UploadForm/UploadForm';
 import { useState } from 'react';
 import { CourseListData } from './data';
 import { queryCourseList } from './service';
@@ -136,33 +134,25 @@ const MyCourses: FC = () => {
     />
   );
 
-  const uploadForm = (
-    <UploadForm
-      btn={
-        <Button type="primary" icon={<ShopOutlined />} size={'large'}>
-          发布闲置
-        </Button>
-      }
-    />
-  );
-
   return (
     <div>
       <PageContainer
-        content={
-          <div style={{ textAlign: 'center' }}>
-            {/* <span style={{ marginRight: '10%' }}>
-              {initialState?.currentUser?.access !== 'admin' ? uploadForm : ''}
-            </span> */}
+        header={{
+          title: '我的课程',
+          ghost: true,
+          extra: [
+            <Button key="1" type="primary" size="large" style={{ marginRight: '20px' }}>
+              同步课程
+            </Button>,
             <Input.Search
-              placeholder="请输入"
+              placeholder="请输入欲搜索的已选课程"
               enterButton="搜索"
+              key="2"
               size="large"
-              // onSearch={handleFormSubmit}
-              style={{ maxWidth: 522 }}
-            />
-          </div>
-        }
+              // onSearch={handleFormSubmit}}
+            />,
+          ],
+        }}
       >
         <div className={styles.coverCardList}>
           <div className={styles.cardList}>{cardList}</div>

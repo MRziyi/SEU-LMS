@@ -1,5 +1,6 @@
 import { request } from 'umi';
 import { CourseData, DiscussionData } from '../data';
+import { SyllabusData } from './data';
 
 export async function queryDiscussionList(
   courseIDParam: string,
@@ -9,7 +10,22 @@ export async function queryDiscussionList(
   return request('/api/discussion/list', {
     method: 'POST',
     data: {
-      discussionID: courseIDParam,
+      courseID: courseIDParam,
+      currentPage: currentPageParam,
+      pageSize: pageSizeParam,
+    },
+  });
+}
+
+export async function querySyllabus(
+  courseIDParam: string,
+  currentPageParam: number,
+  pageSizeParam: number,
+): Promise<{ data: { totalNum: number; list: SyllabusData[] } }> {
+  return request('/api/syllabus/list', {
+    method: 'POST',
+    data: {
+      courseID: courseIDParam,
       currentPage: currentPageParam,
       pageSize: pageSizeParam,
     },

@@ -59,7 +59,7 @@ function fakeDiscussionList(currentPage: number, pageSize: number) {
       semester: '2023秋季学期',
     });
   }
-  let startIndex = (currentPage - 1) * pageSize;
+  const startIndex = (currentPage - 1) * pageSize;
   console.log('Page: ' + startIndex + ' - ' + (startIndex + pageSize));
   return list.slice(startIndex, startIndex + pageSize);
 }

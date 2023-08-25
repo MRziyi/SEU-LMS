@@ -23,12 +23,3 @@ export type NoticeType = {
   href: string;
   memberLink: string;
 };
-
-export type CurrentUser = {
-  nickName?: string;
-  id?: string;
-  imgUrl?: string;
-  access?: string;
-  phone?: string;
-  credit: number;
-};

@@ -1,14 +1,5 @@
 export type tabKeyType = 'orderHistory' | 'comments' | 'myPublish';
 
-export type CurrentUser = {
-  nickName?: string;
-  id?: string;
-  imgUrl?: string;
-  access?: string;
-  phone?: string;
-  credit: number;
-};
-
 export interface ItemData {
   itemId: string;
   itemName: string;

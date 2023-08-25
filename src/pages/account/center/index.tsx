@@ -12,7 +12,7 @@ import type { RouteChildrenProps } from 'react-router';
 import OrderHistory from './components/OrderHistory';
 import Comments from './components/Comments';
 import MyPublish from './components/MyPublish';
-import type { CurrentUser, tabKeyType } from './data.d';
+import type { tabKeyType } from './data.d';
 import styles from './Center.less';
 
 const operationTabList = [
@@ -49,7 +49,7 @@ const Center: React.FC<RouteChildrenProps> = () => {
   const { initialState, loading } = useModel('@@initialState');
 
   //  渲染用户信息
-  const renderUserInfo = ({ id, credit, phone }: Partial<CurrentUser>) => {
+  const renderUserInfo = ({ id, phone }: Partial<API.CurrentUser>) => {
     return (
       <div className={styles.detail}>
         <p>
@@ -59,14 +59,6 @@ const Center: React.FC<RouteChildrenProps> = () => {
             }}
           />
           一卡通号: {id}
-        </p>
-        <p>
-          <RadarChartOutlined
-            style={{
-              marginRight: 8,
-            }}
-          />
-          信用分: {credit}
         </p>
         <p>
           <PhoneOutlined

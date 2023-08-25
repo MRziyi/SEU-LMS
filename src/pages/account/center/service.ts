@@ -1,17 +1,5 @@
 import { request } from 'umi';
-import type { CurrentUser, ItemData, CommentData, OrderData } from './data.d';
-
-export async function queryCurrent(): Promise<{ data: CurrentUser }> {
-  return request('/api/user/currentUser');
-}
-
-/*export async function queryList(
-  listType: 'myPublish' | 'orderHistory',
-): Promise<{ data: { totalNum: number; list: ItemData[] } }> {
-  let requestUrl = '/api';
-  requestUrl += listType === 'myPublish' ? '/item/listMy' : '/order/list';
-  return request(requestUrl);
-}*/
+import type { ItemData, CommentData, OrderData } from './data.d';
 
 export async function queryItemList(): Promise<{
   data: { totalNum: number; list: ItemData[] };

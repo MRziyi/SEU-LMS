@@ -59,7 +59,7 @@ export default defineConfig({
       path: '/profile',
       name: '详情',
       icon: 'profile',
-      // hideInMenu: true,
+      hideInMenu: true,
       routes: [
         {
           path: '/profile',

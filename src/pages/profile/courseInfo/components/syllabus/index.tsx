@@ -1,47 +1,86 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ProCard from '@ant-design/pro-card';
+import { List } from 'antd';
+import { SyllabusData } from '../../data';
+import { useRequest } from 'umi';
+import { querySyllabus } from '../../service';
+import styles from './index.less';
 
-export function formatWan(val: number) {
-  const v = val * 1;
-  if (!v || Number.isNaN(v)) return '';
+interface CourseIDParam {
+  courseID: string;
+}
 
-  let result: React.ReactNode = val;
-  if (val > 10000) {
-    result = (
-      <span>
-        {Math.floor(val / 10000)}
-        <span
-          style={{
-            position: 'relative',
-            top: -2,
-            fontSize: 14,
-            fontStyle: 'normal',
-            marginLeft: 2,
-          }}
-        />
-      </span>
-    );
+const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
+  const [pageSize, setPageSize] = useState<number>(6);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [listData, setListData] = useState<SyllabusData[]>([]);
+  const [totalNum, setTotalNum] = useState<number>(0);
+  const [loadingForPagigation, setLoading] = useState<boolean>(false);
+  // 获取列表数据
+  const { loading } = useRequest(
+    () => {
+      return querySyllabus(courseID, 1, 6);
+    },
+    {
+      onSuccess: (result: any) => {
+        setTotalNum(result.totalNum);
+        setListData(result.list);
+      },
+    },
+  );
+
+  async function changePage(_page: number, _pageSize: number) {
+    setLoading(true);
+    try {
+      const result = await querySyllabus(courseID, _page, _pageSize);
+      if (result.data) {
+        setTotalNum(result.data.totalNum);
+        setListData(result.data.list);
+        setCurrentPage(_page);
+        setPageSize(_pageSize);
+        setLoading(false);
+      }
+    } catch {}
   }
-  return result;
-}
 
-function showTotal(total: number, range: [number, number]) {
-  return `${range[0]}-${range[1]} 共 ${total} 件`;
-}
+  function showTotal(total: number, range: [number, number]) {
+    return `${range[0]}-${range[1]} 共 ${total} 条`;
+  }
+  const paginationProps = {
+    onChange: changePage,
+    showQuickJumper: true,
+    showSizeChanger: true,
+    pageSizeOptions: [6, 12, 18, 24],
+    currentPage: currentPage,
+    pageSize: pageSize,
+    total: totalNum,
+    showTotal: showTotal,
+  };
 
-const Syllabus: React.FC = () => {
   return (
-    <ProCard title="Lesson 1: Lesson Title" bordered headerBordered gutter={16} collapsible>
-      <ProCard title="课程视频" type="inner" bordered>
-        课程视频按钮
-      </ProCard>
-      <ProCard title="课件资料" type="inner" bordered>
-        课件资料文件
-      </ProCard>
-      <ProCard title="作业" type="inner" bordered>
-        作业提交与反馈
-      </ProCard>
-    </ProCard>
+    <List<SyllabusData>
+      className={styles.coverCardList}
+      rowKey="syllabusID"
+      loading={loading && loadingForPagigation}
+      grid={{ gutter: 1, xxl: 1, xl: 1, lg: 1, md: 1, sm: 1, xs: 1 }}
+      pagination={paginationProps}
+      dataSource={listData}
+      renderItem={(syllabus) => (
+        <List.Item>
+          <ProCard title={syllabus.title} bordered headerBordered gutter={16} collapsible>
+            <ProCard title="课程视频" type="inner" bordered>
+              课程视频按钮
+            </ProCard>
+            <ProCard title="课件资料" type="inner" bordered>
+              TODO课件资料文件显示与下载
+            </ProCard>
+            <ProCard title="作业" type="inner" bordered>
+              TODO作业提交与反馈
+            </ProCard>
+          </ProCard>
+        </List.Item>
+      )}
+    />
   );
 };
 export default Syllabus;

@@ -57,11 +57,25 @@ const ownerName = [
   '仲尼',
 ];
 
+function fakeSyllabusList(currentPage: number, pageSize: number) {
+  const list = [];
+  for (let i = 0; i < 18; i += 1) {
+    list.push({
+      syllabusID: 'Syllabus - ' + i,
+      title: 'Lesson ' + (i + 1) + ': ' + itemName[i % 8],
+      materials: ['URL1', 'URL2'],
+      homework: ['URL3', 'URL4'],
+    });
+  }
+  const startIndex = (currentPage - 1) * pageSize;
+  return list.slice(startIndex, startIndex + pageSize);
+}
+
 function fakeDiscussionList(currentPage: number, pageSize: number) {
   const list = [];
   for (let i = 0; i < 24; i += 1) {
     list.push({
-      ID: i.toString(),
+      ID: 'Discussion - ' + i,
       fromUserName: ownerName[i % 8],
       fromUserAvatar: ownerUrl[i % 4],
       title: itemName[i % 8],
@@ -69,9 +83,20 @@ function fakeDiscussionList(currentPage: number, pageSize: number) {
       time: new Date(new Date().getTime() - 1000 * 60 * 60 * 2 * i).toLocaleString(),
     });
   }
-  let startIndex = (currentPage - 1) * pageSize;
-  console.log('Page: ' + startIndex + ' - ' + (startIndex + pageSize));
+  const startIndex = (currentPage - 1) * pageSize;
   return list.slice(startIndex, startIndex + pageSize);
+}
+
+async function postFakeSyllabusList(req: Request, res: Response) {
+  const { courseID, currentPage, pageSize } = req.body;
+  console.log('CourseID: ' + courseID);
+  return res.json({
+    code: 0,
+    data: {
+      totalNum: 18,
+      list: fakeSyllabusList(currentPage, pageSize),
+    },
+  });
 }
 
 async function postFakeDiscussionList(req: Request, res: Response) {
@@ -107,6 +132,7 @@ async function postFakeCourseIntro(req: Request, res: Response) {
 }
 
 export default {
+  'POST  /api/syllabus/list': postFakeSyllabusList,
   'POST  /api/discussion/list': postFakeDiscussionList,
   'POST  /api/course/get-intro': postFakeCourseIntro,
 };

@@ -74,7 +74,7 @@ const CourseInfo: React.FC<RouteChildrenProps> = () => {
       );
     }
     if (tabValue === '2') {
-      return <Syllabus key="2" />;
+      return <Syllabus courseID={courseID} key="2" />;
     }
     if (tabValue === '3') {
       return <Discussion courseID={courseID} key="3" />;
@@ -108,35 +108,10 @@ const CourseInfo: React.FC<RouteChildrenProps> = () => {
           title: data?.courseData.courseName,
           ghost: true,
           extra: [
-            <Button key="1">次要按钮</Button>,
             <Button key="2">次要按钮</Button>,
             <Button key="3" type="primary">
               主要按钮
-            </Button>,
-            <Dropdown
-              key="dropdown"
-              trigger={['click']}
-              menu={{
-                items: [
-                  {
-                    label: '下拉菜单',
-                    key: '1',
-                  },
-                  {
-                    label: '下拉菜单2',
-                    key: '2',
-                  },
-                  {
-                    label: '下拉菜单3',
-                    key: '3',
-                  },
-                ],
-              }}
-            >
-              <Button key="4" style={{ padding: '0 8px' }}>
-                <EllipsisOutlined />
-              </Button>
-            </Dropdown>,
+            </Button>
           ],
         }}
         tabActiveKey={tabKey}

@@ -1,14 +1,5 @@
 export type tabKeyType = '1' | '2' | '3' | '4';
 
-export type CurrentUser = {
-  nickName?: string;
-  id?: string;
-  imgUrl?: string;
-  privilege?: string;
-  phone?: string;
-  credit: number;
-};
-
 export interface ItemData {
   itemId: string;
   itemName: string;
