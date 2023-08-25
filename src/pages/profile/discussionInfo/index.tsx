@@ -17,8 +17,8 @@ import { GridContent, PageContainer, RouteContext } from '@ant-design/pro-layout
 import type { FC } from 'react';
 import React, { Fragment, useState } from 'react';
 
-import { useRequest } from 'umi';
-import type { AdvancedProfileData } from './data.d';
+import { useHistory, useParams, useRequest } from 'umi';
+import type { AdvancedProfileData, RouteParams } from './data';
 import { queryAdvancedProfile } from './service';
 import styles from './style.less';
 
@@ -75,6 +75,14 @@ type AdvancedState = {
 };
 
 const Advanced: FC = () => {
+  const history = useHistory();
+
+  const handleGoBack = () => {
+    history.goBack();
+  };
+
+  const { discussionID } = useParams<RouteParams>();
+
   const [tabStatus, seTabStatus] = useState<AdvancedState>({
     operationKey: 'tab1',
     tabActiveKey: 'detail',
@@ -96,6 +104,12 @@ const Advanced: FC = () => {
       extraContent={extra}
       tabActiveKey={tabStatus.tabActiveKey}
       onTabChange={onTabChange}
+      footer={[
+        <Button key="3">返回</Button>,
+        <Button key="2" type="primary">
+          回复
+        </Button>,
+      ]}
     >
       <div className={styles.main}>
         <GridContent>

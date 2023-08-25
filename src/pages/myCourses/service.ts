@@ -1,18 +1,17 @@
 import { request } from 'umi';
-import type { Params, ItemData, Course } from './data.d';
+import { CourseListData } from './data';
 
-export async function queryList(): Promise<{ data: { totalNum: number; list: ItemData[] } }> {
-  return request('/api/item/list');
-}
-
-export async function searchList(
-  params: Params,
-): Promise<{ data: { totalNum: number; list: ItemData[] } }> {
-  return request('/api/item/search', {
-    params,
+export async function queryCourseList(
+  userIDParam: string,
+  currentPageParam: number,
+  pageSizeParam: number,
+): Promise<{ data: { totalNum: number; list: CourseListData[] } }> {
+  return request('/api/course/list', {
+    method: 'POST',
+    data: {
+      userID: userIDParam,
+      currentPage: currentPageParam,
+      pageSize: pageSizeParam,
+    },
   });
-}
-
-export async function queryMyCourses(): Promise<{ data: { totalNum: number; list: Course[] } }> {
-  return request('/api/course/list');
 }

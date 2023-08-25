@@ -59,41 +59,27 @@ export default defineConfig({
       path: '/profile',
       name: '详情',
       icon: 'profile',
-      hideInMenu: true,
+      // hideInMenu: true,
       routes: [
         {
           path: '/profile',
-          redirect: '/profile/basic',
+          redirect: '/myCourses',
         },
         {
-          name: '基础',
-          icon: 'smile',
-          path: '/profile/basic',
-          component: './profile/basic',
+          path: '/profile/course-info/:courseID',
+          component: './profile/courseInfo',
+          name: '课程详情',
         },
         {
-          name: '进阶',
-          icon: 'smile',
-          path: '/profile/advanced',
-          component: './profile/advanced',
-        },
-        {
-          path: '/profile/item-info/:itemId',
-          component: './profile/ItemInfo',
-          name: '商品详情',
-          icon: 'book',
-        },
-        {
-          path: '/profile/order-info/:orderId',
-          name: '历史订单',
-          icon: 'ClockCircle',
-          component: './profile/orderInfo',
+          path: '/profile/dicussion-info/:discussionID',
+          name: '讨论详情',
+          component: './profile/discussionInfo',
         },
       ],
     },
     {
       name: '我的课程',
-      icon: 'book',
+      icon: 'read',
       path: '/myCourses',
       access: 'canStudent' || 'canTeacher',
       component: './myCourses',
@@ -122,7 +108,7 @@ export default defineConfig({
       path: '/workpanel',
       name: '工作台',
       icon: 'crown',
-      access: 'canAdmin',
+      // access: 'canAdmin',
       component: './workpanel',
     },
     {
@@ -290,12 +276,12 @@ export default defineConfig({
   esbuild: {},
   title: false,
   ignoreMomentLocale: true,
-  proxy: {
-    '/api/': {
-      target: 'http://123.60.24.195',
-      changeOrigin: true,
-    },
-  },
+  // proxy: {
+  //   '/api/': {
+  //     target: 'http://123.60.24.195',
+  //     changeOrigin: true,
+  //   },
+  // },
   manifest: {
     basePath: '/',
   },

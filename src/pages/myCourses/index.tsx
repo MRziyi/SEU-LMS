@@ -1,65 +1,81 @@
 import { Avatar, Button, Card, List, Typography } from 'antd';
 import type { FC } from 'react';
 import { Link, useModel, useRequest } from 'umi';
-import type { ItemData } from './data.d';
-import { queryList, searchList } from './service';
 import styles from './style.less';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Input } from 'antd';
 import { ShopOutlined } from '@ant-design/icons';
 import UploadForm from './components/UploadForm/UploadForm';
 import { useState } from 'react';
+import { CourseListData } from './data';
+import { queryCourseList } from './service';
 
 const { Paragraph } = Typography;
 
 const MyCourses: FC = () => {
   const [pageSize, setPageSize] = useState<number>(8);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [listData, setListData] = useState<ItemData[]>([]);
+  const [listData, setListData] = useState<CourseListData[]>([]);
   const [totalNum, setTotalNum] = useState<number>(0);
+  const [loadingForPagigation, setLoading] = useState<boolean>(false);
 
+  //  获取用户信息
+  const { initialState } = useModel('@@initialState');
+
+  // 获取列表数据
   const { loading } = useRequest(
     () => {
-      return queryList();
+      if (initialState && initialState.currentUser && initialState.currentUser.id)
+        return queryCourseList(initialState.currentUser.id, 1, 8);
+      else throw 'Please Login!';
     },
     {
-      onSuccess: (result) => {
+      onSuccess: (result: any) => {
         setTotalNum(result.totalNum);
         setListData(result.list);
       },
     },
   );
 
-  function changePage(_page: number, _pageSize: number) {
-    setCurrentPage(_page);
-    setPageSize(_pageSize);
+  async function changePage(_page: number, _pageSize: number) {
+    setLoading(true);
+    if (initialState && initialState.currentUser)
+      try {
+        const result = await queryCourseList(initialState.currentUser.id, _page, _pageSize);
+        if (result.data) {
+          setTotalNum(result.data.totalNum);
+          setListData(result.data.list);
+          setCurrentPage(_page);
+          setPageSize(_pageSize);
+          setLoading(false);
+        } else throw 'Please Login!';
+      } catch {}
   }
 
   function showTotal(total: number, range: [number, number]) {
-    return `${range[0]}-${range[1]} 共 ${total} 件`;
+    return `${range[0]}-${range[1]} 共 ${total} 条`;
   }
-
   const paginationProps = {
     onChange: changePage,
-    showSizeChanger: true,
     showQuickJumper: true,
+    showSizeChanger: true,
+    pageSizeOptions: [8, 12, 16, 20],
     currentPage: currentPage,
     pageSize: pageSize,
     total: totalNum,
     showTotal: showTotal,
-    pageSizeOptions: [8, 16, 24, 36],
   };
 
-  const handleFormSubmit = async (value: string) => {
-    const result = await searchList({ description: value });
-    setListData(result.data.list);
-    setTotalNum(result.data.totalNum);
-  };
+  // const handleFormSubmit = async (value: string) => {
+  //   const result = await searchList({ description: value });
+  //   setListData(result.data.list);
+  //   setTotalNum(result.data.totalNum);
+  // };
 
   const cardList = listData && (
-    <List<ItemData>
-      rowKey="itemId"
-      loading={loading}
+    <List<CourseListData>
+      rowKey="courseID"
+      loading={loading && loadingForPagigation}
       grid={{
         gutter: 16,
         xs: 1,
@@ -71,13 +87,13 @@ const MyCourses: FC = () => {
       }}
       pagination={paginationProps}
       dataSource={listData}
-      renderItem={(item) => (
+      renderItem={(course) => (
         <List.Item>
-          <Link to={`/profile/item-info/${item.itemId}`}>
+          <Link to={`/profile/course-info/${course.courseID}`}>
             <Card
               className={styles.card}
               hoverable
-              cover={<img alt={item.itemName} src={item.imgUrl} />}
+              cover={<img alt={course.courseName} src={course.imgUrl} />}
             >
               <Card.Meta
                 title={
@@ -88,18 +104,7 @@ const MyCourses: FC = () => {
                       alignItems: 'center',
                     }}
                   >
-                    <a>{item.itemName}</a>
-                    <div className={styles.avatarList}>
-                      <span style={{ fontSize: '13px', marginRight: '10px' }}>
-                        {item.ownerName}
-                      </span>
-                      <Avatar
-                        size="small"
-                        className={styles.avatar}
-                        src={item.ownerUrl}
-                        alt="avatar"
-                      />
-                    </div>
+                    <a>{course.courseName}</a>
                   </div>
                 }
                 description={
@@ -108,14 +113,21 @@ const MyCourses: FC = () => {
                       style={{ marginTop: 10, whiteSpace: 'pre-wrap' }}
                       className={styles.item}
                       ellipsis={false}
-                    >
-                      {item.description}
-                    </Paragraph>
+                    ></Paragraph>
                   </div>
                 }
               />
               <div className={styles.cardItemContent}>
-                <span>{item.uploadTime}</span>
+                <span>{course.semester}</span>
+                <div className={styles.avatarList}>
+                  <span style={{ marginRight: 10 }}>{course.teacherName}</span>
+                  <Avatar
+                    size="small"
+                    className={styles.avatar}
+                    src={course.teacherAvatar}
+                    alt="avatar"
+                  />
+                </div>
               </div>
             </Card>
           </Link>
@@ -123,9 +135,6 @@ const MyCourses: FC = () => {
       )}
     />
   );
-
-  //  获取用户信息
-  const { initialState } = useModel('@@initialState');
 
   const uploadForm = (
     <UploadForm
@@ -149,7 +158,7 @@ const MyCourses: FC = () => {
               placeholder="请输入"
               enterButton="搜索"
               size="large"
-              onSearch={handleFormSubmit}
+              // onSearch={handleFormSubmit}
               style={{ maxWidth: 522 }}
             />
           </div>

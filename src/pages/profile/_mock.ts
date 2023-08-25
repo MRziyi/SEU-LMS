@@ -1,5 +1,4 @@
 import type { Request, Response } from 'express';
-import type { CurrentUser } from './data.d';
 
 const itemName = [
   'Alipay',
@@ -47,45 +46,6 @@ const ownerName = [
   '谭小仪',
   '仲尼',
 ];
-
-function fakeUserList(count: number): CurrentUser[] {
-  const list = [];
-  for (let i = 0; i < count; i += 1) {
-    list.push({
-      nickName: ownerName[i % 10],
-      id: `213213002`,
-      imgUrl: ownerUrl[i % 8],
-      access: 'user',
-      phone: '1999999' + i,
-      credit: i + 50,
-    });
-  }
-  return list;
-}
-
-function getItemInfo(req: Request, res: Response) {
-  const { itemId } = req.body;
-  const itemResult = {
-    itemId: itemId,
-    itemName: itemName[1 % 8],
-    imgUrl: imgUrl[1 % 4],
-    ownerId: '213213002',
-    description: description[1 % 5],
-    price: 1 * 10,
-    status: 1,
-    uploadedTime: new Date(new Date().getTime() - 1000 * 60 * 60 * 2 * 1).toString(),
-    ownerName: ownerName[1 % 10],
-    ownerUrl: ownerUrl[1 % 8],
-  };
-  const ownerResult = fakeUserList(1);
-  return res.json({
-    code: 0,
-    data: {
-      itemInfo: itemResult,
-      ownerInfo: ownerResult[0],
-    },
-  });
-}
 
 function getOrderInfo(req: Request, res: Response) {
   return res.json({
@@ -138,7 +98,6 @@ function createOrder(req: Request, res: Response) {
 }
 
 export default {
-  'POST /api/item/info': getItemInfo,
   'POST /api/order/info': getOrderInfo,
   'POST /api/order/create': createOrder,
   'POST /api/item/status': createOrder,

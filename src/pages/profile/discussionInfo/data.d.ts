@@ -1,3 +1,7 @@
+export type RouteParams = {
+  discussionID: string;
+};
+
 export type AdvancedOperation1 = {
   key: string;
   type: string;
@@ -30,3 +34,12 @@ export interface AdvancedProfileData {
   advancedOperation2?: AdvancedOperation2[];
   advancedOperation3?: AdvancedOperation3[];
 }
+
+export type DiscussionProfileData = {
+  ID: string;
+  fromUserName: string;
+  fromUserAvatar: string;
+  title: string;
+  content: string;
+  time: string;
+};

@@ -111,7 +111,7 @@ export default {
   },
   'POST /api/user/logout': (req: Request, res: Response) => {
     access = '';
-    res.send({ data: {}, code: true });
+    res.send({ data: {}, code: 0 });
   },
   'GET /api/500': (req: Request, res: Response) => {
     res.status(500).send({

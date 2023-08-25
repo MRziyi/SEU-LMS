@@ -10,6 +10,16 @@ const courseName = [
   '数据库原理',
   '计算机网络与应用',
 ];
+const itemName = [
+  'Alipay',
+  'Angular',
+  'Ant Design',
+  'Ant Design Pro',
+  'Bootstrap',
+  'React',
+  'Vue',
+  'Webpack',
+];
 const ownerUrl = [
   'https://gw.alipayobjects.com/zos/rmsportal/WdGqmHpayyMjiEhcKoVE.png', // Alipay
   'https://gw.alipayobjects.com/zos/rmsportal/zOsKZmFRdUtvpqCImOVY.png', // Angular
@@ -29,7 +39,7 @@ const imgUrl = [
 ];
 const description = [
   '那是一种内在的东西， 他们到达不了，也无法触及的',
-  '希望是一个好东西，也许是最好的，好东西是不会消亡的',
+  '希望是一个好东西，也许是最好的，好东西是不会消亡的啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊',
   '生命就像一盒巧克力，结果往往出人意料',
   '城镇中有那么多的酒馆，她却偏偏走进了我的酒馆',
   '那时候我只会想自己想要什么，从不想自己拥有什么',
@@ -51,12 +61,12 @@ function fakeDiscussionList(currentPage: number, pageSize: number) {
   const list = [];
   for (let i = 0; i < 24; i += 1) {
     list.push({
-      courseID: 'Course-' + i,
-      courseName: courseName[i % 8],
-      imgUrl: imgUrl[i % 4],
-      teacherName: ownerName[i % 10],
-      teacherAvatar: ownerUrl[i % 8],
-      semester: '2023秋季学期',
+      ID: i.toString(),
+      fromUserName: ownerName[i % 8],
+      fromUserAvatar: ownerUrl[i % 4],
+      title: itemName[i % 8],
+      content: description[i % 5],
+      time: new Date(new Date().getTime() - 1000 * 60 * 60 * 2 * i).toLocaleString(),
     });
   }
   let startIndex = (currentPage - 1) * pageSize;
@@ -64,9 +74,9 @@ function fakeDiscussionList(currentPage: number, pageSize: number) {
   return list.slice(startIndex, startIndex + pageSize);
 }
 
-async function postFakeCourseList(req: Request, res: Response) {
-  const { userID, currentPage, pageSize } = req.body;
-  console.log('UserID: ' + userID);
+async function postFakeDiscussionList(req: Request, res: Response) {
+  const { courseID, currentPage, pageSize } = req.body;
+  console.log('CourseID: ' + courseID);
   return res.json({
     code: 0,
     data: {
@@ -76,6 +86,27 @@ async function postFakeCourseList(req: Request, res: Response) {
   });
 }
 
+async function postFakeCourseIntro(req: Request, res: Response) {
+  const { courseID } = req.body;
+  console.log('CourseID: ' + courseID);
+  return res.json({
+    code: 0,
+    data: {
+      courseData: {
+        courseName: courseName[1],
+        imgUrl: imgUrl[1],
+        teacherName: ownerName[1],
+        teacherAvatar: ownerUrl[1],
+        semester: '2023秋季学期',
+        description: '课程描述',
+        teacherPhone: '18777777777',
+        teacherEmail: 'teacher@seu.edu.cn',
+      },
+    },
+  });
+}
+
 export default {
-  'POST  /api/course/list': postFakeCourseList,
+  'POST  /api/discussion/list': postFakeDiscussionList,
+  'POST  /api/course/get-intro': postFakeCourseIntro,
 };
