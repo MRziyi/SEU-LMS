@@ -1,6 +1,5 @@
 import { request } from 'umi';
-import { CourseData, DiscussionData } from '../data';
-import { SyllabusData } from './data';
+import { CourseData, DiscussionData, ReplyData, SyllabusData } from '../data';
 
 export async function queryDiscussionList(
   courseIDParam: string,
@@ -39,6 +38,21 @@ export async function queryCourseIntro(
     method: 'POST',
     data: {
       courseID: courseIDParam,
+    },
+  });
+}
+
+export async function queryReplyList(
+  discussionIDParam: string,
+  currentReplyCntParam: number,
+  replySizeParam: number,
+): Promise<{ data: { totalNum: number; list: ReplyData[] } }> {
+  return request('/api/reply/list', {
+    method: 'POST',
+    data: {
+      discussionID: discussionIDParam,
+      currentReplyCnt: currentReplyCntParam,
+      replySize: replySizeParam,
     },
   });
 }

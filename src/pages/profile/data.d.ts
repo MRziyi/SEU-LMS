@@ -1,13 +1,3 @@
-export type Params = {
-  keyword: string;
-  // 其他已有属性
-};
-
-type KeyValuePair = {
-  key: string;
-  value: string;
-};
-
 export type DiscussionData = {
   discussionID: string;
   fromUserName: string;
@@ -26,4 +16,20 @@ export type CourseData = {
   teacherPhone: string;
   semester: string;
   teacherEmail: string;
+};
+
+export type SyllabusData = {
+  syllabusID: string;
+  title: string;
+  materials: string[];
+  homework: string[];
+};
+
+export type ReplyData = {
+  fromUserName: string;
+  fromUserAvatar: string;
+  ID: string;
+  content: string;
+  isRead: bool;
+  time: string;
 };

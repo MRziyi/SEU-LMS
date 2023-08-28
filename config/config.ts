@@ -70,11 +70,6 @@ export default defineConfig({
           component: './profile/courseInfo',
           name: '课程详情',
         },
-        {
-          path: '/profile/dicussion-info/:discussionID',
-          name: '讨论详情',
-          component: './profile/discussionInfo',
-        },
       ],
     },
     {

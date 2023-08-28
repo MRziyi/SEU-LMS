@@ -12,12 +12,9 @@ export async function currentUser(options?: { [key: string]: any }) {
   });
 }
 
-/** 退出登录接口 POST /api/login/outLogin */
+/** 退出登录接口 POST /api/login/logout */
 export async function outLogin(options?: { [key: string]: any }) {
-  return request<Record<string, any>>('/api/user/logout', {
-    method: 'POST',
-    ...(options || {}),
-  });
+  return request<Record<string, any>>('/api/user/logout');
 }
 
 /** 登录接口 POST /api/user/login */

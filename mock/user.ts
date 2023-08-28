@@ -80,7 +80,7 @@ export default {
     });
     access = '';
   },
-  'POST /api/user/logout': (req: Request, res: Response) => {
+  'GET /api/user/logout': (req: Request, res: Response) => {
     access = '';
     res.send({ data: {}, code: 0 });
   },
