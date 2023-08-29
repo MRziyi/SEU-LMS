@@ -72,46 +72,13 @@ export default defineConfig({
         },
       ],
     },
-    {
-      name: '我的课程',
-      icon: 'read',
-      path: '/myCourses',
-      access: 'canStudent' || 'canTeacher',
-      component: './myCourses',
-    },
-    {
-      name: '我的消息',
-      icon: 'message',
-      path: '/myMessages',
-      component: './myMessages',
-    },
-    {
-      name: '日历',
-      icon: 'calendar',
-      path: '/calendar',
-      access: 'canStudent' || 'canTeacher',
-      component: './calendar',
-    },
-    {
-      name: '帮助中心',
-      icon: 'questionCircle',
-      path: '/wiki',
-      access: 'canStudent' || 'canTeacher',
-      component: './wiki',
-    },
-    {
-      path: '/workpanel',
-      name: '工作台',
-      icon: 'crown',
-      // access: 'canAdmin',
-      component: './workpanel',
-    },
+
     {
       path: '/dashboard',
       name: '仪表盘',
       icon: 'dashboard',
-      access: 'canAdmin',
-      hideInMenu: true,
+      // access: 'canAdmin',
+      // hideInMenu: true,
       routes: [
         {
           path: '/dashboard',
@@ -138,10 +105,65 @@ export default defineConfig({
       ],
     },
     {
+      path: '/data-visualize',
+      name: '数据可视化',
+      icon: 'areaChart',
+      access: 'canAdmin',
+      component: './dataVisualize',
+    },
+    {
+      path: '/question-answer',
+      name: '问题解答',
+      icon: 'crown',
+      access: 'canAdmin',
+      component: './questionAnswer',
+    },
+    {
+      path: '/course-manage',
+      name: '课程管理',
+      icon: 'appstore',
+      access: 'canAdmin',
+      component: './courseManagement',
+    },
+    {
+      path: '/user-manage',
+      name: '用户管理',
+      icon: 'team',
+      access: 'canAdmin',
+      component: './userManagement',
+    },
+
+    {
+      name: '我的课程',
+      icon: 'read',
+      path: '/myCourses',
+      access: 'canStudent' || 'canTeacher',
+      component: './myCourses',
+    },
+    {
+      name: '我的消息',
+      icon: 'message',
+      path: '/myMessages',
+      component: './myMessages',
+    },
+    {
+      name: '日历',
+      icon: 'calendar',
+      path: '/calendar',
+      access: 'canStudent' || 'canTeacher',
+      component: './calendar',
+    },
+    {
+      name: '帮助中心',
+      icon: 'questionCircle',
+      path: '/wiki',
+      component: './wiki',
+    },
+    {
       path: '/form',
       icon: 'form',
       name: '表单',
-      // hideInMenu: true,
+      hideInMenu: true,
       routes: [
         {
           path: '/form',

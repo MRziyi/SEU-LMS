@@ -2,14 +2,9 @@ import React, { useState } from 'react';
 import { GridContent, PageContainer } from '@ant-design/pro-layout';
 import type { RouteChildrenProps } from 'react-router';
 import type { RouteParams, tabKeyType } from './data.d';
-import { useHistory, useModel, useParams, useRequest } from 'umi';
-import { Button, Card, Col, Dropdown, Row } from 'antd';
-import {
-  ContactsOutlined,
-  EllipsisOutlined,
-  PhoneOutlined,
-  RadarChartOutlined,
-} from '@ant-design/icons';
+import { useHistory, useParams, useRequest } from 'umi';
+import { Button, Card, Col, Row } from 'antd';
+import { ContactsOutlined, PhoneOutlined } from '@ant-design/icons';
 import Syllabus from './components/syllabus';
 import Discussion from './components/discussion';
 import { queryCourseIntro } from './service';
@@ -112,6 +107,11 @@ const CourseInfo: React.FC<RouteChildrenProps> = () => {
         onTabChange={(_tabKey: string) => {
           setTabKey(_tabKey as tabKeyType);
         }}
+        extra={
+          <Button onClick={handleGoBack} type="primary">
+            返回我的课程
+          </Button>
+        }
       >
         {renderChildrenByTabKey(tabKey)}
       </PageContainer>
