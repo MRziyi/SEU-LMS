@@ -16,7 +16,7 @@ export const request: RequestConfig = {
       return {
         ...resData,
         success: resData.code === 0,
-        errorMessage: resData.description === '' ? resData.message : resData.description,
+        errorMessage: resData.description,
       };
     },
   },

@@ -107,12 +107,6 @@ const CourseInfo: React.FC<RouteChildrenProps> = () => {
         header={{
           title: data?.courseData.courseName,
           ghost: true,
-          extra: [
-            <Button key="2">次要按钮</Button>,
-            <Button key="3" type="primary">
-              主要按钮
-            </Button>
-          ],
         }}
         tabActiveKey={tabKey}
         onTabChange={(_tabKey: string) => {

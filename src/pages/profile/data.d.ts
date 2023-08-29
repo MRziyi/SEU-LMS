@@ -23,6 +23,7 @@ export type SyllabusData = {
   title: string;
   materials: string[];
   homework: string[];
+  isCheckedIn: boolean;
 };
 
 export type ReplyData = {

@@ -44,15 +44,30 @@ export async function queryCourseIntro(
 
 export async function queryReplyList(
   discussionIDParam: string,
-  currentReplyCntParam: number,
-  replySizeParam: number,
+  currentPageParam: number,
+  pageSizeParam: number,
 ): Promise<{ data: { totalNum: number; list: ReplyData[] } }> {
-  return request('/api/reply/list', {
+  return request('/api/discussion/reply-list', {
     method: 'POST',
     data: {
       discussionID: discussionIDParam,
-      currentReplyCnt: currentReplyCntParam,
-      replySize: replySizeParam,
+      currentPage: currentPageParam,
+      pageSize: pageSizeParam,
+    },
+  });
+}
+
+export async function sendReply(
+  contentParam: string,
+  courseIDParam: string,
+  discussionIDParam: string,
+): Promise<{ code: number }> {
+  return request('/api/discussion/reply-send', {
+    method: 'POST',
+    data: {
+      content: contentParam,
+      courseID: courseIDParam,
+      discussionID: discussionIDParam,
     },
   });
 }

@@ -141,7 +141,7 @@ export default defineConfig({
       path: '/form',
       icon: 'form',
       name: '表单',
-      hideInMenu: true,
+      // hideInMenu: true,
       routes: [
         {
           path: '/form',

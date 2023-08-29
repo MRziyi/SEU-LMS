@@ -1,4 +1,5 @@
 import type { Request, Response } from 'express';
+import user from 'mock/user';
 
 const courseName = [
   '数据结构',
@@ -65,6 +66,7 @@ function fakeSyllabusList(currentPage: number, pageSize: number) {
       title: 'Lesson ' + (i + 1) + ': ' + itemName[i % 8],
       materials: ['URL1', 'URL2'],
       homework: ['URL3', 'URL4'],
+      isCheckedIn: i < 3,
     });
   }
   const startIndex = (currentPage - 1) * pageSize;
@@ -131,7 +133,7 @@ async function postFakeCourseIntro(req: Request, res: Response) {
   });
 }
 
-function fakeReplyList(discussionID: number, currentReplyCnt: number, replySize: number) {
+function fakeReplyList(discussionID: number, currentPage: number, pageSize: number) {
   const list = [];
   for (let i = 0; i < 100; i += 1) {
     list.push({
@@ -143,19 +145,30 @@ function fakeReplyList(discussionID: number, currentReplyCnt: number, replySize:
       time: new Date(new Date().getTime() - 1000 * 60 * 60 * 2 * i).toLocaleString(),
     });
   }
-  console.log('Reply: ' + currentReplyCnt + ' - ' + (currentReplyCnt + replySize));
-  return list.slice(currentReplyCnt, currentReplyCnt + replySize);
+  const startIndex = (currentPage - 1) * pageSize;
+  console.log('Reply: ' + startIndex + ' - ' + (startIndex + pageSize));
+  return list.slice(startIndex, startIndex + pageSize);
 }
 
 async function postFakeReplyList(req: Request, res: Response) {
-  const { discussionID, currentReplyCnt, replySize } = req.body;
+  const { discussionID, currentPage, pageSize } = req.body;
   console.log('DiscussionID: ' + discussionID);
   return res.json({
     code: 0,
     data: {
       totalNum: 100,
-      list: fakeReplyList(discussionID, currentReplyCnt, replySize),
+      list: fakeReplyList(discussionID, currentPage, pageSize),
     },
+  });
+}
+
+async function receiveFakeReply(req: Request, res: Response) {
+  const { content, userID, discussionID } = req.body;
+  console.log(content + ', from:' + userID + ', for:' + discussionID);
+  return res.json({
+    code: 0,
+    data: {},
+    description: 'ok',
   });
 }
 
@@ -163,5 +176,6 @@ export default {
   'POST  /api/syllabus/list': postFakeSyllabusList,
   'POST  /api/discussion/list': postFakeDiscussionList,
   'POST  /api/course/get-intro': postFakeCourseIntro,
-  'POST  /api/reply/list': postFakeReplyList,
+  'POST  /api/discussion/reply-list': postFakeReplyList,
+  'POST  /api/discussion/reply-send': receiveFakeReply,
 };

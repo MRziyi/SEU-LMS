@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import ProCard from '@ant-design/pro-card';
-import { List } from 'antd';
-import { SyllabusData } from '../../data';
+import { Button, List } from 'antd';
 import { useRequest } from 'umi';
 import { querySyllabus } from '../../service';
 import styles from './index.less';
+import { SyllabusData } from '@/pages/profile/data';
 
 interface CourseIDParam {
   courseID: string;
@@ -67,7 +67,24 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
       dataSource={listData}
       renderItem={(syllabus) => (
         <List.Item>
-          <ProCard title={syllabus.title} bordered headerBordered gutter={16} collapsible>
+          <ProCard
+            title={syllabus.title}
+            bordered
+            headerBordered
+            gutter={16}
+            collapsible
+            extra={
+              <Button
+                disabled={syllabus.isCheckedIn}
+                type="primary"
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
+                签到
+              </Button>
+            }
+          >
             <ProCard title="课程视频" type="inner" bordered>
               课程视频按钮
             </ProCard>

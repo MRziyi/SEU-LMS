@@ -1,4 +1,4 @@
-import { Avatar, Button, Card, List, Typography } from 'antd';
+import { Avatar, Button, Card, List, Typography, message } from 'antd';
 import type { FC } from 'react';
 import { Link, useModel, useRequest } from 'umi';
 import styles from './style.less';
@@ -46,7 +46,7 @@ const MyCourses: FC = () => {
           setCurrentPage(_page);
           setPageSize(_pageSize);
           setLoading(false);
-        } else throw 'Please Login!';
+        }
       } catch {}
   }
 
