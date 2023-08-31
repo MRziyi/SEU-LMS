@@ -1,7 +1,7 @@
 // https://umijs.org/config/
 import { defineConfig } from 'umi';
 import { join } from 'path';
-import defaultSettings from './defaultSettings';
+import defaultSettings from './studentSettings';
 export default defineConfig({
   hash: true,
   antd: {},
@@ -74,7 +74,7 @@ export default defineConfig({
       name: '仪表盘',
       icon: 'dashboard',
       // access: 'canAdmin',
-      // hideInMenu: true,
+      hideInMenu: true,
       routes: [
         {
           path: '/dashboard',
@@ -143,11 +143,11 @@ export default defineConfig({
       component: './myMessages',
     },
     {
-      name: '日历',
+      name: '我的日历',
       icon: 'calendar',
-      path: '/calendar',
+      path: '/my-calendar',
       access: 'canStudent' || 'canTeacher',
-      component: './calendar',
+      component: './myCalendar',
     },
     {
       name: '帮助中心',

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { GridContent, PageContainer } from '@ant-design/pro-layout';
 import type { RouteChildrenProps } from 'react-router';
 import type { RouteParams, tabKeyType } from './data.d';
-import { useHistory, useParams, useRequest } from 'umi';
+import { useHistory, useModel, useParams, useRequest } from 'umi';
 import { Button, Card, Col, Row } from 'antd';
 import { ContactsOutlined, PhoneOutlined } from '@ant-design/icons';
 import Syllabus from './components/syllabus';
@@ -11,6 +11,7 @@ import { queryCourseIntro } from './service';
 import styles from './index.less';
 
 const CourseInfo: React.FC<RouteChildrenProps> = () => {
+  const { initialState } = useModel('@@initialState');
   const history = useHistory();
 
   const handleGoBack = () => {
@@ -107,11 +108,18 @@ const CourseInfo: React.FC<RouteChildrenProps> = () => {
         onTabChange={(_tabKey: string) => {
           setTabKey(_tabKey as tabKeyType);
         }}
-        extra={
+        extra={[
           <Button onClick={handleGoBack} type="primary">
             返回我的课程
-          </Button>
-        }
+          </Button>,
+          initialState?.currentUser?.access == 'teacher' ? (
+            <Button onClick={handleGoBack} type="primary">
+              发表通知
+            </Button>
+          ) : (
+            ''
+          ),
+        ]}
       >
         {renderChildrenByTabKey(tabKey)}
       </PageContainer>

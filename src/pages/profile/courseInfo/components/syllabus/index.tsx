@@ -102,10 +102,26 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
               课程视频按钮
             </ProCard>
             <ProCard title="课件资料" type="inner" bordered>
-              TODO课件资料文件显示与下载
+              <List
+                size="small"
+                dataSource={syllabus.materials}
+                renderItem={(item) => (
+                  <List.Item>
+                    <a href={item}>{item}</a>
+                  </List.Item>
+                )}
+              />
             </ProCard>
             <ProCard title="作业" type="inner" bordered>
-              TODO作业提交与反馈
+              <List
+                size="small"
+                dataSource={syllabus.homework}
+                renderItem={(item) => (
+                  <List.Item>
+                    <a href={item}>{item}</a>
+                  </List.Item>
+                )}
+              />
             </ProCard>
           </ProCard>
         </List.Item>

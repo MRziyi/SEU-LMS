@@ -6,7 +6,9 @@ import { history } from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import { currentUser as queryCurrentUser } from './services/ant-design-pro/api';
-import defaultSettings from '../config/defaultSettings';
+import studentSettings from '../config/studentSettings';
+import teacherSettings from '../config/teacherSettings';
+import adminSettings from '../config/adminSettings';
 import type { RequestConfig } from 'umi';
 
 export const request: RequestConfig = {
@@ -54,12 +56,17 @@ export async function getInitialState(): Promise<{
     return {
       fetchUserInfo,
       currentUser,
-      settings: defaultSettings,
+      settings:
+        currentUser?.access == 'student'
+          ? studentSettings
+          : currentUser?.access == 'teacher'
+          ? teacherSettings
+          : adminSettings,
     };
   }
   return {
     fetchUserInfo,
-    settings: defaultSettings,
+    settings: studentSettings,
   };
 }
 
