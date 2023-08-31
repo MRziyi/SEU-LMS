@@ -1,12 +1,12 @@
-import { Avatar, Button, Card, List, Typography, message } from 'antd';
+import { Avatar, Button, Card, List, Typography } from 'antd';
 import type { FC } from 'react';
-import { Link, useModel, useRequest } from 'umi';
+import { Link, useModel } from 'umi';
 import styles from './style.less';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Input } from 'antd';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { CourseListData } from './data';
-import { queryCourseList } from './service';
+import { queryCourseList, searchMyCourse } from './service';
 
 const { Paragraph } = Typography;
 
@@ -15,65 +15,60 @@ const MyCourses: FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [listData, setListData] = useState<CourseListData[]>([]);
   const [totalNum, setTotalNum] = useState<number>(0);
-  const [loadingForPagigation, setLoading] = useState<boolean>(false);
+  const [loadingForPagigation, setLoadingForPagigation] = useState<boolean>(false);
+  const [loadingForSearch, setLoadingForSearch] = useState<boolean>(false);
+
+  const searchContent = useRef<string>('');
+  const preSearchContent = useRef<string>('');
 
   //  获取用户信息
   const { initialState } = useModel('@@initialState');
 
-  // 获取列表数据
-  const { loading } = useRequest(
-    () => {
-      if (initialState && initialState.currentUser && initialState.currentUser.id)
-        return queryCourseList(initialState.currentUser.id, 1, 8);
-      else throw 'Please Login!';
-    },
-    {
-      onSuccess: (result: any) => {
-        setTotalNum(result.totalNum);
-        setListData(result.list);
-      },
-    },
-  );
+  useEffect(() => {
+    changePage(1, pageSize);
+  }, []);
 
   async function changePage(_page: number, _pageSize: number) {
-    setLoading(true);
+    setLoadingForPagigation(true);
+    if (preSearchContent.current !== searchContent.current) _page = 1;
     if (initialState && initialState.currentUser)
       try {
-        const result = await queryCourseList(initialState.currentUser.id, _page, _pageSize);
+        let result;
+        if (searchContent.current == '') {
+          console.log('IN 1!');
+          result = await queryCourseList(initialState.currentUser.id, _page, _pageSize);
+        } else {
+          console.log('IN 2!');
+          result = await searchMyCourse(searchContent.current, _page, _pageSize);
+        }
+        preSearchContent.current = searchContent.current;
         if (result.data) {
           setTotalNum(result.data.totalNum);
           setListData(result.data.list);
-          setCurrentPage(_page);
           setPageSize(_pageSize);
-          setLoading(false);
+          setCurrentPage(_page);
         }
       } catch {}
+    setLoadingForPagigation(false);
+  }
+
+  async function onSearch(keyword: string) {
+    setLoadingForSearch(true);
+    try {
+      searchContent.current = keyword;
+      changePage(1, pageSize);
+    } catch {}
+    setLoadingForSearch(false);
   }
 
   function showTotal(total: number, range: [number, number]) {
     return `${range[0]}-${range[1]} 共 ${total} 条`;
   }
-  const paginationProps = {
-    onChange: changePage,
-    showQuickJumper: true,
-    showSizeChanger: true,
-    pageSizeOptions: [8, 12, 16, 20],
-    currentPage: currentPage,
-    pageSize: pageSize,
-    total: totalNum,
-    showTotal: showTotal,
-  };
-
-  // const handleFormSubmit = async (value: string) => {
-  //   const result = await searchList({ description: value });
-  //   setListData(result.data.list);
-  //   setTotalNum(result.data.totalNum);
-  // };
 
   const cardList = listData && (
     <List<CourseListData>
       rowKey="courseID"
-      loading={loading && loadingForPagigation}
+      loading={loadingForPagigation}
       grid={{
         gutter: 16,
         xs: 1,
@@ -83,7 +78,16 @@ const MyCourses: FC = () => {
         xl: 4,
         xxl: 4,
       }}
-      pagination={paginationProps}
+      pagination={{
+        onChange: changePage,
+        showQuickJumper: true,
+        showSizeChanger: true,
+        pageSizeOptions: [8, 12, 16, 20],
+        current: currentPage,
+        pageSize: pageSize,
+        total: totalNum,
+        showTotal: showTotal,
+      }}
       dataSource={listData}
       renderItem={(course) => (
         <List.Item>
@@ -149,7 +153,9 @@ const MyCourses: FC = () => {
               enterButton="搜索"
               key="2"
               size="large"
-              // onSearch={handleFormSubmit}}
+              defaultValue={searchContent.current}
+              onSearch={onSearch}
+              loading={loadingForSearch}
             />,
           ],
         }}

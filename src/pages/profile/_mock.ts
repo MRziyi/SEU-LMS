@@ -163,8 +163,18 @@ async function postFakeReplyList(req: Request, res: Response) {
 }
 
 async function receiveFakeReply(req: Request, res: Response) {
-  const { content, userID, discussionID } = req.body;
-  console.log(content + ', from:' + userID + ', for:' + discussionID);
+  const { content, courseID, discussionID } = req.body;
+  console.log(content + ', from:' + courseID + ', for:' + discussionID);
+  return res.json({
+    code: 0,
+    data: {},
+    description: 'ok',
+  });
+}
+
+async function receiveFakeCheckIn(req: Request, res: Response) {
+  const { syllabusID } = req.body;
+  console.log('check in for: ' + syllabusID);
   return res.json({
     code: 0,
     data: {},
@@ -178,4 +188,5 @@ export default {
   'POST  /api/course/get-intro': postFakeCourseIntro,
   'POST  /api/discussion/reply-list': postFakeReplyList,
   'POST  /api/discussion/reply-send': receiveFakeReply,
+  'POST  /api/syllabus/check-in': receiveFakeCheckIn,
 };

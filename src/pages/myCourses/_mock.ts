@@ -47,17 +47,27 @@ const ownerName = [
   '仲尼',
 ];
 
-function fakeDiscussionList(currentPage: number, pageSize: number) {
+function fakeCourseList(currentPage: number, pageSize: number, keyword = '') {
   const list = [];
   for (let i = 0; i < 24; i += 1) {
-    list.push({
-      courseID: 'Course-' + i,
-      courseName: courseName[i % 8],
-      imgUrl: imgUrl[i % 4],
-      teacherName: ownerName[i % 10],
-      teacherAvatar: ownerUrl[i % 8],
-      semester: '2023秋季学期',
-    });
+    if (keyword === '')
+      list.push({
+        courseID: 'Course-' + i,
+        courseName: courseName[i % 8],
+        imgUrl: imgUrl[i % 4],
+        teacherName: ownerName[i % 10],
+        teacherAvatar: ownerUrl[i % 8],
+        semester: '2023秋季学期',
+      });
+    else
+      list.push({
+        courseID: 'Course-' + i,
+        courseName: keyword,
+        imgUrl: imgUrl[i % 4],
+        teacherName: ownerName[i % 10],
+        teacherAvatar: ownerUrl[i % 8],
+        semester: '2023秋季学期',
+      });
   }
   const startIndex = (currentPage - 1) * pageSize;
   console.log('Page: ' + startIndex + ' - ' + (startIndex + pageSize));
@@ -71,11 +81,24 @@ async function postFakeCourseList(req: Request, res: Response) {
     code: 0,
     data: {
       totalNum: 24,
-      list: fakeDiscussionList(currentPage, pageSize),
+      list: fakeCourseList(currentPage, pageSize),
+    },
+  });
+}
+
+async function postFakeSearchedCourseList(req: Request, res: Response) {
+  const { keyword, currentPage, pageSize } = req.body;
+  console.log('Keyword: ' + keyword);
+  return res.json({
+    code: 0,
+    data: {
+      totalNum: 18,
+      list: fakeCourseList(currentPage, pageSize, keyword),
     },
   });
 }
 
 export default {
   'POST  /api/course/list': postFakeCourseList,
+  'POST  /api/course/search': postFakeSearchedCourseList,
 };

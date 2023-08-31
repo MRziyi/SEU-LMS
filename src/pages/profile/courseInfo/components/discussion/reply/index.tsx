@@ -36,7 +36,7 @@ const ReplyList: React.FC<DiscussionIDParam> = ({ discussionID }) => {
   }
   const paginationProps = {
     onChange: changeReplyPage,
-    currentPage: currentPage,
+    current: currentPage,
     pageSize: pageSize,
     total: totalReplyNum,
     showTotal: showPageFooter,
