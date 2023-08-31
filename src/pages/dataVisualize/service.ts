@@ -1,21 +1,24 @@
 import { request } from 'umi';
-import {  TeachingSituation, CourseSituation, SectionSituation } from './data';
+import { CourseDiscription, TeacherChartData } from './data';
 
-export async function queryTeachingSituation():Promise<{data:TeachingSituation[]}>{
-  return request('/api/datavisualize/teaching', {
+export async function queryTeacherChart(
+  courseIDParam: string,
+): Promise<{ data: TeacherChartData }> {
+  return request('/api/data-visualize/teacher-chart', {
     method: 'POST',
+    data: {
+      courseID: courseIDParam,
+    },
   });
 }
 
-export async function queryCourseSituation():Promise<{data:CourseSituation[]}>{
-  return request('/api/datavisualize/course', {
+export async function queryTeacherCourses(
+  userIDParam: string,
+): Promise<{ data: CourseDiscription[] }> {
+  return request('/api/course/list-for-teacher', {
     method: 'POST',
-  });
-}
-
-export async function querySectionSituation(teacherID:string) 
-:Promise<{data:SectionSituation[]}>{
-  return request('/api/datavisualize/section', {
-    method: 'POST',
+    data: {
+      userID: userIDParam,
+    },
   });
 }

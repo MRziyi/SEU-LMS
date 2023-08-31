@@ -12,13 +12,13 @@ import adminSettings from '../config/adminSettings';
 import type { RequestConfig } from 'umi';
 
 export const request: RequestConfig = {
-  //prefix: 'http://123.60.24.195', // 指定API后端服务器地址
+  // prefix: 'http://10.203.146.156:8081', // 指定API后端服务器地址
   errorConfig: {
     adaptor: (resData) => {
       return {
         ...resData,
         success: resData.code === 0,
-        errorMessage: resData.description,
+        errorMessage: resData.message,
       };
     },
   },

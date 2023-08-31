@@ -1,63 +1,55 @@
 import type { BadgeProps } from 'antd';
-import { Badge, Calendar, Card } from 'antd';
+import { Badge, Calendar, Card, Tooltip } from 'antd';
 import type { Moment } from 'moment';
-import React from 'react';
-
-const getListData = (value: Moment) => {
-  let listData;
-  switch (value.date()) {
-    case 8:
-      listData = [
-        { type: 'warning', content: 'This is warning event.' },
-        { type: 'success', content: 'This is usual event.' },
-      ];
-      break;
-    case 10:
-      listData = [
-        { type: 'warning', content: 'This is warning event.' },
-        { type: 'success', content: 'This is usual event.' },
-        { type: 'error', content: 'This is error event.' },
-      ];
-      break;
-    case 15:
-      listData = [
-        { type: 'warning', content: 'This is warning event' },
-        { type: 'success', content: 'This is very long usual event。。....' },
-        { type: 'error', content: 'This is error event 1.' },
-        { type: 'error', content: 'This is error event 2.' },
-        { type: 'error', content: 'This is error event 3.' },
-        { type: 'error', content: 'This is error event 4.' },
-      ];
-      break;
-    default:
-  }
-  return listData || [];
-};
-
-const getMonthData = (value: Moment) => {
-  if (value.month() === 8) {
-    return 1394;
-  }
-};
+import moment from 'moment';
+import React, { useState } from 'react';
+import { useRequest, useModel } from 'umi';
+import { queryEventList } from './service';
+import { EventList } from './data';
+import { PageContainer } from '@ant-design/pro-layout';
 
 const MyCalendar: React.FC = () => {
-  const monthCellRender = (value: Moment) => {
-    const num = getMonthData(value);
-    return num ? (
-      <div className="notes-month">
-        <section>{num}</section>
-        <span>Backlog number</span>
-      </div>
-    ) : null;
+  const [eventListData, setEventListData] = useState<EventList[]>([]);
+
+  const { initialState } = useModel('@@initialState');
+
+  const { loading } = useRequest(
+    () => {
+      if (initialState && initialState.currentUser && initialState.currentUser.id)
+        return queryEventList(initialState.currentUser.id);
+      else throw 'Please Login!';
+    },
+    {
+      onSuccess: (result: any) => {
+        setEventListData(result);
+      },
+    },
+  );
+
+  //查找与特定日期匹配的事件
+  const getEventsForDate = (date: Moment) => {
+    return eventListData.filter((event) => {
+      const eventDate = moment(event.date);
+      return eventDate.isSame(date, 'day');
+    });
+  };
+
+  //类型转化
+  const eventType = (type: string) => {
+    if (type === 'Examination') return 'error';
+    else if (type === 'Assignment') return 'warning';
+    else return type;
   };
 
   const dateCellRender = (value: Moment) => {
-    const listData = getListData(value);
+    const events = getEventsForDate(value);
     return (
       <ul className="events">
-        {listData.map((item) => (
-          <li key={item.content}>
-            <Badge status={item.type as BadgeProps['status']} text={item.content} />
+        {events.map((event, index) => (
+          <li key={index}>
+            <Tooltip title={event.content}>
+              <Badge status={eventType(event.type) as BadgeProps['status']} text={event.content} />
+            </Tooltip>
           </li>
         ))}
       </ul>
@@ -65,8 +57,8 @@ const MyCalendar: React.FC = () => {
   };
 
   return (
-    <Card title="我的日历">
-      <Calendar dateCellRender={dateCellRender} monthCellRender={monthCellRender} />;
+    <Card title="我的日历" loading={loading}>
+      <Calendar dateCellRender={dateCellRender} />
     </Card>
   );
 };

@@ -70,42 +70,18 @@ export default defineConfig({
     },
 
     {
-      path: '/dashboard',
-      name: '仪表盘',
-      icon: 'dashboard',
-      // access: 'canAdmin',
-      hideInMenu: true,
-      routes: [
-        {
-          path: '/dashboard',
-          redirect: '/dashboard/analysis',
-        },
-        {
-          name: 'analysis',
-          icon: 'smile',
-          path: '/dashboard/analysis',
-          component: './dashboard/analysis',
-        },
-        {
-          name: 'monitor',
-          icon: 'smile',
-          path: '/dashboard/monitor',
-          component: './dashboard/monitor',
-        },
-        {
-          name: 'workplace',
-          icon: 'smile',
-          path: '/dashboard/workplace',
-          component: './dashboard/workplace',
-        },
-      ],
-    },
-    {
       path: '/data-visualize',
       name: '数据可视化',
       icon: 'areaChart',
-      access: 'canAdmin',
+      access: 'canTA',
       component: './dataVisualize',
+    },
+    {
+      path: '/data-visualize-example',
+      name: '数据可视化样例',
+      icon: 'pieChart',
+      access: 'canTA',
+      component: './dataVisualizeExample',
     },
     {
       path: '/question-answer',
@@ -128,13 +104,26 @@ export default defineConfig({
       access: 'canAdmin',
       component: './userManagement',
     },
-
     {
       name: '我的课程',
       icon: 'read',
       path: '/myCourses',
-      access: 'canStudent' || 'canTeacher',
+      access: 'canST',
       component: './myCourses',
+    },
+    {
+      name: '我的日历',
+      icon: 'calendar',
+      path: '/my-calendar',
+      access: 'canST',
+      component: './myCalendar',
+    },
+    {
+      name: '帮助中心',
+      icon: 'questionCircle',
+      path: '/wiki',
+      access: 'canST',
+      component: './wiki',
     },
     {
       name: '我的消息',
@@ -143,69 +132,18 @@ export default defineConfig({
       component: './myMessages',
     },
     {
-      name: '我的日历',
-      icon: 'calendar',
-      path: '/my-calendar',
-      access: 'canStudent' || 'canTeacher',
-      component: './myCalendar',
-    },
-    {
-      name: '帮助中心',
-      icon: 'questionCircle',
-      path: '/wiki',
-      component: './wiki',
-    },
-    {
-      path: '/form',
-      icon: 'form',
-      name: '表单',
-      hideInMenu: true,
-      routes: [
-        {
-          path: '/form',
-          redirect: '/form/basic-form',
-        },
-        {
-          name: '基础表单',
-          icon: 'smile',
-          path: '/form/basic-form',
-          component: './form/basic-form',
-        },
-        {
-          name: '分步表单',
-          icon: 'smile',
-          path: '/form/step-form',
-          component: './form/step-form',
-        },
-        {
-          name: '进阶表单',
-          icon: 'smile',
-          path: '/form/advanced-form',
-          component: './form/advanced-form',
-        },
-        {
-          name: '总体表单预览',
-          icon: 'smile',
-          path: '/form/total-form',
-          component: './form/total-form',
-        },
-      ],
-    },
-    {
       name: '账户设置',
       icon: 'tool',
       path: '/account-settings',
       component: './accountSettings',
     },
     {
-      path: '/',
-      redirect: '/myCourses',
-      access: 'student' || 'teacher',
+      path: '/redirector',
+      component: './redirector',
     },
     {
       path: '/',
-      redirect: '/data-visualize',
-      access: 'student' || 'teacher',
+      redirect: '/redirector',
     },
     {
       component: '404',
@@ -226,7 +164,7 @@ export default defineConfig({
   ignoreMomentLocale: true,
   // proxy: {
   //   '/api/': {
-  //     target: 'http://123.60.24.195',
+  //     target: 'http://10.203.146.156:8081',
   //     changeOrigin: true,
   //   },
   // },

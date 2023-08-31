@@ -12,7 +12,7 @@ const Settings: LayoutSettings & {
   fixedHeader: false,
   fixSiderbar: true,
   colorWeak: false,
-  title: '东南大学教学管理平台 SEU-LMS',
+  title: 'SEU-LMS',
   pwa: false,
   logo: 'https://pic.imgdb.cn/item/64e60c4a661c6c8e54319b65.png',
   iconfontUrl: '',

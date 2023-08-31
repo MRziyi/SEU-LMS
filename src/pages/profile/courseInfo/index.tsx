@@ -9,6 +9,7 @@ import Syllabus from './components/syllabus';
 import Discussion from './components/discussion';
 import { queryCourseIntro } from './service';
 import styles from './index.less';
+import MyModal from '@/components/Modal';
 
 const CourseInfo: React.FC<RouteChildrenProps> = () => {
   const { initialState } = useModel('@@initialState');
@@ -25,6 +26,7 @@ const CourseInfo: React.FC<RouteChildrenProps> = () => {
   });
 
   const [tabKey, setTabKey] = useState<tabKeyType>('1');
+  const [openSendAnnouncement, setOpenSendAnnouncement] = useState<boolean>(false);
 
   // 渲染tab切换
   const renderChildrenByTabKey = (tabValue: tabKeyType) => {
@@ -79,51 +81,52 @@ const CourseInfo: React.FC<RouteChildrenProps> = () => {
   };
 
   return (
-    <div
-      style={{
-        background: '#F5F7FA',
+    <PageContainer
+      loading={loading}
+      tabList={[
+        {
+          key: '1',
+          tab: '课程简介',
+        },
+        {
+          key: '2',
+          tab: '课程大纲',
+        },
+        {
+          key: '3',
+          tab: '讨论区',
+        },
+      ]}
+      header={{
+        title: data?.courseData.courseName,
+        ghost: true,
       }}
+      tabActiveKey={tabKey}
+      onTabChange={(_tabKey: string) => {
+        setTabKey(_tabKey as tabKeyType);
+      }}
+      extra={[
+        <Button onClick={handleGoBack} type="primary">
+          返回我的课程
+        </Button>,
+        initialState?.currentUser?.access == 'teacher' ? (
+          <Button onClick={() => setOpenSendAnnouncement(true)}>
+            发布通知
+            <MyModal
+              open={openSendAnnouncement}
+              setOpen={setOpenSendAnnouncement}
+              displayMessage="公告内容"
+              url="/api/order/message/send-to-class"
+              idParam={courseID}
+            ></MyModal>
+          </Button>
+        ) : (
+          ''
+        ),
+      ]}
     >
-      <PageContainer
-        loading={loading}
-        tabList={[
-          {
-            key: '1',
-            tab: '课程简介',
-          },
-          {
-            key: '2',
-            tab: '课程大纲',
-          },
-          {
-            key: '3',
-            tab: '讨论区',
-          },
-        ]}
-        header={{
-          title: data?.courseData.courseName,
-          ghost: true,
-        }}
-        tabActiveKey={tabKey}
-        onTabChange={(_tabKey: string) => {
-          setTabKey(_tabKey as tabKeyType);
-        }}
-        extra={[
-          <Button onClick={handleGoBack} type="primary">
-            返回我的课程
-          </Button>,
-          initialState?.currentUser?.access == 'teacher' ? (
-            <Button onClick={handleGoBack} type="primary">
-              发表通知
-            </Button>
-          ) : (
-            ''
-          ),
-        ]}
-      >
-        {renderChildrenByTabKey(tabKey)}
-      </PageContainer>
-    </div>
+      {renderChildrenByTabKey(tabKey)}
+    </PageContainer>
   );
 };
 export default CourseInfo;

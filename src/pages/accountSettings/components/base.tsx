@@ -108,7 +108,8 @@ const BaseView: React.FC = () => {
               initialValues={{
                 name: initialState?.currentUser?.nickName,
                 phone: initialState?.currentUser?.phone,
-                imgUrl: initialState?.currentUser?.imgUrl,
+                avatar: initialState?.currentUser?.imgUrl,
+                email: initialState?.currentUser?.email,
               }}
             >
               <ProFormText
@@ -142,11 +143,11 @@ const BaseView: React.FC = () => {
                   },
                 ]}
               ></ProFormText>
-              <ProFormText name="imgUrl" hidden></ProFormText>
+              <ProFormText name="avatar" hidden></ProFormText>
             </ProForm>
           </div>
           <div className={styles.right}>
-            <AvatarView avatar={form.getFieldValue('imgUrl')} />
+            <AvatarView avatar={form.getFieldValue('avatar')} />
           </div>
         </>
       )}

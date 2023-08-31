@@ -39,6 +39,8 @@ const Login: React.FC = () => {
           redirect: string;
         };
         history.push(redirect || '/');
+
+        window.location.reload();
         return;
       }
       console.log(msg);
