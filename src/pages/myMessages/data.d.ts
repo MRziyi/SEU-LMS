@@ -4,5 +4,6 @@ export type MessageData = {
   fromUserAccess: string;
   messageID: string;
   content: string;
+  isRead: boolean;
   time: string;
 };

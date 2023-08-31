@@ -8,16 +8,16 @@ interface modalCtrl {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   displayMessage: string;
   url: string;
-  idPara?: string;
+  idParam?: string;
 }
 
-const MyModal: React.FC<modalCtrl> = ({ open, setOpen, displayMessage, url, idPara }) => {
+const MyModal: React.FC<modalCtrl> = ({ open, setOpen, displayMessage, url, idParam }) => {
   const [show, setShow] = useState(false);
   const [id, setId] = useState('');
 
   useEffect(() => {
-    if (idPara !== undefined) setId(idPara);
-  }, [idPara]);
+    if (idParam !== undefined) setId(idParam);
+  }, [idParam]);
 
   const [form] = Form.useForm<{
     field: string;

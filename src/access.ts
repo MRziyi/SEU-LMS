@@ -7,5 +7,7 @@ export default function access(initialState: { currentUser?: API.CurrentUser } |
     canAdmin: currentUser && currentUser.access === 'admin',
     canTeacher: currentUser && currentUser.access === 'teacher',
     canStudent: currentUser && currentUser.access === 'student',
+    canST: currentUser && (currentUser.access === 'student' || currentUser.access === 'teacher'),
+    canTA: currentUser && (currentUser.access === 'admin' || currentUser.access === 'teacher'),
   };
 }

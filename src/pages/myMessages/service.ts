@@ -13,3 +13,16 @@ export async function queryMessageList(
     },
   });
 }
+
+export async function markMessage(
+  messageIDParam: string,
+  setToParam: boolean,
+): Promise<{ data: { totalNum: number; list: MessageData[] } }> {
+  return request('/api/message/mark', {
+    method: 'POST',
+    data: {
+      messageID: messageIDParam,
+      setTo: setToParam,
+    },
+  });
+}

@@ -1,8 +1,8 @@
-import { Avatar, Button, Card, Input, List, Skeleton, Space, Tag } from 'antd';
+import { Avatar, Badge, Button, Card, Input, List, Skeleton, Space, Tag, message } from 'antd';
 import { useModel, useRequest } from 'umi';
 import { useState, type FC, useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import { queryMessageList } from './service';
+import { markMessage, queryMessageList } from './service';
 import styles from './style.less';
 import { MessageData } from './data';
 import moment from 'moment';
@@ -13,14 +13,15 @@ const MyMessages: FC<Record<string, any>> = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [listData, setListData] = useState<MessageData[]>([]);
   const [totalNum, setTotalNum] = useState<number>(0);
-  const [loadingForPagigation, setLoading] = useState<boolean>(false);
+  const [loadingForPagigation, setLoadingForPagigation] = useState<boolean>(false);
+  const [loadingForMark, setLoadingForMark] = useState<string>('');
 
   useEffect(() => {
     changePage(1, pageSize);
   }, []);
 
   async function changePage(_page: number, _pageSize: number) {
-    setLoading(true);
+    setLoadingForPagigation(true);
     try {
       const result = await queryMessageList(_page, _pageSize);
       if (result.data) {
@@ -30,7 +31,19 @@ const MyMessages: FC<Record<string, any>> = () => {
         setPageSize(_pageSize);
       }
     } catch {}
-    setLoading(false);
+    setLoadingForPagigation(false);
+  }
+
+  async function markMessageAdaptor(messageID: string, setTo: boolean) {
+    setLoadingForMark(messageID);
+    try {
+      const result = await markMessage(messageID, setTo);
+      if (result.data) {
+        message.success('标记成功！');
+        changePage(1, pageSize);
+      }
+    } catch {}
+    setLoadingForMark('');
   }
 
   function showTotal(total: number, range: [number, number]) {
@@ -49,6 +62,7 @@ const MyMessages: FC<Record<string, any>> = () => {
 
   return (
     <ProList<MessageData>
+      loading={loadingForPagigation}
       dataSource={listData}
       rowKey="messageID"
       headerTitle="消息列表"
@@ -60,7 +74,15 @@ const MyMessages: FC<Record<string, any>> = () => {
           search: false,
         },
         avatar: {
-          dataIndex: 'fromUserAvatar',
+          render: (_, row) => {
+            if (row.isRead) return <Avatar src={row.fromUserAvatar}></Avatar>;
+            else
+              return (
+                <Badge dot>
+                  <Avatar src={row.fromUserAvatar}></Avatar>
+                </Badge>
+              );
+          },
           search: false,
         },
         description: {
@@ -71,24 +93,53 @@ const MyMessages: FC<Record<string, any>> = () => {
           dataIndex: 'fromUserAccess',
           render: (_, row) => {
             return (
-              <Space size={0}>
-                {row.fromUserAccess == 'teacher' ? (
-                  <Tag color="blue" key="1">
-                    教师
-                  </Tag>
-                ) : (
-                  <Tag color="orange" key="1">
-                    管理员
-                  </Tag>
-                )}
-              </Space>
+              <>
+                <Space size={0}>
+                  {row.fromUserAccess == 'teacher' ? (
+                    <Tag color="blue" key="1">
+                      教师
+                    </Tag>
+                  ) : (
+                    <Tag color="orange" key="1">
+                      管理员
+                    </Tag>
+                  )}
+                  <div style={{ marginLeft: '10px' }}>{moment(row.time).fromNow()}</div>
+                </Space>
+              </>
             );
           },
           search: false,
         },
-        extra: {
-          dataIndex: 'time',
-          search: false,
+        actions: {
+          render: (_, row) => {
+            if (row.isRead)
+              return (
+                <Button
+                  style={{ marginRight: '10px' }}
+                  loading={loadingForMark === row.messageID}
+                  onClick={() => {
+                    markMessageAdaptor(row.messageID, false);
+                  }}
+                >
+                  标为未读
+                </Button>
+              );
+            else {
+              return (
+                <Button
+                  loading={loadingForMark === row.messageID}
+                  style={{ marginRight: '10px' }}
+                  type="primary"
+                  onClick={() => {
+                    markMessageAdaptor(row.messageID, true);
+                  }}
+                >
+                  标为已读
+                </Button>
+              );
+            }
+          },
         },
       }}
     />

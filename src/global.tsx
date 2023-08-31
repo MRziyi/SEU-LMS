@@ -1,5 +1,5 @@
 import { Button, message, notification } from 'antd';
-import defaultSettings from '../config/defaultSettings';
+import defaultSettings from '../config/studentSettings';
 const { pwa } = defaultSettings;
 const isHttps = document.location.protocol === 'https:';
 const clearCache = () => {
