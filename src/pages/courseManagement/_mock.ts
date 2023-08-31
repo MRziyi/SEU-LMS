@@ -50,25 +50,35 @@ const ownerName = [
 function fakeCourseList() {
   const list = [];
   for (let i = 0; i < 24; i += 1) {
-    list.push({
-        courseID: 'Course-' + i,
-        courseName: courseName[i % 8],
-        imgUrl: imgUrl[i % 4],
-        teacherName: ownerName[i % 10],
-        teacherAvatar: ownerUrl[i % 8],
-        semester: '2023秋季学期',
-      });
+      if(i%2){
+        list.push({
+          courseID: 'Course-' + i,
+          courseName: courseName[i % 8],
+          imgUrl: imgUrl[i % 4],
+          teacherName: ownerName[i % 10],
+          teacherAvatar: ownerUrl[i % 8],         
+          semester: '2023秋季学期',
+        });
+      }else{
+        list.push({
+          courseID: 'Course-' + i,
+          courseName: courseName[i % 8],
+          imgUrl: imgUrl[i % 4],
+          teacherName: ownerName[i % 10],
+          teacherAvatar: ownerUrl[i % 8],         
+          semester: '2023夏季学期',
+        });
+      }
+
   }
-  return list.slice();
+  return list;
 }
 
 async function postFakeCourseList(req: Request, res: Response) {
   return res.json({
     code: 0,
-    data: {
-      totalNum: 24,
-      list: fakeCourseList(),
-    },
+    data:  fakeCourseList(),
+    success: true,
   });
 }
 

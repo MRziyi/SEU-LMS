@@ -28,23 +28,81 @@ type GithubIssueItem = {
 const CourseManagement: FC<Record<string, any>> = () => {
 
 
-  const [courseList, setCourseList] = useState<CourseListData[]>([])
-  //  获取用户信息
-  const { initialState } = useModel('@@initialState');
+  // const [courseList, setCourseList] = useState<CourseListData[]>([])
+  // //  获取用户信息
+  // const { initialState } = useModel('@@initialState');
 
-  const { loading } = useRequest(
-    () => {
-      if (initialState && initialState.currentUser && initialState.currentUser.id)
-        return queryCourseList();
-      else throw 'Please Login!';
-    },
-    {
-      onSuccess: (result: any) => {
-        setCourseList(result.list);
-      },
-    },
-  );
+  // const { loading } = useRequest(
+  //   () => {
+  //     if (initialState && initialState.currentUser && initialState.currentUser.id)
+  //       return queryCourseList();
+  //     else throw 'Please Login!';
+  //   },
+  //   {
+  //     onSuccess: (result: any) => {
+  //       setCourseList(result.list);
+  //     },
+  //   },
+  // );
     //获取到课程全部列表
+
+
+
+    //尝试一种新的写法
+
+
+    // const fetchData = async (params) => {
+    //   const response = await fetch(`GET  /api/course/listAll`, { params });
+    //   const data = await response.json();
+    //   return data;
+    // };
+
+
+    // async function fetchData(params = {}) {
+    //   return request<{
+    //     data: CourseListData[];
+    //   }>('GET  /api/course/listAll', {
+    //     params,
+    //   });
+    // }
+
+    // async function fetchData(params = {}) {
+    //   return request<{
+    //     data: CourseListData[];
+    //   }>('/api/course/listAll', {
+    //     method: 'GET',
+    //     params,
+    //   });
+    // }
+
+    // 在组件中定义一个函数，并为 T 指定具体的类型
+
+
+// const fetchData = async (
+//   params: Record<string, any> & {
+//     pageSize?: number;
+//     current?: number;
+//     keyword?: string;
+//   },
+//   sort: any,
+//   filter: Record<string, any>
+// ) => {
+//   // 实际的数据获取逻辑
+//   // 这里假设使用 fetch 或其他方式获取数据
+//   const response = await fetch('/api/course/listAll', {
+//     method: 'GET',
+//     // 添加 params 中的参数等
+//   });
+//   const data = await response.json();
+
+//   return {
+//     data: data.list, // 假设数据在 list 字段中
+//     success: true,
+//     total: data.totalNum,
+//   };
+// };
+
+
 
 
 
@@ -52,49 +110,56 @@ const CourseManagement: FC<Record<string, any>> = () => {
   >
   
   <div>
-  {/* <List
-    itemLayout="horizontal"
-    bordered
-    dataSource={courseList}
-    
-    renderItem={(item, index) => (
-      <List.Item extra={
-        <Space>
-          <Button type="link">详情</Button>
-          <Button type="link">修改</Button>
-          <Button type="link">删除</Button>
-        </Space>
-      }>
-        <List.Item.Meta
-          avatar={<Avatar src={`https://xsgames.co/randomusers/avatar.php?g=pixel&key=${index}`} />}
-          title={<a>{item.courseName}</a>}
-          description={"任课教师:"+item.teacherName}
-        />
-      </List.Item>
-    )}
-  /> */}
    <ProList<CourseListData>
-    toolBarRender={() => {
-      return [
-        <AddCourse></AddCourse>
-      ];
-    }}
-    search={{}}
-    rowKey="name"
-    dataSource={courseList}
 
-    headerTitle="全部课程"
-    // request={async (params = {}) =>
+
+     request={async (params = {}) =>
+     request<{
+      data: CourseListData[];
+       }>('/api/course/listAll', {
+        method: 'GET',
+        params,
+      })
+    }
+    // request={async (
+    //   params: CourseListData & {
+    //     pageSize: number;
+    //     current: number;
+    //   },
+    //   sort,
+    //   filter,
+    // ) =>
     //   request<{
-    //     data: GithubIssueItem[];
-    //   }>('https://proapi.azurewebsites.net/github/issues', {
-    //     params,
+    //     data: CourseListData[];
+    //   }>('/api/course/listAll', {
+    //     method: 'GET',
     //   })
     // }
+
+    toolBarRender={() => {
+      return [
+        <Space>
+          <AddCourse></AddCourse>
+          <Button type='primary'>批量删除</Button>
+        </Space>
+      ];
+    }}
+    search={{
+      filterType:'query',
+      searchText:'搜索课程'
+      
+    }}
+    rowKey="name"
+    //获得数据
+    //dataSource={courseList}
+
+    headerTitle="全部课程"
     pagination={{
       pageSize: 10,
     }}
     showActions="hover"
+
+
     metas={{
       title: {
         dataIndex: 'courseName',
@@ -133,22 +198,6 @@ const CourseManagement: FC<Record<string, any>> = () => {
         valueType: 'select',
       },
 
-
-      // subTitle: {
-      //   dataIndex: 'labels',
-      //   render: (_, row) => {
-      //     return (
-      //       <Space size={0}>
-      //         {row.labels?.map((label: { name: string }) => (
-      //           <Tag color="blue" key={label.name}>
-      //             {label.name}
-      //           </Tag>
-      //         ))}
-      //       </Space>
-      //     );
-      //   },
-      //   search: false,
-      // },
       actions: {
         render: () => {
           return(
@@ -160,6 +209,8 @@ const CourseManagement: FC<Record<string, any>> = () => {
           )
         }
       },
+
+
     }}
   />
 
