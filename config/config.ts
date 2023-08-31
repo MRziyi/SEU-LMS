@@ -295,7 +295,7 @@ export default defineConfig({
   ignoreMomentLocale: true,
   // proxy: {
   //   '/api/': {
-  //     target: 'http://123.60.24.195',
+  //     target: 'http://10.203.146.156:8081',
   //     changeOrigin: true,
   //   },
   // },

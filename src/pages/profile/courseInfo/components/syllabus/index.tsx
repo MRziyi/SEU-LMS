@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import ProCard from '@ant-design/pro-card';
-import { Button, List } from 'antd';
+import { Divider, Button, List, Typography } from 'antd';
 import { useRequest } from 'umi';
 import { querySyllabus } from '../../service';
 import styles from './index.less';
@@ -9,6 +9,14 @@ import { SyllabusData } from '@/pages/profile/data';
 interface CourseIDParam {
   courseID: string;
 }
+
+const data = [
+  'Racing car sprays burning fuel into crowd.',
+  'Japanese princess to wed commoner.',
+  'Australian walks 100km after outback crash.',
+  'Man charged over missing wedding girl.',
+  'Los Angeles battles huge wildfires.',
+];
 
 const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
   const [pageSize, setPageSize] = useState<number>(6);
@@ -57,7 +65,14 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
     showTotal: showTotal,
   };
 
+
+
+
+
+
   return (
+    
+
     <List<SyllabusData>
       className={styles.coverCardList}
       rowKey="syllabusID"
@@ -88,11 +103,20 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
             <ProCard title="课程视频" type="inner" bordered>
               课程视频按钮
             </ProCard>
-            <ProCard title="课件资料" type="inner" bordered>
-              TODO课件资料文件显示与下载
+            <ProCard title="课件资料" type="inner">
+              {/* <a href={syllabus.homework[Number(syllabus.syllabusID)]}>TODO课件资料文件显示与下载</a> */}
+              <List
+              size="small"
+              dataSource={syllabus.materials}
+              renderItem={(item) => <List.Item><a href={item}>{item}</a></List.Item>}
+              />             
             </ProCard>
-            <ProCard title="作业" type="inner" bordered>
-              TODO作业提交与反馈
+            <ProCard title="作业" type="inner">
+            <List
+              size="small"
+              dataSource={syllabus.homework}
+              renderItem={(item) => <List.Item><a href={item}>{item}</a></List.Item>}
+              />          
             </ProCard>
           </ProCard>
         </List.Item>
