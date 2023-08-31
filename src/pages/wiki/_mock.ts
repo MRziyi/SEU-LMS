@@ -1,58 +1,50 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import type { Request, Response } from 'express';
 
-async function postWiki(req: Request, res: Response) {
-  //const { currentPage, pageSize } = req.body;
+const answer = [
+  '那是一种内在的东西， 他们到达不了，也无法触及的',
+  '希望是一个好东西，也许是最好的，好东西是不会消亡的',
+  '生命就像一盒巧克力，结果往往出人意料',
+  '城镇中有那么多的酒馆，她却偏偏走进了我的酒馆',
+  '那时候我只会想自己想要什么，从不想自己拥有什么',
+];
+const question = [
+  '什么是React',
+  'React的特点是什么',
+  '什么是JSX',
+  'React中如何处理状态',
+  '什么是React Router',
+  '如何在React中发送HTTP请求',
+  '什么是React生命周期',
+  'React中如何处理表单',
+  'React中如何进行状态提升',
+  'React如何创建组件',
+];
+
+function fakeWikiList(currentPage: number, pageSize: number) {
+  const list = [];
+  for (let i = 0; i < 24; i += 1) {
+    list.push({
+      wikiID: 'Wiki - ' + i,
+      question: question[i % 10],
+      answer: i > 2 ? answer[i % 5] : '待管理员解答',
+    });
+  }
+  const startIndex = (currentPage - 1) * pageSize;
+  console.log('Reply: ' + startIndex + ' - ' + (startIndex + pageSize));
+  return list.slice(startIndex, startIndex + pageSize);
+}
+
+async function postFakeWikiList(req: Request, res: Response) {
+  const { currentPage, pageSize } = req.body;
   return res.json({
     code: 0,
     data: {
-      totalNum: 10,
-      list:[
-          {
-            question: "什么是React?",
-            answer: "React是一个用于构建用户界面的JavaScript库。"
-          },
-          {
-            question: "React的特点是什么?",
-            answer: "React具有虚拟DOM、组件化、单向数据流等特点。"
-          },
-          {
-            question: "React如何创建组件?",
-            answer: "可以使用函数组件或类组件来创建React组件。"
-          },
-          {
-            question: "什么是JSX?",
-            answer: "JSX是一种JavaScript的语法扩展，用于在React中描述用户界面的结构。"
-          },
-          {
-            question: "React中如何处理状态?",
-            answer: "可以使用useState钩子（在函数组件中）或setState方法（在类组件中）来处理状态。"
-          },
-          {
-            question: "什么是React Router?",
-            answer: "React Router是一个用于处理路由的库，用于构建单页面应用。"
-          },
-          {
-            question: "如何在React中发送HTTP请求?",
-            answer: "可以使用fetch API或Axios等库来发送HTTP请求。"
-          },
-          {
-            question: "什么是React生命周期?",
-            answer: "React生命周期是组件在不同阶段执行的一系列方法，如componentDidMount、componentDidUpdate等。"
-          },
-          {
-            question: "React中如何处理表单?",
-            answer: "可以使用controlled组件或者React Hook Form等库来处理表单。"
-          },
-          {
-            question: "React中如何进行状态提升?",
-            answer: "状态提升是将组件的状态移动到它们的共同父组件，以便共享数据。"
-          }
-      ]
+      totalNum: 30,
+      list: fakeWikiList(currentPage, pageSize),
     },
   });
 }
-
 export default {
-  'POST  /api/wiki': postWiki,
+  'POST  /api/wiki': postFakeWikiList,
 };

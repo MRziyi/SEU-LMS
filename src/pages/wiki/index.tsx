@@ -1,124 +1,119 @@
-import {  Collapse, Input, List, theme  } from 'antd';
-import { useModel, useRequest } from 'umi';
-import { useState, type FC } from 'react';
-import { PageContainer } from '@ant-design/pro-layout';
-import {  queryWiki } from './service';
-import { WikiListData } from './data';
-import { CaretRightOutlined } from '@ant-design/icons';
-import React from 'react';
-
-
-
-
-
+import { Button, Space, Tag } from 'antd';
+import { useState, type FC, ReactText, useEffect } from 'react';
+import { queryWiki } from './service';
+import { WikiData } from './data';
+import { QuestionCircleOutlined } from '@ant-design/icons';
+import { ProList } from '@ant-design/pro-components';
 
 const Wiki: FC<Record<string, any>> = () => {
-  const [pageSize, setPageSize] = useState<number>(6);
+  const [pageSize, setPageSize] = useState<number>(10);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [listData, setListData] = useState<WikiListData[]>([]);
+  const [listData, setListData] = useState<WikiData[]>([]);
   const [totalNum, setTotalNum] = useState<number>(0);
   const [loadingForPagigation, setLoading] = useState<boolean>(false);
 
-
-
-  
-  //  获取用户信息
-  const { initialState } = useModel('@@initialState');
-
-  // 获取列表数据
-  const { loading } = useRequest(
-    () => {
-      if (initialState && initialState.currentUser && initialState.currentUser.id)
-        return queryWiki(1, 6);
-      else throw 'Please Login!';
-    },
-    {
-      onSuccess: (result: any) => {
-        setTotalNum(result.totalNum);
-        setListData(result.list);
-      },
-    },
-  );
+  useEffect(() => {
+    changePage(1, pageSize);
+  }, []);
 
   async function changePage(_page: number, _pageSize: number) {
     setLoading(true);
-    if (initialState && initialState.currentUser)
-      try {
-        const result = await queryWiki( _page, _pageSize);
-        if (result.data) {
-          setTotalNum(result.data.totalNum);
-          setListData(result.data.list);
-          setCurrentPage(_page);
-          setPageSize(_pageSize);
-          setLoading(false);
-        } else throw 'Please Login!';
-      } catch {}
+    try {
+      const result = await queryWiki(_page, _pageSize);
+      if (result.data) {
+        setTotalNum(result.data.totalNum);
+        setListData(result.data.list);
+        setCurrentPage(_page);
+        setPageSize(_pageSize);
+        setLoading(false);
+      } else throw 'Please Login!';
+    } catch {}
   }
 
   function showTotal(total: number, range: [number, number]) {
     return `${range[0]}-${range[1]} 共 ${total} 条`;
   }
+
+  const [expandedRowKeys, setExpandedRowKeys] = useState<readonly ReactText[]>([]);
+
   const paginationProps = {
     onChange: changePage,
     showQuickJumper: true,
     showSizeChanger: true,
-    pageSizeOptions: [4, 6, 8, 12],
-    currentPage: currentPage,
+    pageSizeOptions: [10, 15, 20],
+    current: currentPage,
     pageSize: pageSize,
     total: totalNum,
     showTotal: showTotal,
   };
 
-  // const { token } = theme.useToken();
-  // const panelStyle: React.CSSProperties = {
-  //   marginBottom: 24,
-  //   background: token.colorFillAlter,
-  //   borderRadius: token.borderRadiusLG,
-  //   border: 'none',
-  // };
-
   return (
-    <PageContainer 
-      header={{
-        title: '使用帮助',
-        ghost: true,
-        extra: [
-          <Input.Search
-            placeholder="请输入问题"
-            enterButton="搜索"
-            key="2"
-            size="large"
-            // onSearch={handleFormSubmit}}
-          />,
-        ],
+    <ProList<WikiData>
+      loading={loadingForPagigation}
+      dataSource={listData}
+      rowKey="wikiID"
+      headerTitle="使用帮助"
+      pagination={paginationProps}
+      showActions="hover"
+      toolBarRender={() => {
+        return [
+          <Button key="3" type="primary">
+            创建提问
+          </Button>,
+        ];
       }}
-    >
-    <List
-        loading={loading && loadingForPagigation}
-        itemLayout="horizontal"
-        dataSource={listData}
-        pagination={paginationProps}
-        renderItem={(item, index) => (
-          <List.Item>
-            <Collapse
-              bordered={false}
-              defaultActiveKey={['0']}
-              expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
-              style={{width:'100%'}}
-              //style={{ background: token.colorBgContainer }}
-            >
-              <Collapse.Panel 
-              key="1" 
-              header={item.question} 
-             // style={panelStyle}
-              >
-                <p>{item.answer}</p>
-              </Collapse.Panel>
-            </Collapse>
-          </List.Item>
-        )}
-      />
-    </PageContainer>
+      metas={{
+        avatar: {
+          render: () => {
+            return <QuestionCircleOutlined />;
+          },
+        },
+        title: {
+          dataIndex: 'question',
+          search: false,
+        },
+        description: {
+          dataIndex: 'answer',
+          search: false,
+        },
+        content: {
+          render: () => (
+            <div
+              style={{
+                minWidth: 200,
+                flex: 1,
+                display: 'flex',
+                justifyContent: 'flex-end',
+              }}
+            ></div>
+          ),
+        },
+        subTitle: {
+          dataIndex: 'fromUserAccess',
+          render: (_, row) => {
+            return (
+              <Space size={0}>
+                {row.answer !== '待管理员解答' ? (
+                  <Tag color="green" key="1">
+                    已解答
+                  </Tag>
+                ) : (
+                  <Tag color="red" key="2">
+                    待解答
+                  </Tag>
+                )}
+              </Space>
+            );
+          },
+          search: false,
+        },
+      }}
+      expandable={{
+        expandedRowKeys,
+        defaultExpandAllRows: false,
+        onExpandedRowsChange: setExpandedRowKeys,
+      }}
+    />
   );
 };
 

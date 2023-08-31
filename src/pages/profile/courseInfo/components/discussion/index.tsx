@@ -49,7 +49,6 @@ const Discussion: React.FC<CourseIDParam> = ({ courseID }) => {
         message.success('回复成功！');
       }
     } catch {}
-
     setLoadingForSendingReply(false);
   }
 
@@ -61,7 +60,7 @@ const Discussion: React.FC<CourseIDParam> = ({ courseID }) => {
     showQuickJumper: true,
     showSizeChanger: true,
     pageSizeOptions: [6, 12, 18, 24],
-    currentPage: currentPage,
+    current: currentPage,
     pageSize: pageSize,
     total: totalDiscussionNum,
     showTotal: showPageFooter,

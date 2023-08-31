@@ -15,3 +15,17 @@ export async function queryCourseList(
     },
   });
 }
+export async function searchMyCourse(
+  keywordParam: string,
+  currentPageParam: number,
+  pageSizeParam: number,
+): Promise<{ data: { totalNum: number; list: CourseListData[] } }> {
+  return request('/api/course/search', {
+    method: 'POST',
+    data: {
+      keyword: keywordParam,
+      currentPage: currentPageParam,
+      pageSize: pageSizeParam,
+    },
+  });
+}

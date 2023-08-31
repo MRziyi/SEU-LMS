@@ -71,3 +71,12 @@ export async function sendReply(
     },
   });
 }
+
+export async function sendCheckIn(syllabusIDParam: string): Promise<{ code: number }> {
+  return request('/api/syllabus/check-in', {
+    method: 'POST',
+    data: {
+      syllabusID: syllabusIDParam,
+    },
+  });
+}

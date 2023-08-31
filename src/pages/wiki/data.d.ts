@@ -1,4 +1,5 @@
-export type WikiListData={
-    question:string;
-    answer:string;
-}
+export type WikiData = {
+  wikiID: string;
+  question: string;
+  answer: string;
+};

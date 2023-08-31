@@ -62,10 +62,6 @@ export default defineConfig({
       hideInMenu: true,
       routes: [
         {
-          path: '/profile',
-          redirect: '/myCourses',
-        },
-        {
           path: '/profile/course-info/:courseID',
           component: './profile/courseInfo',
           name: '课程详情',
@@ -196,85 +192,20 @@ export default defineConfig({
       ],
     },
     {
-      path: '/list',
-      icon: 'table',
-      name: '列表',
-      hideInMenu: true,
-      routes: [
-        {
-          path: '/list/search',
-          name: '列表搜索',
-          component: './list/search',
-          routes: [
-            {
-              path: '/list/search',
-              redirect: '/list/search/articles',
-            },
-            {
-              name: '文章',
-              icon: 'smile',
-              path: '/list/search/articles',
-              component: './list/search/articles',
-            },
-            {
-              name: '应用',
-              icon: 'smile',
-              path: '/list/search/applications',
-
-              component: './list/search/applications',
-            },
-          ],
-        },
-        {
-          path: '/list',
-          redirect: '/list/table-list',
-        },
-        {
-          name: '表格',
-          icon: 'smile',
-          path: '/list/table-list',
-          component: './list/table-list',
-        },
-        {
-          name: '基本列表',
-          icon: 'smile',
-          path: '/list/basic-list',
-          component: './list/basic-list',
-        },
-        {
-          name: '卡片列表',
-          icon: 'smile',
-          path: '/list/card-list',
-          component: './list/card-list',
-        },
-      ],
-    },
-    {
-      name: '个人',
-      icon: 'user',
-      path: '/account',
-      routes: [
-        {
-          path: '/account',
-          redirect: '/account/center',
-        },
-        {
-          name: '个人中心',
-          icon: 'smile',
-          path: '/account/center',
-          component: './account/center',
-        },
-        {
-          name: '个人设置',
-          icon: 'smile',
-          path: '/account/settings',
-          component: './account/settings',
-        },
-      ],
+      name: '账户设置',
+      icon: 'tool',
+      path: '/account-settings',
+      component: './accountSettings',
     },
     {
       path: '/',
       redirect: '/myCourses',
+      access: 'student' || 'teacher',
+    },
+    {
+      path: '/',
+      redirect: '/data-visualize',
+      access: 'student' || 'teacher',
     },
     {
       component: '404',

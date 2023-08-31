@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import ProCard from '@ant-design/pro-card';
-import { Divider, Button, List, Typography } from 'antd';
+import { Divider, Button, List, Typography, message } from 'antd';
 import { useRequest } from 'umi';
-import { querySyllabus } from '../../service';
+import { querySyllabus, sendCheckIn } from '../../service';
 import styles from './index.less';
 import { SyllabusData } from '@/pages/profile/data';
 
@@ -23,7 +23,8 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [listData, setListData] = useState<SyllabusData[]>([]);
   const [totalNum, setTotalNum] = useState<number>(0);
-  const [loadingForPagigation, setLoading] = useState<boolean>(false);
+  const [loadingForPagigation, setLoadingForPagigation] = useState<boolean>(false);
+  const [loadingForCheckIn, setLoadingForCheckIn] = useState<string>('');
   // 获取列表数据
   const { loading } = useRequest(
     () => {
@@ -38,7 +39,7 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
   );
 
   async function changePage(_page: number, _pageSize: number) {
-    setLoading(true);
+    setLoadingForPagigation(true);
     try {
       const result = await querySyllabus(courseID, _page, _pageSize);
       if (result.data) {
@@ -46,9 +47,20 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
         setListData(result.data.list);
         setCurrentPage(_page);
         setPageSize(_pageSize);
-        setLoading(false);
       }
     } catch {}
+    setLoadingForPagigation(false);
+  }
+
+  async function checkIn(syllabusID: string) {
+    setLoadingForCheckIn(syllabusID);
+    try {
+      let result = await sendCheckIn(syllabusID);
+      if (result.code === 0) {
+        message.success('签到成功');
+      }
+    } catch {}
+    setLoadingForCheckIn('');
   }
 
   function showTotal(total: number, range: [number, number]) {
@@ -59,7 +71,7 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
     showQuickJumper: true,
     showSizeChanger: true,
     pageSizeOptions: [6, 12, 18, 24],
-    currentPage: currentPage,
+    current: currentPage,
     pageSize: pageSize,
     total: totalNum,
     showTotal: showTotal,
@@ -92,8 +104,9 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
               <Button
                 disabled={syllabus.isCheckedIn}
                 type="primary"
-                onClick={(e) => {
-                  e.stopPropagation();
+                loading={loadingForCheckIn === syllabus.syllabusID}
+                onClick={() => {
+                  checkIn(syllabus.syllabusID);
                 }}
               >
                 签到

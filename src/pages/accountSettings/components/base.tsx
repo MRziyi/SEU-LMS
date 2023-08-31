@@ -10,7 +10,8 @@ const BaseView: React.FC = () => {
   const [form] = Form.useForm<{
     name: string;
     phone: string;
-    imgUrl: string;
+    avatar: string;
+    email: string;
   }>();
 
   const AvatarView = ({ avatar }: { avatar: string }) => (
@@ -33,7 +34,7 @@ const BaseView: React.FC = () => {
             if (response.ok) {
               response.json().then((res: any) => {
                 options.onSuccess({ url: res.data }, new Response());
-                form.setFieldsValue({ imgUrl: res.data });
+                form.setFieldsValue({ avatar: res.data });
               });
             } else {
               options.onError(new Error('上传失败'));
@@ -72,7 +73,8 @@ const BaseView: React.FC = () => {
             <ProForm<{
               name: string;
               phone: string;
-              imgUrl: string;
+              avatar: string;
+              email: string;
             }>
               form={form}
               layout="vertical"
@@ -108,7 +110,6 @@ const BaseView: React.FC = () => {
                 phone: initialState?.currentUser?.phone,
                 imgUrl: initialState?.currentUser?.imgUrl,
               }}
-              hideRequiredMark
             >
               <ProFormText
                 width="md"
@@ -128,6 +129,16 @@ const BaseView: React.FC = () => {
                   {
                     required: true,
                     message: '请输入您的电话!',
+                  },
+                ]}
+              ></ProFormText>
+              <ProFormText
+                name="email"
+                label="电子邮箱"
+                rules={[
+                  {
+                    required: true,
+                    message: '请输入您的电子邮箱!',
                   },
                 ]}
               ></ProFormText>

@@ -1,8 +1,8 @@
-export type MessageListData={
-    formUserID:string;
-    toUserID:string;
-    id:string;
-    content:string;
-    isRead:boolean;
-    time:string;
-}
+export type MessageData = {
+  fromUserName: string;
+  fromUserAvatar: string;
+  fromUserAccess: string;
+  messageID: string;
+  content: string;
+  time: string;
+};
