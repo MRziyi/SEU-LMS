@@ -1,5 +1,5 @@
 import { request } from 'umi';
-import { CourseDiscription, TeacherChartData } from './data';
+import { CourseDiscription, GeneralOverviewData, TeacherChartData } from './data';
 
 export async function queryTeacherChart(
   courseIDParam: string,
@@ -20,5 +20,12 @@ export async function queryTeacherCourses(
     data: {
       teacherID: teacherIDParam,
     },
+  });
+}
+
+export async function queryGeneralOverview(
+): Promise<{ data: { chartData: GeneralOverviewData } }>{
+  return request('/api/data-visualize/general-overview', {
+    method: 'POST',
   });
 }
