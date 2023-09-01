@@ -50,26 +50,25 @@ const ownerName = [
 function fakeCourseList() {
   const list = [];
   for (let i = 0; i < 24; i += 1) {
-      if(i%2){
-        list.push({
-          courseID: 'Course-' + i,
-          courseName: courseName[i % 8],
-          imgUrl: imgUrl[i % 4],
-          teacherName: ownerName[i % 10],
-          teacherAvatar: ownerUrl[i % 8],         
-          semester: '2023秋季学期',
-        });
-      }else{
-        list.push({
-          courseID: 'Course-' + i,
-          courseName: courseName[i % 8],
-          imgUrl: imgUrl[i % 4],
-          teacherName: ownerName[i % 10],
-          teacherAvatar: ownerUrl[i % 8],         
-          semester: '2023夏季学期',
-        });
-      }
-
+    if (i % 2) {
+      list.push({
+        courseID: 'Course-' + i,
+        courseName: courseName[i % 8],
+        imgUrl: imgUrl[i % 4],
+        teacherName: ownerName[i % 10],
+        teacherAvatar: ownerUrl[i % 8],
+        semester: '2023秋季学期',
+      });
+    } else {
+      list.push({
+        courseID: 'Course-' + i,
+        courseName: courseName[i % 8],
+        imgUrl: imgUrl[i % 4],
+        teacherName: ownerName[i % 10],
+        teacherAvatar: ownerUrl[i % 8],
+        semester: '2023夏季学期',
+      });
+    }
   }
   return list;
 }
@@ -79,48 +78,46 @@ async function postFakeCourseList(req: Request, res: Response) {
   const paramName = req.query.courseName;
   const list = [];
   for (let i = 0; i < 24; i += 1) {
-      if(i%2){
-        list.push({
-          courseID: 'Course-' + i,
-          courseName: courseName[i % 8],
-          imgUrl: imgUrl[i % 4],
-          teacherName: ownerName[i % 10],
-          teacherAvatar: ownerUrl[i % 8],         
-          semester: '2023秋季学期',
-        });
-      }else{
-        list.push({
-          courseID: 'Course-' + i,
-          courseName: courseName[i % 8],
-          imgUrl: imgUrl[i % 4],
-          teacherName: ownerName[i % 10],
-          teacherAvatar: ownerUrl[i % 8],         
-          semester: '2023夏季学期',
-        });
-      }
-  //const filteredItems = list.filter(item => item.courseName.includes(paramName));
+    if (i % 2) {
+      list.push({
+        courseID: 'Course-' + i,
+        courseName: courseName[i % 8],
+        imgUrl: imgUrl[i % 4],
+        teacherName: ownerName[i % 10],
+        teacherAvatar: ownerUrl[i % 8],
+        semester: '2023秋季学期',
+      });
+    } else {
+      list.push({
+        courseID: 'Course-' + i,
+        courseName: courseName[i % 8],
+        imgUrl: imgUrl[i % 4],
+        teacherName: ownerName[i % 10],
+        teacherAvatar: ownerUrl[i % 8],
+        semester: '2023夏季学期',
+      });
+    }
+    //const filteredItems = list.filter(item => item.courseName.includes(paramName));
   }
 
   let filteredItems = list; // 初始化为整个列表
 
   // 如果 paramName 不为空，则进行筛选
   if (paramName) {
-    filteredItems = list.filter(item => item.courseName.includes(paramName));
+    filteredItems = list.filter((item) => item.courseName.includes(paramName));
   }
 
   return res.json({
     code: 0,
-    data:  filteredItems,
-
+    data: filteredItems,
   });
 }
-
 
 async function deleteItem(req: Request, res: Response) {
   const queryParams = req.query;
   return res.json({
     code: 0,
-  })
+  });
 }
 
 export default {

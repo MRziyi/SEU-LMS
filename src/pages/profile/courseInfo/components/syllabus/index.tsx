@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import ProCard from '@ant-design/pro-card';
-import { Button, List, message } from 'antd';
+import { Divider, Button, List, Typography, message } from 'antd';
 import { useRequest } from 'umi';
 import { querySyllabus, sendCheckIn } from '../../service';
 import styles from './index.less';
@@ -9,6 +9,14 @@ import { SyllabusData } from '@/pages/profile/data';
 interface CourseIDParam {
   courseID: string;
 }
+
+const data = [
+  'Racing car sprays burning fuel into crowd.',
+  'Japanese princess to wed commoner.',
+  'Australian walks 100km after outback crash.',
+  'Man charged over missing wedding girl.',
+  'Los Angeles battles huge wildfires.',
+];
 
 const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
   const [pageSize, setPageSize] = useState<number>(6);
@@ -69,7 +77,14 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
     showTotal: showTotal,
   };
 
+
+
+
+
+
   return (
+    
+
     <List<SyllabusData>
       className={styles.coverCardList}
       rowKey="syllabusID"
