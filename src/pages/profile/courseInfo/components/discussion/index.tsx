@@ -72,7 +72,7 @@ const Discussion: React.FC<CourseIDParam> = ({ courseID }) => {
         className={styles.coverCardList}
         rowKey="discussionID"
         loading={loadingForPagigation}
-        grid={{ gutter: 24, xxl: 2, xl: 2, lg: 1, md: 1, sm: 1, xs: 1 }}
+        grid={{ gutter: 24, xxl: 2, xl: 1, lg: 1, md: 1, sm: 1, xs: 1 }}
         pagination={paginationProps}
         dataSource={discussionList}
         renderItem={(discussion) => (
@@ -90,6 +90,7 @@ const Discussion: React.FC<CourseIDParam> = ({ courseID }) => {
                 collapsible
                 defaultCollapsed
                 onCollapse={(collapse) => console.log(collapse)}
+                collapsed={false}
               >
                 <ReplyList
                   key={discussion.discussionID}

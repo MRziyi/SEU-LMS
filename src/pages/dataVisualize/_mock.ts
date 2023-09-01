@@ -68,20 +68,22 @@ function sectionSituationList() {
 async function postFakeCourseDiscription(req: Request, res: Response) {
   return res.json({
     code: 0,
-    data: [
-      {
-        courseName: '离散数学',
-        courseID: 'Course - 1',
-      },
-      {
-        courseName: '程序设计',
-        courseID: 'Course - 2',
-      },
-      {
-        courseName: '编译原理',
-        courseID: 'Course - 3',
-      },
-    ],
+    data: {
+      tabList: [
+        {
+          courseName: '离散数学',
+          courseID: 'Course - 1',
+        },
+        {
+          courseName: '程序设计',
+          courseID: 'Course - 2',
+        },
+        {
+          courseName: '编译原理',
+          courseID: 'Course - 3',
+        },
+      ],
+    },
   });
 }
 
@@ -166,12 +168,14 @@ async function postTeacherChart(req: Request, res: Response) {
   return res.json({
     code: 0,
     data: {
-      dountChartData: postDonutChartData(),
-      pieChartData: postPieChartData(),
-      gaugeChartData: postGaugeChartData(),
-      liquidChartData: postLiquidChartData(),
-      lineChartData: postLineChartData(),
-      groupedColumnChartData: postGroupedColumnChartData(),
+      chartData: {
+        dountChartData: postDonutChartData(),
+        pieChartData: postPieChartData(),
+        gaugeChartData: postGaugeChartData(),
+        liquidChartData: postLiquidChartData(),
+        lineChartData: postLineChartData(),
+        groupedColumnChartData: postGroupedColumnChartData(),
+      },
     },
   });
 }

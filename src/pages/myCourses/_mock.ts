@@ -99,6 +99,7 @@ async function postFakeSearchedCourseList(req: Request, res: Response) {
 }
 
 export default {
-  'POST  /api/course/list': postFakeCourseList,
+  'POST  /api/course/student-list': postFakeCourseList,
+  'POST  /api/course/teacher-list': postFakeCourseList,
   'POST  /api/course/search': postFakeSearchedCourseList,
 };

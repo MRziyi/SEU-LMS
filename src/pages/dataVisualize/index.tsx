@@ -5,15 +5,15 @@ import { useModel } from 'umi';
 import { message } from 'antd';
 import { queryTeacherCourses } from './service';
 import ChartForTeacher from './chartForTeacher';
-import ChartForAdmin from './chartForAdmin/generalOverview';
 import GeneralOverview from './chartForAdmin/generalOverview';
 import CourseStatistics from './chartForAdmin/teacherStatistics';
 import TeacherStatistics from './chartForAdmin/courseStatistics';
 
 const DataVisualize: React.FC<RouteChildrenProps> = () => {
   useEffect(() => {
-    if (initialState?.currentUser?.access == 'teacher') getTeacherTab();
-    else {
+    if (initialState?.currentUser?.access == 'teacher') {
+      getTeacherTab();
+    } else {
       getAdminTab();
     }
   }, []);
@@ -26,7 +26,9 @@ const DataVisualize: React.FC<RouteChildrenProps> = () => {
     setLoadingForTab(true);
     try {
       if (initialState?.currentUser?.id) {
+        console.log('In Get Teacher Tab');
         const result = await queryTeacherCourses(initialState.currentUser.id);
+        console.log(initialState?.currentUser);
         if (result.data.tabList) {
           message.success('课程数据拉取成功');
           const newTabList = result.data.tabList.map((element) => ({
