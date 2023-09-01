@@ -3,7 +3,7 @@ import { CourseDiscription, TeacherChartData } from './data';
 
 export async function queryTeacherChart(
   courseIDParam: string,
-): Promise<{ data: TeacherChartData }> {
+): Promise<{ data: { chartData: TeacherChartData } }> {
   return request('/api/data-visualize/teacher-chart', {
     method: 'POST',
     data: {
@@ -13,12 +13,12 @@ export async function queryTeacherChart(
 }
 
 export async function queryTeacherCourses(
-  userIDParam: string,
-): Promise<{ data: CourseDiscription[] }> {
+  teacherIDParam: string,
+): Promise<{ data: { tabList: CourseDiscription[] } }> {
   return request('/api/course/list-for-teacher', {
     method: 'POST',
     data: {
-      userID: userIDParam,
+      teacherID: teacherIDParam,
     },
   });
 }

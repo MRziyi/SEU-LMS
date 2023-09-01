@@ -46,5 +46,5 @@ async function postFakeWikiList(req: Request, res: Response) {
   });
 }
 export default {
-  'POST  /api/wiki': postFakeWikiList,
+  'POST  /api/wiki/list': postFakeWikiList,
 };

@@ -27,9 +27,9 @@ const ChartForTeacher: React.FC<ChartForTeacherInterface> = ({ courseID, loading
     setLoding(true);
     try {
       const result = await queryTeacherChart(courseID);
-      if (result.data) {
+      if (result.data.chartData) {
         message.success('表单数据拉取成功');
-        setTeacherChartData(result.data);
+        setTeacherChartData(result.data.chartData);
       }
     } catch {}
     setLoding(false);
