@@ -1,29 +1,61 @@
-export type TeachingSituation = {
-  courseName: string;
-  teacherName: string[];
-  averageScore: number[]; //某个课程的某个老师的学生作业均分
-  attendance: number[];
+import { DataItem } from '@antv/g2plot/esm/interface/config';
+
+export type DonutChartData = {
+  name: string;
+  angleField: string;
+  colorField: string;
+  dataSource: DataItem[];
+  contentName: string;
+  contentValue: string;
 };
 
-export type CourseSituation = {
-  courseName: string;
-  averageScore: number;
+export type PieChartData = {
+  name: string;
+  angleField: string;
+  colorField: string;
+  dataSource: DataItem[];
 };
 
-export type SectionSituation = {
-  courseName: string;
-  lessonTitle: string[];
-  averageScore: number[]; //某个课程的某个章节的学生作业均分
-  attendance: number[];
+export type GaugeChartData = {
+  name: string;
+  value: number;
+  statisticText: string;
 };
 
-export type TeacherChartData = {
-  teachingSituationData: TeachingSituation[];
-  courseSituation: CourseSituation[];
-  sectionSituation: SectionSituation[];
+export type LiquidChartData = {
+  name: string;
+  value: number;
+};
+
+export type LineChartData = {
+  name: string;
+  dataSource: DataItem[];
+  xField: string;
+  yField: string;
+  xAxis: string;
+  yAxis: string;
+};
+
+export type GroupedColumnChartData = {
+  name: string;
+  dataSource: DataItem[];
+  xField: string;
+  yField: string;
+  xAlias: string;
+  yAlias: string;
+  groupField: string;
 };
 
 export type CourseDiscription = {
   courseID: string;
   courseName: string;
+};
+
+export type TeacherChartData = {
+  dountChartData: DonutChartData;
+  pieChartData: PieChartData;
+  gaugeChartData: GaugeChartData;
+  liquidChartData: LiquidChartData;
+  lineChartData: LineChartData;
+  groupedColumnChartData: GroupedColumnChartData;
 };

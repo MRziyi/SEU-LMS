@@ -85,13 +85,93 @@ async function postFakeCourseDiscription(req: Request, res: Response) {
   });
 }
 
+function postDonutChartData() {
+  return {
+    name: '上节课到课率',
+    angleField: 'value',
+    colorField: 'type',
+    dataSource: [
+      { type: '已签到', value: 45 },
+      { type: '未签到', value: 8 },
+    ],
+    contentName: '到课率',
+    contentValue: '84.9%',
+  };
+}
+
+function postPieChartData() {
+  return {
+    name: '上节课作业情况',
+    angleField: 'value',
+    colorField: 'type',
+    dataSource: [
+      { type: '已批改', value: 32 },
+      { type: '待批改', value: 18 },
+      { type: '未提交', value: 3 },
+    ],
+  };
+}
+
+function postGaugeChartData() {
+  return {
+    name: '上次作业均分',
+    value: 85,
+    statisticText: '85_良',
+  };
+}
+
+function postLiquidChartData() {
+  return {
+    name: '课程进度',
+    value: 56.4,
+  };
+}
+
+function postLineChartData() {
+  return {
+    name: '历史到课率',
+    dataSource: [
+      { chapter: 'Chapter 1', attendanceRate: 80 },
+      { chapter: 'Chapter 2', attendanceRate: 75 },
+      { chapter: 'Chapter 3', attendanceRate: 90 },
+      { chapter: 'Chapter 4', attendanceRate: 85 },
+    ],
+    xField: 'chapter',
+    yField: 'attendanceRate',
+    xAxis: '章节名称',
+    yAxis: '到课率(%)',
+  };
+}
+
+function postGroupedColumnChartData() {
+  return {
+    name: '历史作业均分',
+    dataSource: [
+      { chapter: 'Chapter 1', task: 'Task 1', score: 85 },
+      { chapter: 'Chapter 1', task: 'Task 2', score: 92 },
+      { chapter: 'Chapter 2', task: 'Task 1', score: 78 },
+      { chapter: 'Chapter 3', task: 'Task 1', score: 90 },
+      { chapter: 'Chapter 3', task: 'Task 2', score: 88 },
+      // 可以继续添加更多章节、任务和分数数据
+    ],
+    xField: 'chapter',
+    yField: 'score',
+    xAlias: 'Chapter',
+    yAlias: 'Average Score',
+    groupField: 'task',
+  };
+}
+
 async function postTeacherChart(req: Request, res: Response) {
   return res.json({
     code: 0,
     data: {
-      teachingSituationData: teachingSituationList(),
-      courseSituation: courseSituationList(),
-      sectionSituation: sectionSituationList(),
+      dountChartData: postDonutChartData(),
+      pieChartData: postPieChartData(),
+      gaugeChartData: postGaugeChartData(),
+      liquidChartData: postLiquidChartData(),
+      lineChartData: postLineChartData(),
+      groupedColumnChartData: postGroupedColumnChartData(),
     },
   });
 }
