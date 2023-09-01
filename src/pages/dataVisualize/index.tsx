@@ -22,14 +22,14 @@ const DataVisualize: React.FC<RouteChildrenProps> = () => {
     try {
       if (initialState?.currentUser?.id) {
         const result = await queryTeacherCourses(initialState.currentUser.id);
-        if (result.data) {
+        if (result.data.tabList) {
           message.success('课程数据拉取成功');
-          const newTabList = result.data.map((element) => ({
+          const newTabList = result.data.tabList.map((element) => ({
             key: element.courseID,
             tab: element.courseName,
           }));
           setTabList(newTabList);
-          setTabKey(result.data[0].courseID);
+          setTabKey(result.data.tabList[0].courseID);
         }
       }
     } catch {}

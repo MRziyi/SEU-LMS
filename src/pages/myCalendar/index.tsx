@@ -6,7 +6,6 @@ import React, { useState } from 'react';
 import { useRequest, useModel } from 'umi';
 import { queryEventList } from './service';
 import { EventList } from './data';
-import { PageContainer } from '@ant-design/pro-layout';
 
 const MyCalendar: React.FC = () => {
   const [eventListData, setEventListData] = useState<EventList[]>([]);
@@ -20,8 +19,8 @@ const MyCalendar: React.FC = () => {
       else throw 'Please Login!';
     },
     {
-      onSuccess: (result: any) => {
-        setEventListData(result);
+      onSuccess: (result) => {
+        setEventListData(result.eventData);
       },
     },
   );
@@ -36,8 +35,8 @@ const MyCalendar: React.FC = () => {
 
   //类型转化
   const eventType = (type: string) => {
-    if (type === 'Examination') return 'error';
-    else if (type === 'Assignment') return 'warning';
+    if (type === 'exam') return 'error';
+    else if (type === 'assignment') return 'warning';
     else return type;
   };
 

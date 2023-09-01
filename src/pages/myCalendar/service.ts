@@ -1,15 +1,13 @@
 import { request } from 'umi';
 import { EventList } from './data';
 
-export async function fakeSubmitForm(params: any) {
-  return request('/api/basicForm', {
+export async function queryEventList(
+  userIDParam: string,
+): Promise<{ data: { eventData: EventList[] } }> {
+  return request('/api/calendar/list-events', {
     method: 'POST',
-    data: params,
-  });
-}
-
-export async function queryEventList(userID:string) :Promise<{data:EventList[]}>{
-  return request('/api/myCalendar', {
-    method: 'POST',
+    data: {
+      userID: userIDParam,
+    },
   });
 }
