@@ -46,18 +46,23 @@ export type GroupedColumnChartData = {
   groupField: string;
 };
 
-export type ColumnChartData={
+export type ColumnChartData = {
   name: string;
   dataSource: DataItem[];
   xField: string;
   yField: string;
   xAlias: string;
   yAlias: string;
-}
+};
 
 export type CourseDiscription = {
   courseID: string;
   courseName: string;
+};
+
+export type TeacherDiscription = {
+  teacherID: string;
+  teacherName: string;
 };
 
 export type TeacherChartData = {
@@ -69,10 +74,10 @@ export type TeacherChartData = {
   groupedColumnChartData: GroupedColumnChartData;
 };
 
-export type GeneralOverviewData={
-  userDountChartData:DonutChartData;
-  pieChartData:PieChartData;
-  discussionDountChartData:DonutChartData;
-  lineChartData:LineChartData;
-  columnChartData:ColumnChartData;
-}
+export type GeneralOverviewData = {
+  userDountChartData: DonutChartData;
+  pieChartData: PieChartData;
+  discussionDountChartData: DonutChartData;
+  lineChartData: LineChartData;
+  columnChartData: ColumnChartData;
+};

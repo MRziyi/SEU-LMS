@@ -92,6 +92,7 @@ const BaseView: React.FC = () => {
                   });
                   if (response.data) {
                     message.success('提交成功');
+                    window.location.reload();
                   } else {
                     message.error('提交失败');
                   }

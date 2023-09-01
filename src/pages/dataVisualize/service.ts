@@ -1,5 +1,10 @@
 import { request } from 'umi';
-import { CourseDiscription, GeneralOverviewData, TeacherChartData } from './data';
+import {
+  CourseDiscription,
+  GeneralOverviewData,
+  TeacherChartData,
+  TeacherDiscription,
+} from './data';
 
 export async function queryTeacherChart(
   courseIDParam: string,
@@ -12,19 +17,19 @@ export async function queryTeacherChart(
   });
 }
 
-export async function queryTeacherCourses(
-  teacherIDParam: string,
-): Promise<{ data: { tabList: CourseDiscription[] } }> {
-  return request('/api/course/list-for-teacher', {
-    method: 'POST',
-    data: {
-      teacherID: teacherIDParam,
-    },
-  });
+export async function queryCourseList(): Promise<{
+  data: { descriptionList: CourseDiscription[] };
+}> {
+  return request('/api/course/list-description');
 }
 
-export async function queryGeneralOverview(
-): Promise<{ data: { chartData: GeneralOverviewData } }>{
+export async function queryTeacherList(): Promise<{ data: { teacherList: TeacherDiscription[] } }> {
+  return request('/api/user/list-teacher');
+}
+
+export async function queryGeneralOverview(): Promise<{
+  data: { chartData: GeneralOverviewData };
+}> {
   return request('/api/data-visualize/general-overview', {
     method: 'POST',
   });

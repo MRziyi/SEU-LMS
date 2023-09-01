@@ -47,6 +47,7 @@ const Discussion: React.FC<CourseIDParam> = ({ courseID }) => {
       let result = await sendReply(value, courseID, discussionID);
       if (result.code === 0) {
         message.success('回复成功！');
+        changeDiscussionPage(currentPage, pageSize);
       }
     } catch {}
     setLoadingForSendingReply(false);

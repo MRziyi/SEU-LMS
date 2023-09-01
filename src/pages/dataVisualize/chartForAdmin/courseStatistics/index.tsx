@@ -1,8 +1,9 @@
 import { Card } from 'antd';
-
-const CourseStatistics: React.FC = () => {
-  return <Card>管理员教师统计页面 :</Card>;
+interface CourseStatisticsInterface {
+  courseID: string;
+}
+const CourseStatistics: React.FC<CourseStatisticsInterface> = ({ courseID }) => {
+  return <Card>管理员课程统计页面: {courseID}</Card>;
 };
-
 
 export default CourseStatistics;

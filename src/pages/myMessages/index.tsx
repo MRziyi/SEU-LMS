@@ -1,9 +1,6 @@
-import { Avatar, Badge, Button, Card, Input, List, Skeleton, Space, Tag, message } from 'antd';
-import { useModel, useRequest } from 'umi';
+import { Avatar, Badge, Button, Space, Tag, message } from 'antd';
 import { useState, type FC, useEffect } from 'react';
-import { PageContainer } from '@ant-design/pro-layout';
 import { markMessage, queryMessageList } from './service';
-import styles from './style.less';
 import { MessageData } from './data';
 import moment from 'moment';
 import { ProList } from '@ant-design/pro-components';
@@ -40,7 +37,7 @@ const MyMessages: FC<Record<string, any>> = () => {
       const result = await markMessage(messageID, setTo);
       if (result.data) {
         message.success('标记成功！');
-        changePage(1, pageSize);
+        changePage(currentPage, pageSize);
       }
     } catch {}
     setLoadingForMark('');

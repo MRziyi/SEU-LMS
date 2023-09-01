@@ -4,7 +4,7 @@ async function postFakeCourseDiscription(req: Request, res: Response) {
   return res.json({
     code: 0,
     data: {
-      tabList: [
+      descriptionList: [
         {
           courseName: '离散数学',
           courseID: 'Course - 1',
@@ -16,6 +16,28 @@ async function postFakeCourseDiscription(req: Request, res: Response) {
         {
           courseName: '编译原理',
           courseID: 'Course - 3',
+        },
+      ],
+    },
+  });
+}
+
+async function postFakeTeacherDiscription(req: Request, res: Response) {
+  return res.json({
+    code: 0,
+    data: {
+      teacherList: [
+        {
+          teacherName: '张小一',
+          teacherID: 'Teacher - 1',
+        },
+        {
+          teacherName: '王小二',
+          teacherID: 'Teacher - 2',
+        },
+        {
+          teacherName: '李小三',
+          teacherID: 'Teacher - 3',
         },
       ],
     },
@@ -207,6 +229,7 @@ async function postGeneralOverview(req: Request, res: Response) {
 
 export default {
   'POST  /api/data-visualize/teacher-chart': postTeacherChart,
-  'POST  /api/course/list-for-teacher': postFakeCourseDiscription,
   'POST  /api/data-visualize/general-overview': postGeneralOverview,
+  'GET  /api/course/list-description': postFakeCourseDiscription,
+  'GET  /api/user/list-teacher': postFakeTeacherDiscription,
 };
