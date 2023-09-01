@@ -6,7 +6,13 @@ import { PageContainer } from '@ant-design/pro-layout';
 import { Input } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import { CourseListData } from './data';
-import { queryCourseList, searchMyCourse } from './service';
+import {
+  queryStudentCourseList,
+  queryTeacherCourseList,
+  searchStudentCourse,
+  searchTeacherCourse,
+} from './service';
+import { queryTeacherChart } from '../dataVisualize/service';
 
 const { Paragraph } = Typography;
 
@@ -35,11 +41,13 @@ const MyCourses: FC = () => {
       try {
         let result;
         if (searchContent.current == '') {
-          console.log('IN 1!');
-          result = await queryCourseList(initialState.currentUser.id, _page, _pageSize);
+          if (initialState.currentUser.access == 'student')
+            result = await queryStudentCourseList(_page, _pageSize);
+          else result = await queryTeacherCourseList(_page, _pageSize);
         } else {
-          console.log('IN 2!');
-          result = await searchMyCourse(searchContent.current, _page, _pageSize);
+          if (initialState.currentUser.access == 'student')
+            result = await searchStudentCourse(searchContent.current, _page, _pageSize);
+          else result = await searchTeacherCourse(searchContent.current, _page, _pageSize);
         }
         preSearchContent.current = searchContent.current;
         if (result.data) {

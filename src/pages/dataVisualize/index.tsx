@@ -5,12 +5,17 @@ import { useModel } from 'umi';
 import { message } from 'antd';
 import { queryTeacherCourses } from './service';
 import ChartForTeacher from './chartForTeacher';
-import ChartForAdmin from './chartForAdmin';
+import ChartForAdmin from './chartForAdmin/generalOverview';
+import GeneralOverview from './chartForAdmin/generalOverview';
+import CourseStatistics from './chartForAdmin/teacherStatistics';
+import TeacherStatistics from './chartForAdmin/courseStatistics';
 
 const DataVisualize: React.FC<RouteChildrenProps> = () => {
   useEffect(() => {
     if (initialState?.currentUser?.access == 'teacher') getTeacherTab();
-    else getAdminTab;
+    else {
+      getAdminTab();
+    }
   }, []);
 
   const { initialState } = useModel('@@initialState');
@@ -39,11 +44,11 @@ const DataVisualize: React.FC<RouteChildrenProps> = () => {
   async function getAdminTab() {
     setLoadingForTab(true);
     setTabList([
-      { key: '1', tab: 'Tab1' },
-      { key: '2', tab: 'Tab2' },
+      { key: '1', tab: '总体概览' },
+      { key: '2', tab: '教师统计' },
+      { key: '3', tab: '课程统计' },
     ]);
     setTabKey('1');
-
     setLoadingForTab(false);
   }
   // 渲染tab切换
@@ -57,10 +62,11 @@ const DataVisualize: React.FC<RouteChildrenProps> = () => {
           loadingFather={loadingForTab}
         ></ChartForTeacher>
       );
-    else
-      return (
-        <ChartForAdmin key={value} value={value} loadingFather={loadingForTab}></ChartForAdmin>
-      );
+    else {
+      if (value == '1') return <GeneralOverview></GeneralOverview>;
+      else if (value == '2') return <TeacherStatistics></TeacherStatistics>;
+      else return <CourseStatistics></CourseStatistics>;
+    }
   };
 
   const [tabKey, setTabKey] = useState<string>('');
@@ -73,7 +79,7 @@ const DataVisualize: React.FC<RouteChildrenProps> = () => {
         title:
           '你好！' +
           initialState?.currentUser?.nickName +
-          (initialState?.currentUser?.access == 'teacher' ? '老师' : '管理员'),
+          (initialState?.currentUser?.access == 'teacher' ? ' 老师' : ' 管理员'),
       }}
       tabActiveKey={tabKey}
       onTabChange={(_tabKey: string) => {
