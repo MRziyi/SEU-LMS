@@ -1,70 +1,5 @@
 import type { Request, Response } from 'express';
 
-function teachingSituationList() {
-  return [
-    {
-      courseName: '数学',
-      teacherName: ['张老师', '李老师', '王老师'],
-      averageScore: [85, 88, 90],
-      attendance: [95, 92, 94],
-    },
-    {
-      courseName: '英语',
-      teacherName: ['刘老师', '赵老师', '陈老师', '钱老师'],
-      averageScore: [78, 82, 85, 89],
-      attendance: [90, 88, 91, 92],
-    },
-    {
-      courseName: '物理',
-      teacherName: ['杨老师', '吴老师', '钱老师'],
-      averageScore: [88, 86, 89],
-      attendance: [93, 91, 94],
-    },
-  ];
-}
-
-function courseSituationList() {
-  return [
-    { courseName: 'Math', averageScore: 85 },
-    { courseName: 'Science', averageScore: 78 },
-    { courseName: 'History', averageScore: 92 },
-    { courseName: 'English', averageScore: 88 },
-    { courseName: 'Physics', averageScore: 75 },
-    { courseName: 'Chemistry', averageScore: 80 },
-    { courseName: 'Biology', averageScore: 87 },
-    { courseName: 'Computer Science', averageScore: 91 },
-    { courseName: 'Art', averageScore: 70 },
-    { courseName: 'Music', averageScore: 82 },
-    { courseName: 'Physical Education', averageScore: 95 },
-    { courseName: 'Geography', averageScore: 89 },
-    { courseName: 'Economics', averageScore: 83 },
-    { courseName: 'Literature', averageScore: 79 },
-    { courseName: 'Foreign Language', averageScore: 93 },
-    { courseName: 'Social Studies', averageScore: 86 },
-    { courseName: 'Psychology', averageScore: 74 },
-    { courseName: 'Sociology', averageScore: 77 },
-    { courseName: 'Philosophy', averageScore: 90 },
-    { courseName: 'Religion', averageScore: 84 },
-  ];
-}
-
-function sectionSituationList() {
-  return [
-    {
-      courseName: 'Math',
-      lessonTitle: ['Introduction', 'Algebra', 'Geometry', 'Calculus'],
-      averageScore: [88, 76, 92, 85],
-      attendance: [95, 89, 97, 92],
-    },
-    {
-      courseName: 'Science',
-      lessonTitle: ['Physics', 'Chemistry', 'Biology', 'Astronomy'],
-      averageScore: [78, 82, 89, 91],
-      attendance: [90, 88, 95, 93],
-    },
-  ];
-}
-
 async function postFakeCourseDiscription(req: Request, res: Response) {
   return res.json({
     code: 0,
@@ -118,7 +53,7 @@ function postGaugeChartData() {
   return {
     name: '上次作业均分',
     value: 85,
-    statisticText: '85_良',
+    statisticText: '85-良',
   };
 }
 
@@ -180,7 +115,98 @@ async function postTeacherChart(req: Request, res: Response) {
   });
 }
 
+function postGOUserData() {
+  return {
+    name: '用户统计',
+    angleField: 'value',
+    colorField: 'type',
+    dataSource: [
+      { type: '学生', value: 1730 },
+      { type: '教师', value: 180 },
+      { type: '管理员', value: 20 },
+    ],
+    contentName: ' ',
+    contentValue: ' ',
+  };
+}
+
+function postGOPieChartData() {
+  return {
+    name: '课程规模统计',
+    angleField: 'value',
+    colorField: 'type',
+    dataSource: [
+      { type: '其他', value: 102 },
+      { type: '20-30人', value: 32 },
+      { type: '10-20人', value: 18 },
+    ],
+  };
+}
+
+function postGODiscussionData() {
+  return {
+    name: '讨论统计',
+    angleField: 'value',
+    colorField: 'type',
+    dataSource: [
+      { type: '回复', value: 168 },
+      { type: '主贴', value: 42 },
+    ],
+    contentName: ' ',
+    contentValue: ' ',
+  };
+}
+
+function postGOLineChartData() {
+  return {
+    name: '出勤统计',
+    dataSource: [
+      { date: '2023-09-01', attendance: 800 },
+      { date: '2023-09-02', attendance: 1100 },
+      { date: '2023-09-03', attendance: 600 },
+      { date: '2023-09-04', attendance: 1400 },
+    ],
+    xField: 'date',
+    yField: 'attendance',
+    xAxis: '日期',
+    yAxis: '出勤人数',
+  };
+}
+
+function postGOColumnChartData() {
+  return {
+    name: 'Daily Homework Scores',
+    dataSource: [
+      { date: '2023-09-01', score: 700 },
+      { date: '2023-09-02', score: 900 },
+      { date: '2023-09-03', score: 620 },
+      { date: '2023-09-04', score: 1300 },
+      // 可以继续添加更多日期和分数数据
+    ],
+    xField: 'date',
+    yField: 'score',
+    xAlias: '日期',
+    yAlias: '作业份数',
+  };
+}
+
+async function postGeneralOverview(req: Request, res: Response) {
+  return res.json({
+    code: 0,
+    data: {
+      chartData: {
+        userDountChartData: postGOUserData(),
+        pieChartData: postGOPieChartData(),
+        discussionDountChartData: postGODiscussionData(),
+        lineChartData: postGOLineChartData(),
+        columnChartData: postGOColumnChartData(),
+      },
+    },
+  });
+}
+
 export default {
   'POST  /api/data-visualize/teacher-chart': postTeacherChart,
   'POST  /api/course/list-for-teacher': postFakeCourseDiscription,
+  'POST  /api/data-visualize/general-overview': postGeneralOverview,
 };

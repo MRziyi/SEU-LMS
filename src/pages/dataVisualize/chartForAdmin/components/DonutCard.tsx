@@ -17,16 +17,9 @@ const DonutCard = ({
           radius={0.95}
           padding="auto"
           data={donutChartData?.dataSource}
-          statistic={{
-            visible: true,
-            content: {
-              value: donutChartData.contentValue,
-              name: donutChartData.contentName,
-            },
-          }}
           angleField={donutChartData.angleField}
           colorField={donutChartData.colorField}
-          color={['#9251C3', '#FCEBAC', '#E4C2D6', '#CAA1BA']}
+          color={['#1080D8','#FEDA90','#C3D6DD','#F4EECA']}
         />
       ) : (
         <></>

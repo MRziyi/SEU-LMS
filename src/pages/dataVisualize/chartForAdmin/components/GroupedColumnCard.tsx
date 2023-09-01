@@ -18,7 +18,7 @@ const GroupedColumnCard = ({
         yField={data.yField}
         colorField={data.groupField}
         groupField={data.groupField}
-        color={['#9251C3', '#FCEBAC', '#E4C2D6', '#CAA1BA']}
+        color={['#1080D8','#FEDA90','#C3D6DD','#F4EECA']}
         xAxis={{
           visible: true,
           title: {
@@ -37,7 +37,7 @@ const GroupedColumnCard = ({
         label={{
           visible: true,
           style: {
-            fill: '#9251C3',
+            fill: '#002B4B',
             //'#0D0E68',
             fontSize: 12,
             fontWeight: 600,
