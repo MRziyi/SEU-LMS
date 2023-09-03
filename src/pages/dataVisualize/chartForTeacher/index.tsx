@@ -17,14 +17,14 @@ interface ChartForTeacherInterface {
 
 const ChartForTeacher: React.FC<ChartForTeacherInterface> = ({ courseID, loadingFather }) => {
   const [teacherChartData, setTeacherChartData] = useState<TeacherChartData>();
-  const [loading, setLoding] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     queryTeacherChartAdaptor();
   }, [courseID]);
 
   async function queryTeacherChartAdaptor() {
-    setLoding(true);
+    setLoading(true);
     try {
       const result = await queryTeacherChart(courseID);
       if (result.data.chartData) {
@@ -32,7 +32,7 @@ const ChartForTeacher: React.FC<ChartForTeacherInterface> = ({ courseID, loading
         setTeacherChartData(result.data.chartData);
       }
     } catch {}
-    setLoding(false);
+    setLoading(false);
   }
 
   const calculateAttendanceRate = (data: DataItem[]): string => {

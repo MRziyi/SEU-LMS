@@ -182,8 +182,9 @@ async function postCourseStatistic(req: Request, res: Response) {
 export default {
   'POST  /api/data-visualize/teacher-chart': postTeacherChart,
   'GET  /api/data-visualize/general-overview': postGeneralOverview,
-  'GET  /api/course/list-description': postFakeCourseDiscription,
-  'GET  /api/user/list-teacher': postFakeTeacherDiscription,
   'POST  /api/data-visualize/teacher-statistics': postTeacherStatistic,
   'POST  /api/data-visualize/course-statistics': postCourseStatistic,
+
+  'GET  /api/course/list-description': postFakeCourseDiscription,
+  'GET  /api/user/list-teacher': postFakeTeacherDiscription,
 };
