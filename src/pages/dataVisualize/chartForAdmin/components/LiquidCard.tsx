@@ -10,6 +10,7 @@ const LiquidCard = ({ data, loading }: { data: LiquidChartData | null; loading: 
       max={100}
       value={data?.value ? data?.value : 0}
       statistic={{ formatter: (value) => ((100 * value) / 100).toFixed(1) + '%' }}
+      color={['#1080D8', '#F7D66D', '#F4EECA', '#AED6F9', '#E5F9FA']}
     />
   </Card>
 );

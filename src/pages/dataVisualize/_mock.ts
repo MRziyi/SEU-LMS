@@ -44,172 +44,37 @@ async function postFakeTeacherDiscription(req: Request, res: Response) {
   });
 }
 
-function postDonutChartData() {
-  return {
-    name: '上节课到课率',
-    angleField: 'value',
-    colorField: 'type',
-    dataSource: [
-      { type: '已签到', value: 45 },
-      { type: '未签到', value: 8 },
-    ],
-    contentName: '到课率',
-    contentValue: '84.9%',
-  };
-}
-
-function postPieChartData() {
-  return {
-    name: '上节课作业情况',
-    angleField: 'value',
-    colorField: 'type',
-    dataSource: [
-      { type: '已批改', value: 32 },
-      { type: '待批改', value: 18 },
-      { type: '未提交', value: 3 },
-    ],
-  };
-}
-
-function postGaugeChartData() {
-  return {
-    name: '上次作业均分',
-    value: 85,
-    statisticText: '85-良',
-  };
-}
-
-function postLiquidChartData() {
-  return {
-    name: '课程进度',
-    value: 56.4,
-  };
-}
-
-function postLineChartData() {
-  return {
-    name: '历史到课率',
-    dataSource: [
-      { chapter: 'Chapter 1', attendanceRate: 80 },
-      { chapter: 'Chapter 2', attendanceRate: 75 },
-      { chapter: 'Chapter 3', attendanceRate: 90 },
-      { chapter: 'Chapter 4', attendanceRate: 85 },
-    ],
-    xField: 'chapter',
-    yField: 'attendanceRate',
-    xAxis: '章节名称',
-    yAxis: '到课率(%)',
-  };
-}
-
-function postGroupedColumnChartData() {
-  return {
-    name: '历史作业均分',
-    dataSource: [
-      { chapter: 'Chapter 1', task: 'Task 1', score: 85 },
-      { chapter: 'Chapter 1', task: 'Task 2', score: 92 },
-      { chapter: 'Chapter 2', task: 'Task 1', score: 78 },
-      { chapter: 'Chapter 3', task: 'Task 1', score: 90 },
-      { chapter: 'Chapter 3', task: 'Task 2', score: 88 },
-      // 可以继续添加更多章节、任务和分数数据
-    ],
-    xField: 'chapter',
-    yField: 'score',
-    xAlias: 'Chapter',
-    yAlias: 'Average Score',
-    groupField: 'task',
-  };
-}
-
 async function postTeacherChart(req: Request, res: Response) {
   return res.json({
     code: 0,
     data: {
       chartData: {
-        dountChartData: postDonutChartData(),
-        pieChartData: postPieChartData(),
-        gaugeChartData: postGaugeChartData(),
-        liquidChartData: postLiquidChartData(),
-        lineChartData: postLineChartData(),
-        groupedColumnChartData: postGroupedColumnChartData(),
+        dountChartData: [
+          { type: '已签到', value: 45 },
+          { type: '未签到', value: 8 },
+        ],
+        pieChartData: [
+          { type: '已批改', value: 32 },
+          { type: '待批改', value: 18 },
+          { type: '未提交', value: 3 },
+        ],
+        gaugeChartData: 75,
+        lineChartData: [
+          { chapter: 'Chapter 1', attendanceRate: 80 },
+          { chapter: 'Chapter 2', attendanceRate: 75 },
+          { chapter: 'Chapter 3', attendanceRate: 90 },
+          { chapter: 'Chapter 4', attendanceRate: 85 },
+        ],
+        groupedColumnChartData: [
+          { chapter: 'Chapter 1', task: 'Task 1', score: 85 },
+          { chapter: 'Chapter 1', task: 'Task 2', score: 92 },
+          { chapter: 'Chapter 2', task: 'Task 1', score: 78 },
+          { chapter: 'Chapter 3', task: 'Task 1', score: 90 },
+          { chapter: 'Chapter 3', task: 'Task 2', score: 88 },
+        ],
       },
     },
   });
-}
-
-function postGOUserData() {
-  return {
-    name: '用户统计',
-    angleField: 'value',
-    colorField: 'type',
-    dataSource: [
-      { type: '学生', value: 1730 },
-      { type: '教师', value: 180 },
-      { type: '管理员', value: 20 },
-    ],
-    contentName: ' ',
-    contentValue: ' ',
-  };
-}
-
-function postGOPieChartData() {
-  return {
-    name: '课程规模统计',
-    angleField: 'value',
-    colorField: 'type',
-    dataSource: [
-      { type: '其他', value: 102 },
-      { type: '20-30人', value: 32 },
-      { type: '10-20人', value: 18 },
-    ],
-  };
-}
-
-function postGODiscussionData() {
-  return {
-    name: '讨论统计',
-    angleField: 'value',
-    colorField: 'type',
-    dataSource: [
-      { type: '回复', value: 168 },
-      { type: '主贴', value: 42 },
-    ],
-    contentName: ' ',
-    contentValue: ' ',
-  };
-}
-
-function postGOLineChartData() {
-  return {
-    name: '出勤统计',
-    dataSource: [
-      { date: '2023-09-01', attendance: 800 },
-      { date: '2023-09-02', attendance: 1100 },
-      { date: '2023-09-03', attendance: 600 },
-      { date: '2023-09-04', attendance: 1400 },
-    ],
-    xField: 'date',
-    yField: 'attendance',
-    xAxis: '日期',
-    yAxis: '出勤人数',
-  };
-}
-
-function postGOColumnChartData() {
-  return {
-    name: 'Daily Homework Scores',
-    dataSource: [
-      { date: '2023-09-01', score: 700 },
-      { date: '2023-09-02', score: 900 },
-      { date: '2023-09-03', score: 620 },
-      { date: '2023-09-04', score: 1300 },
-      // 可以继续添加更多日期和分数数据
-    ],
-    xField: 'date',
-    yField: 'score',
-    xAlias: '日期',
-    yAlias: '作业份数',
-  };
 }
 
 async function postGeneralOverview(req: Request, res: Response) {
@@ -217,11 +82,98 @@ async function postGeneralOverview(req: Request, res: Response) {
     code: 0,
     data: {
       chartData: {
-        userDountChartData: postGOUserData(),
-        pieChartData: postGOPieChartData(),
-        discussionDountChartData: postGODiscussionData(),
-        lineChartData: postGOLineChartData(),
-        columnChartData: postGOColumnChartData(),
+        userDountChartData: [
+          { type: '学生', value: 1730 },
+          { type: '教师', value: 180 },
+          { type: '管理员', value: 20 },
+        ],
+        pieChartData: [
+          { type: '其他', value: 102 },
+          { type: '20-30人', value: 32 },
+          { type: '10-20人', value: 18 },
+        ],
+        discussionDountChartData: [
+          { type: '回复', value: 168 },
+          { type: '主贴', value: 42 },
+        ],
+        lineChartData: [
+          { date: '2023-09-01', attendance: 800 },
+          { date: '2023-09-02', attendance: 1100 },
+          { date: '2023-09-03', attendance: 600 },
+          { date: '2023-09-04', attendance: 1400 },
+        ],
+        columnChartData: [
+          { date: '2023-09-01', num: 700 },
+          { date: '2023-09-02', num: 900 },
+          { date: '2023-09-03', num: 620 },
+          { date: '2023-09-04', num: 1300 },
+        ],
+      },
+    },
+  });
+}
+
+async function postTeacherStatistic(req: Request, res: Response) {
+  return res.json({
+    code: 0,
+    data: {
+      chartData: {
+        dountChartData: [
+          { type: '计算机组成原理', value: 80 },
+          { type: 'Java', value: 43 },
+          { type: 'C++', value: 37 },
+        ],
+        gaugeChartData: 85,
+        pieChartData: [
+          { type: '90-100', value: 12 },
+          { type: '80-90', value: 21 },
+          { type: '60-80', value: 11 },
+          { type: '其他', value: 9 },
+          { type: '未提交', value: 3 },
+        ],
+        lineChartData: [
+          { course: '计算机组成原理', attendance: 85 },
+          { course: 'Java', attendance: 92 },
+          { course: 'C++', attendance: 78 },
+        ],
+        columnChartData: [
+          { course: '计算机组成原理', score: 88 },
+          { course: 'Java', score: 92 },
+          { course: 'C++', score: 75 },
+        ],
+      },
+    },
+  });
+}
+
+async function postCourseStatistic(req: Request, res: Response) {
+  return res.json({
+    code: 0,
+    data: {
+      chartData: {
+        dountChartData: [
+          { type: '教师A', value: 45 },
+          { type: '教师B', value: 32 },
+          { type: '教师C', value: 58 },
+        ],
+        gaugeChartData: 85,
+        pieChartData: [
+          { type: '90-100', value: 12 },
+          { type: '80-90', value: 21 },
+          { type: '60-80', value: 11 },
+          { type: '其他', value: 9 },
+          { type: '未提交', value: 3 },
+        ],
+        lineChartData: [
+          { teacher: '教师A', attendance: 85 },
+          { teacher: '教师B', attendance: 92 },
+          { teacher: '教师C', attendance: 78 },
+        ],
+        columnChartData: [
+          { teacher: '教师A', score: 88 },
+          { teacher: '教师B', score: 92 },
+          { teacher: '教师C', score: 75 },
+        ],
       },
     },
   });
@@ -232,4 +184,6 @@ export default {
   'POST  /api/data-visualize/general-overview': postGeneralOverview,
   'GET  /api/course/list-description': postFakeCourseDiscription,
   'GET  /api/user/list-teacher': postFakeTeacherDiscription,
+  'POST  /api/data-visualize/teacher-statistics': postTeacherStatistic,
+  'POST  /api/data-visualize/course-statistics': postCourseStatistic,
 };

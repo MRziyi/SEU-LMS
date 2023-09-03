@@ -11,11 +11,11 @@ const GaugeCard = ({ data, loading }: { data: GaugeChartData | null; loading: bo
       min={0}
       max={100}
       padding="auto"
-      range={[0, data?.value ? data?.value : 85]}
+      range={[0, data?.value ? data?.value : 0]}
       format={(v) => {
         return v + '%';
       }}
-      color={['l(0) 0:#E4C2D6 1:#9251C3']}
+      color={['l(0) 0:#C3D6DD 1:#1080D8']}
       statistic={{
         visible: true,
         text: data?.statisticText,

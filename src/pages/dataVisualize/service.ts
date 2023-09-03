@@ -1,9 +1,11 @@
 import { request } from 'umi';
 import {
   CourseDiscription,
+  CourseStatisticsData,
   GeneralOverviewData,
   TeacherChartData,
   TeacherDiscription,
+  TeacherStatisticsData,
 } from './data';
 
 export async function queryTeacherChart(
@@ -32,5 +34,27 @@ export async function queryGeneralOverview(): Promise<{
 }> {
   return request('/api/data-visualize/general-overview', {
     method: 'POST',
+  });
+}
+
+export async function queryTeacherStatistics(teacherIDParam: string): Promise<{
+  data: { chartData: TeacherStatisticsData };
+}> {
+  return request('/api/data-visualize/teacher-statistics', {
+    method: 'POST',
+    data: {
+      teacherID: teacherIDParam,
+    },
+  });
+}
+
+export async function queryCourseSiatistics(courseIDParam: string): Promise<{
+  data: { chartData: CourseStatisticsData };
+}> {
+  return request('/api/data-visualize/course-statistics', {
+    method: 'POST',
+    data: {
+      courseID: courseIDParam,
+    },
   });
 }

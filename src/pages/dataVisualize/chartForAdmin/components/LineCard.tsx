@@ -11,7 +11,7 @@ const LineCard = ({ loading, data }: { loading: boolean; data: LineChartData | n
           forceFit
           xField={data.xField}
           yField={data.yField}
-          color={['#1080D8','#FEDA90','#C3D6DD','#F4EECA']}
+          color={['#1080D8', '#F7D66D', '#F4EECA', '#AED6F9', '#E5F9FA']}
           xAxis={{
             visible: true,
             title: {

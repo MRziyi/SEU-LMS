@@ -33,21 +33,44 @@ const GeneralOverview: React.FC = () => {
       <Row gutter={24} className="card-row">
         <Col xl={8} lg={24} md={24} sm={24} xs={24}>
           <DonutCard
-            donutChartData={generalOverviewData?.userDountChartData || null}
+            data={{
+              name: '用户统计',
+              angleField: 'value',
+              colorField: 'type',
+              dataSource: generalOverviewData?.userDountChartData
+                ? generalOverviewData.userDountChartData
+                : [],
+              contentName: '',
+              contentValue: '',
+            }}
             loading={loading}
           />
         </Col>
 
         <Col xl={8} lg={24} md={24} sm={24} xs={24}>
           <PieCard
-            data={generalOverviewData?.pieChartData || null}
+            data={{
+              name: '课程规模统计',
+              angleField: 'value',
+              colorField: 'type',
+              dataSource: generalOverviewData?.pieChartData ? generalOverviewData.pieChartData : [],
+            }}
             loading={loading}
           />
         </Col>
 
         <Col xl={8} lg={24} md={24} sm={24} xs={24}>
           <DonutCard
-            donutChartData={generalOverviewData?.discussionDountChartData || null}
+            data={{
+              name: '讨论统计',
+              angleField: 'value',
+              colorField: 'type',
+              dataSource: generalOverviewData?.discussionDountChartData
+                ? generalOverviewData.discussionDountChartData
+                : [],
+              contentName: '',
+              contentValue: '',
+            }}
             loading={loading}
           />
         </Col>
@@ -56,7 +79,16 @@ const GeneralOverview: React.FC = () => {
       <Row gutter={24} className="card-row">
         <Col xl={24} lg={24} md={24} sm={24} xs={24}>
           <LineCard
-            data={generalOverviewData?.lineChartData || null}
+            data={{
+              name: '出勤统计',
+              dataSource: generalOverviewData?.lineChartData
+                ? generalOverviewData.lineChartData
+                : [],
+              xField: 'date',
+              yField: 'attendance',
+              xAxis: '日期',
+              yAxis: '出勤人数',
+            }}
             loading={loading}
           />
         </Col>
@@ -65,7 +97,16 @@ const GeneralOverview: React.FC = () => {
       <Row gutter={24} className="card-row">
         <Col xl={24} lg={24} md={24} sm={24} xs={24}>
           <ColumnCard
-            data={generalOverviewData?.columnChartData || null}
+            data={{
+              name: '作业提交统计',
+              dataSource: generalOverviewData?.columnChartData
+                ? generalOverviewData.columnChartData
+                : [],
+              xField: 'date',
+              yField: 'num',
+              xAlias: '日期',
+              yAlias: '作业份数',
+            }}
             loading={loading}
           />
         </Col>

@@ -66,18 +66,33 @@ export type TeacherDiscription = {
 };
 
 export type TeacherChartData = {
-  dountChartData: DonutChartData;
-  pieChartData: PieChartData;
-  gaugeChartData: GaugeChartData;
-  liquidChartData: LiquidChartData;
-  lineChartData: LineChartData;
-  groupedColumnChartData: GroupedColumnChartData;
+  dountChartData: DataItem[]; //必须包含“已签到”和“未签到”，{ type: '已签到', value: 45 },
+  pieChartData: DataItem[]; //{ type: '已批改', value: 32 },
+  gaugeChartData: number; //0~100之间的一个数字
+  lineChartData: DataItem[]; //{ chapter: 'Chapter 1', attendanceRate: 80 },
+  groupedColumnChartData: DataItem[]; //{ chapter: 'Chapter 1', task: 'Task 1', score: 85 },
 };
 
 export type GeneralOverviewData = {
-  userDountChartData: DonutChartData;
-  pieChartData: PieChartData;
-  discussionDountChartData: DonutChartData;
-  lineChartData: LineChartData;
-  columnChartData: ColumnChartData;
+  userDountChartData: DataItem[];
+  pieChartData: DataItem[];
+  discussionDountChartData: DataItem[];
+  lineChartData: DataItem[];
+  columnChartData: DataItem[];
+};
+
+export type TeacherStatisticsData = {
+  dountChartData: DataItem[];
+  gaugeChartData: number;
+  pieChartData: DataItem[];
+  lineChartData: DataItem[];
+  columnChartData: DataItem[];
+};
+
+export type CourseStatisticsData = {
+  dountChartData: DataItem[];
+  gaugeChartData: number;
+  pieChartData: DataItem[];
+  lineChartData: DataItem[];
+  columnChartData: DataItem[];
 };
