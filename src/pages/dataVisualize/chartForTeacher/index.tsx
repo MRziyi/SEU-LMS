@@ -21,7 +21,7 @@ const ChartForTeacher: React.FC<ChartForTeacherInterface> = ({ courseID, loading
 
   useEffect(() => {
     queryTeacherChartAdaptor();
-  }, []);
+  }, [courseID]);
 
   async function queryTeacherChartAdaptor() {
     setLoding(true);
@@ -74,7 +74,7 @@ const ChartForTeacher: React.FC<ChartForTeacherInterface> = ({ courseID, loading
               name: '上节课到课率',
               angleField: 'value',
               colorField: 'type',
-              dataSource: teacherChartData?.dountChartData ? teacherChartData?.dountChartData : [],
+              dataSource: teacherChartData?.dountChartData ? teacherChartData.dountChartData : [],
               contentName: '到课率',
               contentValue: calculateAttendanceRate(
                 teacherChartData?.dountChartData ? teacherChartData?.dountChartData : [],

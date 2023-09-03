@@ -21,15 +21,21 @@ export type CourseData = {
 export type SyllabusData = {
   syllabusID: string;
   title: string;
-  materials: string[];
-  homework: string[];
+  // homework: string[]; TODO
   isCheckedIn: boolean;
+  time: string;
+};
+
+export type MaterialData = {
+  type: string;
+  name: string;
+  url: string;
 };
 
 export type ReplyData = {
   fromUserName: string;
   fromUserAvatar: string;
-  ID: string;
+  replyID: string;
   content: string;
   isRead: bool;
   time: string;

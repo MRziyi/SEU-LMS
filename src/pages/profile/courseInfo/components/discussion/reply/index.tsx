@@ -1,7 +1,7 @@
 import { Avatar, List } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { ReplyData } from '@/pages/profile/data';
-import { queryReplyList, sendReply } from '../../../service';
+import { queryReplyList } from '../../../service';
 
 interface DiscussionIDParam {
   discussionID: string;
@@ -50,7 +50,7 @@ const ReplyList: React.FC<DiscussionIDParam> = ({ discussionID }) => {
       dataSource={replyList}
       pagination={paginationProps}
       renderItem={(messageItem) => (
-        <List.Item key={messageItem.ID}>
+        <List.Item key={messageItem.replyID}>
           <List.Item.Meta
             avatar={<Avatar src={messageItem.fromUserAvatar} />}
             title={messageItem.fromUserName}

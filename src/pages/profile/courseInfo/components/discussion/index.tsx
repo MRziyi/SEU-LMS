@@ -111,7 +111,7 @@ const Discussion: React.FC<CourseIDParam> = ({ courseID }) => {
               <div className={styles.cardItemContent}>
                 <span>{discussion.time}</span>
                 <div className={styles.avatarList}>
-                  <span style={{ marginRight: 10 }}>{discussion.fromUserName}</span>
+                  <span>{discussion.fromUserName}</span>
                   <Avatar
                     size="small"
                     className={styles.avatar}

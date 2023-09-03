@@ -67,6 +67,7 @@ function fakeSyllabusList(currentPage: number, pageSize: number) {
       materials: ['URL1', 'URL2'],
       homework: ['URL3', 'URL4'],
       isCheckedIn: i < 3,
+      time: new Date(new Date().getTime() - 1000 * 60 * 60 * 2 * i).toLocaleString(),
     });
   }
   const startIndex = (currentPage - 1) * pageSize;
@@ -139,7 +140,7 @@ function fakeReplyList(discussionID: number, currentPage: number, pageSize: numb
     list.push({
       fromUserName: ownerName[i % 10] + ' - ' + discussionID,
       fromUserAvatar: ownerUrl[i % 8],
-      ID: 'Reply - ' + i,
+      replyID: 'Reply - ' + i,
       content: description[i % 5],
       isRead: false,
       time: new Date(new Date().getTime() - 1000 * 60 * 60 * 2 * i).toLocaleString(),

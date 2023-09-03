@@ -32,9 +32,7 @@ export async function queryTeacherList(): Promise<{ data: { teacherList: Teacher
 export async function queryGeneralOverview(): Promise<{
   data: { chartData: GeneralOverviewData };
 }> {
-  return request('/api/data-visualize/general-overview', {
-    method: 'POST',
-  });
+  return request('/api/data-visualize/general-overview');
 }
 
 export async function queryTeacherStatistics(teacherIDParam: string): Promise<{

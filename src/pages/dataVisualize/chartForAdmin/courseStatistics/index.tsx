@@ -12,14 +12,14 @@ interface CourseStatisticsInterface {
 }
 const CourseStatistics: React.FC<CourseStatisticsInterface> = ({ courseID }) => {
   const [courseStatisticsData, setCourseStatisticsData] = useState<CourseStatisticsData>();
-  const [loading, setLoding] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     queryCourseStatisticsAdaptor();
-  }, []);
+  }, [courseID]);
 
   async function queryCourseStatisticsAdaptor() {
-    setLoding(true);
+    setLoading(true);
     try {
       const result = await queryCourseSiatistics(courseID);
       if (result.data.chartData) {
@@ -27,7 +27,7 @@ const CourseStatistics: React.FC<CourseStatisticsInterface> = ({ courseID }) => 
         setCourseStatisticsData(result.data.chartData);
       }
     } catch {}
-    setLoding(false);
+    setLoading(false);
   }
 
   const getRating = (score: number): string => {

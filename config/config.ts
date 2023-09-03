@@ -77,13 +77,6 @@ export default defineConfig({
       component: './dataVisualize',
     },
     {
-      path: '/data-visualize-example',
-      name: '数据可视化样例',
-      icon: 'pieChart',
-      access: 'canTA',
-      component: './dataVisualizeExample',
-    },
-    {
       path: '/question-answer',
       name: '问题解答',
       icon: 'crown',

@@ -19,6 +19,7 @@ const Login: React.FC = () => {
         currentUser: userInfo,
       }));
     }
+    return userInfo?.access;
   };
   const handleSubmit = async (values: API.LoginParams) => {
     try {
@@ -31,7 +32,7 @@ const Login: React.FC = () => {
         console.log(msg);
         const defaultLoginSuccessMessage = '登录成功！';
         message.success(defaultLoginSuccessMessage);
-        await fetchUserInfo();
+        const access = await fetchUserInfo();
         /** 此方法会跳转到 redirect 参数所在的位 置 */
         if (!history) return;
         const { query } = history.location;
@@ -40,7 +41,12 @@ const Login: React.FC = () => {
         };
         history.push(redirect || '/');
 
-        window.location.reload();
+        if (
+          (access == 'student' && initialState?.settings?.primaryColor != '#13C2C2') ||
+          (access == 'teacher' && initialState?.settings?.primaryColor != '#722ED1') ||
+          (access == 'admin' && initialState?.settings?.primaryColor != '#1890ff')
+        )
+          window.location.reload();
         return;
       }
       console.log(msg);

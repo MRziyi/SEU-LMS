@@ -12,14 +12,14 @@ interface TeacherStatisticsInterface {
 }
 const TeacherStatistics: React.FC<TeacherStatisticsInterface> = ({ teacherID }) => {
   const [teacherStatisticsData, setTeacherStatisticsData] = useState<TeacherStatisticsData>();
-  const [loading, setLoding] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     queryTeacherStatisticsAdaptor();
-  }, []);
+  }, [teacherID]);
 
   async function queryTeacherStatisticsAdaptor() {
-    setLoding(true);
+    setLoading(true);
     try {
       const result = await queryTeacherStatistics(teacherID);
       if (result.data.chartData) {
@@ -27,7 +27,7 @@ const TeacherStatistics: React.FC<TeacherStatisticsInterface> = ({ teacherID }) 
         setTeacherStatisticsData(result.data.chartData);
       }
     } catch {}
-    setLoding(false);
+    setLoading(false);
   }
 
   const getRating = (score: number): string => {
