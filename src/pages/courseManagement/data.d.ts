@@ -5,4 +5,8 @@ export type CourseListData = {
   teacherName: string;
   teacherAvatar: string;
   semester: string;
+  description:string;
+  teacherEmail: string;
+  teacherPhone: string;
+  key: string;
 };

@@ -6,12 +6,13 @@ import { request } from 'umi';
 interface modalCtrl {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  title: string;
   displayMessage: string;
   url: string;
   idParam?: string;
 }
 
-const MyModal: React.FC<modalCtrl> = ({ open, setOpen, displayMessage, url, idParam }) => {
+const MyModal: React.FC<modalCtrl> = ({ open, setOpen, title, displayMessage, url, idParam }) => {
   const [show, setShow] = useState(false);
   const [id, setId] = useState('');
 
@@ -33,8 +34,8 @@ const MyModal: React.FC<modalCtrl> = ({ open, setOpen, displayMessage, url, idPa
 
   return (
     <Modal
-      title={displayMessage}
-      width={700}
+      title={title}
+      width={500}
       open={open}
       okButtonProps={{ style: { display: 'none' } }}
       onCancel={() => {
@@ -42,48 +43,50 @@ const MyModal: React.FC<modalCtrl> = ({ open, setOpen, displayMessage, url, idPa
         return true;
       }}
     >
-      <ProForm<{
-        field: string;
-      }>
-        form={form}
-        autoFocusFirstInput
-        onFinish={async (field) => {
-          try {
-            const response = await request<{
-              data: boolean;
-            }>(url, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              data: { field: field.field, id },
-            });
-            if (response.data) {
-              message.success('提交成功');
-              setOpen(false);
-              return true;
-            } else {
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <ProForm<{
+          field: string;
+        }>
+          form={form}
+          autoFocusFirstInput
+          onFinish={async (field) => {
+            try {
+              const response = await request<{
+                data: boolean;
+              }>(url, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                data: { field: field.field, id },
+              });
+              if (response.data) {
+                message.success('提交成功');
+                setOpen(false);
+                return true;
+              } else {
+                message.error('提交失败，请重试');
+                return false;
+              }
+            } catch (error) {
               message.error('提交失败，请重试');
               return false;
             }
-          } catch (error) {
-            message.error('提交失败，请重试');
-            return false;
-          }
-        }}
-        onFinishFailed={(errorInfo: any) => {
-          console.log('提交失败:', errorInfo);
-        }}
-      >
-        <ProFormText
-          style={{ width: '50%' }}
-          width="md"
-          name="field"
-          label={displayMessage}
-          placeholder="请输入相关信息"
-          rules={[{ required: true }]}
-        />
-      </ProForm>
+          }}
+          onFinishFailed={(errorInfo: any) => {
+            console.log('提交失败:', errorInfo);
+          }}
+        >
+          <ProFormText
+            style={{ width: '50%' }}
+            width="md"
+            name="field"
+            label={displayMessage}
+            placeholder="请输入相关信息"
+            rules={[{ required: true }]}
+          />
+        </ProForm>
+      </div>
     </Modal>
   );
 };

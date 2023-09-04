@@ -58,6 +58,7 @@ function fakeCourseList() {
         teacherName: ownerName[i % 10],
         teacherAvatar: ownerUrl[i % 8],
         semester: '2023秋季学期',
+        description: "俺是描述俺是描述",
       });
     } else {
       list.push({
@@ -67,6 +68,7 @@ function fakeCourseList() {
         teacherName: ownerName[i % 10],
         teacherAvatar: ownerUrl[i % 8],
         semester: '2023夏季学期',
+        description: "俺是描述俺是描述",
       });
     }
   }
@@ -86,6 +88,7 @@ async function postFakeCourseList(req: Request, res: Response) {
         teacherName: ownerName[i % 10],
         teacherAvatar: ownerUrl[i % 8],
         semester: '2023秋季学期',
+        description: "俺是描述俺是描述",
       });
     } else {
       list.push({
@@ -95,6 +98,7 @@ async function postFakeCourseList(req: Request, res: Response) {
         teacherName: ownerName[i % 10],
         teacherAvatar: ownerUrl[i % 8],
         semester: '2023夏季学期',
+        description: "俺是描述俺是描述",
       });
     }
     //const filteredItems = list.filter(item => item.courseName.includes(paramName));
@@ -120,7 +124,22 @@ async function deleteItem(req: Request, res: Response) {
   });
 }
 
+async function fakeTeacherInfo(req: Request, res: Response) {
+  const { courseID } = req.body;
+  const teacherData = {
+    teacherPhone: '123456789',
+    teacherEmail: 'teacher@example.com',
+  };
+  return res.json({
+    code:0,
+    data: {
+      teacherData,
+    },
+  })
+}
+
 export default {
-  'POST  /api/course/listForAdmin': postFakeCourseList,
+  'POST  /api/course/admin-list': postFakeCourseList,
   'POST  /api/course/delete': deleteItem,
+  'POST  /api/course/get-teacher-intro': fakeTeacherInfo,
 };

@@ -6,35 +6,23 @@ import { CourseListData } from './data';
 import { queryCourseList } from './service';
 import { ProList } from '@ant-design/pro-components';
 import request from 'umi-request';
+import CourseInfo from './components/intro';
+import ModifyCourse from './components/modifyCourse';
+
+
 
 const CourseManagement: FC<Record<string, any>> = () => {
-  // const [courseList, setCourseList] = useState<CourseListData[]>([])
-  // //  获取用户信息
-  // const { initialState } = useModel('@@initialState');
 
-  // const { loading } = useRequest(
-  //   () => {
-  //     if (initialState && initialState.currentUser && initialState.currentUser.id)
-  //       return queryCourseList();
-  //     else throw 'Please Login!';
-  //   },
-  //   {
-  //     onSuccess: (result: any) => {
-  //       setCourseList(result.list);
-  //     },
-  //   },
-  // );
-  //获取到课程全部列表
 
   const [searchKeyword, setSearchKeyword] = useState<string>('');
-  const [refreshKey, setRefreshKey] = useState<number>(0);
+  const [refresh, setRefresh] = useState(false);
 
   const fetchData = async (params: any) => {
     // params 包含了请求的参数，包括搜索条件
     console.log('请求参数:', params);
     return request<{
       data: CourseListData[];
-    }>('/api/course/listForAdmin', {
+    }>('/api/course/admin-list', {
       method: 'POST',
       params,
     });
@@ -49,7 +37,7 @@ const CourseManagement: FC<Record<string, any>> = () => {
     })
       .then(() => {
         alert('删除成功');
-        setRefreshKey((prevKey) => prevKey + 1); // 刷新列表
+        setRefresh((prevRefresh) => !prevRefresh);
       })
       .catch((error) => {
         alert('删除失败，请重试');
@@ -125,8 +113,22 @@ const CourseManagement: FC<Record<string, any>> = () => {
               render: (_, row) => {
                 return (
                   <Space>
-                    <Button type="link">详情</Button>
-                    <Button type="link">修改</Button>
+                    <CourseInfo 
+                    courseID={row.courseID}
+                    courseName={row.courseName} 
+                    imgUrl={row.imgUrl} 
+                    teacherName={row.teacherName}
+                    teacherAvatar={row.teacherAvatar}
+                    semester={row.semester}
+                    description={row.description}
+                    ></CourseInfo>
+                    <ModifyCourse
+                    courseID={row.courseID}
+                    courseName={row.courseName} 
+                    imgUrl={row.imgUrl} 
+                    teacherName={row.teacherName}
+                    semester={row.semester}             
+                    ></ModifyCourse>
                     <Button
                       type="link"
                       key="delete"
@@ -140,7 +142,6 @@ const CourseManagement: FC<Record<string, any>> = () => {
               },
             },
           }}
-          key={refreshKey} // 刷新列表的 key
         />
       </div>
     </PageContainer>

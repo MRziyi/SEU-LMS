@@ -10,9 +10,16 @@ const onFinishFailed = (errorInfo: any) => {
   console.log('Failed:', errorInfo);
 };
 
+interface CourseInfoProps {
+    courseID:string;
+    courseName: string;
+    imgUrl: string;
+    semester: string;
+    teacherName: string;
+  }
 
 
-const AddCourse : React.FC = () => {
+const ModifyCourse : React.FC<CourseInfoProps> = (props) => {
   const [visiable, setVisiable] = useState(false);
   const [form] = Form.useForm();
  
@@ -24,12 +31,17 @@ const AddCourse : React.FC = () => {
     setVisiable(false);
   };
 
-  const handleSubmit = (params:any) => {
+  const handleSubmit = (formValues:any) => {
     //alert("!!");
+    const { courseID } = props;
+    const params = {
+        ...formValues,
+        courseID, // 将 courseID 添加到 params 对象中
+      };
     console.log('请求参数:', params);
-    request('/api/course/add', {
+    request('/api/course/modify-course', {
       method: 'POST',
-      params
+      data:params,
     })
       .then(() => {
         //alert('新增成功');
@@ -51,9 +63,9 @@ const AddCourse : React.FC = () => {
  
   return (
 <>
-  <Button type='primary' onClick={() => setVisiable(true)}>新增课程</Button>
+  <Button type='link' onClick={() => setVisiable(true)}>修改</Button>
     <Modal
-      title="新增课程"
+      title="课程修改"
       open={visiable}
       onOk={onOk}
       onCancel={closeModal}
@@ -77,7 +89,7 @@ const AddCourse : React.FC = () => {
       name="courseName"
       rules={[{ required: true, message: '请输入课程名称' }]}
     >
-      <Input placeholder='请输入课程名称'/>
+      <Input placeholder={props.courseName}/>
     </Form.Item>
 
     <Form.Item
@@ -85,7 +97,7 @@ const AddCourse : React.FC = () => {
       name="TeacherName"
       rules={[{ required: true, message: '请输入教师名称' }]}
     >
-      <Input placeholder='请输入教师名称'/>
+      <Input placeholder={props.teacherName}/>
     </Form.Item>    
     
     <Form.Item
@@ -93,7 +105,7 @@ const AddCourse : React.FC = () => {
       name="semester"
       rules={[{ required: true, message: 'xxxx年x季学期  例:2023年夏季学期' }]}
     >
-      <Input placeholder='xxxx年夏/秋季学期  例:2023年夏季学期'/>
+      <Input placeholder={props.semester}/>
     </Form.Item>
     <Form.Item
       name="上传课程图片"
@@ -120,4 +132,4 @@ const AddCourse : React.FC = () => {
 
 };
  
-export default AddCourse;
+export default ModifyCourse;
