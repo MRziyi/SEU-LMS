@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
-import { GridContent, PageContainer } from '@ant-design/pro-layout';
+import { PageContainer } from '@ant-design/pro-layout';
 import type { RouteChildrenProps } from 'react-router';
 import type { RouteParams, tabKeyType } from './data.d';
 import { useHistory, useModel, useParams, useRequest } from 'umi';
-import { Button, Card, Col, Row } from 'antd';
-import { ContactsOutlined, PhoneOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
 import Syllabus from './components/syllabus';
 import Discussion from './components/discussion';
-import { queryCourseIntro } from './service';
-import styles from './index.less';
+import { queryCourseName } from './service';
 import MyModal from '@/components/Modal';
+import Description from './components/description';
 
 const CourseInfo: React.FC<RouteChildrenProps> = () => {
   const { initialState } = useModel('@@initialState');
@@ -19,11 +18,12 @@ const CourseInfo: React.FC<RouteChildrenProps> = () => {
     history.goBack();
   };
 
+  const { data, loading } = useRequest(() => {
+    return queryCourseName(courseID);
+  });
+
   const { courseID } = useParams<RouteParams>();
 
-  const { data, loading } = useRequest(() => {
-    return queryCourseIntro(courseID);
-  });
 
   const [tabKey, setTabKey] = useState<tabKeyType>('1');
   const [openSendAnnouncement, setOpenSendAnnouncement] = useState<boolean>(false);
@@ -31,45 +31,7 @@ const CourseInfo: React.FC<RouteChildrenProps> = () => {
   // 渲染tab切换
   const renderChildrenByTabKey = (tabValue: tabKeyType) => {
     if (tabValue === '1') {
-      return (
-        <GridContent>
-          <Row gutter={24}>
-            <Col lg={16} md={16} sm={24} xs={24}>
-              <Card bordered={false} style={{ marginBottom: 24 }} loading={loading}>
-                {data?.courseData.description}
-              </Card>
-            </Col>
-            <Col lg={8} md={8} sm={24} xs={24}>
-              <Card bordered={false} style={{ marginBottom: 24 }} loading={loading}>
-                <div>
-                  <div className={styles.avatarHolder}>
-                    <img alt="" src={data?.courseData.teacherAvatar} />
-                    <div className={styles.name}>{data?.courseData.teacherName}</div>
-                  </div>
-                  <div className={styles.detail}>
-                    <p>
-                      <ContactsOutlined
-                        style={{
-                          marginRight: 8,
-                        }}
-                      />
-                      邮箱: {data?.courseData.teacherEmail}
-                    </p>
-                    <p>
-                      <PhoneOutlined
-                        style={{
-                          marginRight: 8,
-                        }}
-                      />
-                      手机号: {data?.courseData.teacherPhone}
-                    </p>
-                  </div>
-                </div>
-              </Card>
-            </Col>
-          </Row>
-        </GridContent>
-      );
+      return <Description courseID={courseID} key='1'/>
     }
     if (tabValue === '2') {
       return <Syllabus courseID={courseID} key="2" />;
@@ -98,7 +60,7 @@ const CourseInfo: React.FC<RouteChildrenProps> = () => {
         },
       ]}
       header={{
-        title: data?.courseData.courseName,
+        title: data?.courseName,
         ghost: true,
       }}
       tabActiveKey={tabKey}

@@ -7,9 +7,18 @@ export type DiscussionData = {
   time: string;
 };
 
+export type DescriptionData={
+  unit:string;
+  credit:string;
+  teachingTime:string;
+  teachingLocation:string;
+  teachingMethod:string;
+  introduction:string;
+}
+
 export type CourseData = {
   courseName: string;
-  description: string;
+  description: DescriptionData;
   imgUrl: string;
   teacherName: string;
   teacherAvatar: string;

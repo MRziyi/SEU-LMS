@@ -126,7 +126,14 @@ async function postFakeCourseIntro(req: Request, res: Response) {
         teacherName: ownerName[1],
         teacherAvatar: ownerUrl[1],
         semester: '2023秋季学期',
-        description: '课程描述',
+        description: {
+          unit:'软件学院',
+          credit:'4',
+          teachingTime:'1-16周 星期二 3-5节',
+          teachingLocation:'教1-301',
+          teachingMethod:'讲授',
+          introduction:'balabalabalalalalalalalalalalalalalallla',
+        },
         teacherPhone: '18777777777',
         teacherEmail: 'teacher@seu.edu.cn',
       },
@@ -183,6 +190,17 @@ async function receiveFakeCheckIn(req: Request, res: Response) {
   });
 }
 
+async function postFakeName(req: Request, res: Response) {
+  const { syllabusID } = req.body;
+  console.log('check in for: ' + syllabusID);
+  return res.json({
+    code: 0,
+    data: {courseName:'离散数学'},
+    description: 'ok',
+  });
+}
+
+
 export default {
   'POST  /api/syllabus/list': postFakeSyllabusList,
   'POST  /api/discussion/list': postFakeDiscussionList,
@@ -190,4 +208,5 @@ export default {
   'POST  /api/discussion/reply-list': postFakeReplyList,
   'POST  /api/discussion/reply-send': receiveFakeReply,
   'POST  /api/syllabus/check-in': receiveFakeCheckIn,
+  'POST  /api/course/get-name': postFakeName,
 };

@@ -80,3 +80,12 @@ export async function sendCheckIn(syllabusIDParam: string): Promise<{ code: numb
     },
   });
 }
+
+export async function queryCourseName(syllabusIDParam: string): Promise<{  data:{courseName:string} }> {
+  return request('/api/course/get-name', {
+    method: 'POST',
+    data: {
+      syllabusID: syllabusIDParam,
+    },
+  });
+}
