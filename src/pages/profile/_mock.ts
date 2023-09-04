@@ -1,5 +1,4 @@
 import type { Request, Response } from 'express';
-import user from 'mock/user';
 
 const courseName = [
   '数据结构',
@@ -127,12 +126,12 @@ async function postFakeCourseIntro(req: Request, res: Response) {
         teacherAvatar: ownerUrl[1],
         semester: '2023秋季学期',
         description: {
-          unit:'软件学院',
-          credit:'4',
-          teachingTime:'1-16周 星期二 3-5节',
-          teachingLocation:'教1-301',
-          teachingMethod:'讲授',
-          introduction:'balabalabalalalalalalalalalalalalalallla',
+          unit: '软件学院',
+          credit: '4',
+          teachingTime: '1-16周 星期二 3-5节',
+          teachingLocation: '教1-301',
+          teachingMethod: '讲授',
+          introduction: 'balabalabalalalalalalalalalalalalalallla',
         },
         teacherPhone: '18777777777',
         teacherEmail: 'teacher@seu.edu.cn',
@@ -195,11 +194,10 @@ async function postFakeName(req: Request, res: Response) {
   console.log('check in for: ' + syllabusID);
   return res.json({
     code: 0,
-    data: {courseName:'离散数学'},
+    data: { courseName: '离散数学' },
     description: 'ok',
   });
 }
-
 
 export default {
   'POST  /api/syllabus/list': postFakeSyllabusList,

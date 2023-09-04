@@ -13,6 +13,7 @@ import Description from './components/description';
 const CourseInfo: React.FC<RouteChildrenProps> = () => {
   const { initialState } = useModel('@@initialState');
   const history = useHistory();
+  const { courseID } = useParams<RouteParams>();
 
   const handleGoBack = () => {
     history.goBack();
@@ -22,16 +23,13 @@ const CourseInfo: React.FC<RouteChildrenProps> = () => {
     return queryCourseName(courseID);
   });
 
-  const { courseID } = useParams<RouteParams>();
-
-
   const [tabKey, setTabKey] = useState<tabKeyType>('1');
   const [openSendAnnouncement, setOpenSendAnnouncement] = useState<boolean>(false);
 
   // 渲染tab切换
   const renderChildrenByTabKey = (tabValue: tabKeyType) => {
     if (tabValue === '1') {
-      return <Description courseID={courseID} key='1'/>
+      return <Description courseID={courseID} key="1" />;
     }
     if (tabValue === '2') {
       return <Syllabus courseID={courseID} key="2" />;
@@ -68,11 +66,11 @@ const CourseInfo: React.FC<RouteChildrenProps> = () => {
         setTabKey(_tabKey as tabKeyType);
       }}
       extra={[
-        <Button onClick={handleGoBack} type="primary">
+        <Button onClick={handleGoBack} key="1" type="primary">
           返回我的课程
         </Button>,
         initialState?.currentUser?.access == 'teacher' ? (
-          <Button onClick={() => setOpenSendAnnouncement(true)}>
+          <Button key="2" onClick={() => setOpenSendAnnouncement(true)}>
             发布通知
             <MyModal
               open={openSendAnnouncement}
@@ -80,7 +78,7 @@ const CourseInfo: React.FC<RouteChildrenProps> = () => {
               displayMessage="公告内容"
               url="/api/order/message/send-to-class"
               idParam={courseID}
-            ></MyModal>
+            />
           </Button>
         ) : (
           ''
