@@ -66,6 +66,11 @@ export default defineConfig({
           component: './profile/courseInfo',
           name: '课程详情',
         },
+        {
+          path: '/profile/homework-info/:syllabusID',
+          component: './profile/homeworkInfo',
+          name: '课程详情',
+        },
       ],
     },
 
@@ -75,13 +80,6 @@ export default defineConfig({
       icon: 'areaChart',
       access: 'canTA',
       component: './dataVisualize',
-    },
-    {
-      path: '/question-answer',
-      name: '问题解答',
-      icon: 'crown',
-      access: 'canAdmin',
-      component: './questionAnswer',
     },
     {
       path: '/course-manage',
@@ -122,7 +120,15 @@ export default defineConfig({
       name: '我的消息',
       icon: 'message',
       path: '/myMessages',
+      access: 'canST',
       component: './myMessages',
+    },
+    {
+      path: '/question-answer',
+      name: '问题解答',
+      icon: 'crown',
+      access: 'canAdmin',
+      component: './questionAnswer',
     },
     {
       name: '账户设置',
@@ -157,8 +163,9 @@ export default defineConfig({
   ignoreMomentLocale: true,
   // proxy: {
   //   '/api/': {
-  //     target: 'http://10.203.146.156:8081',
+  //     target: 'http://10.203.240.187:8081',
   //     changeOrigin: true,
+  //     secure: false,
   //   },
   // },
   manifest: {

@@ -1,18 +1,17 @@
 import { useState, type FC } from 'react';
-import { Button, Modal, Checkbox, Form, Input, Upload} from 'antd';
+import { Button, Modal, Checkbox, Form, Input, Upload, Select} from 'antd';
 import React from 'react';
 import { UploadOutlined } from '@ant-design/icons';
 import request from 'umi-request';
 
 
-
 const onFinishFailed = (errorInfo: any) => {
   console.log('Failed:', errorInfo);
 };
+const { Option } = Select;
 
 
-
-const AddCourse : React.FC = () => {
+const AddUser : React.FC = () => {
   const [visiable, setVisiable] = useState(false);
   const [form] = Form.useForm();
  
@@ -27,7 +26,7 @@ const AddCourse : React.FC = () => {
   const handleSubmit = (params:any) => {
     //alert("!!");
     console.log('请求参数:', params);
-    request('/api/course/add', {
+    request('/api/user/add-user', {
       method: 'POST',
       params
     })
@@ -38,7 +37,6 @@ const AddCourse : React.FC = () => {
         alert('创建失败，请重试');
       });
       form.resetFields();
-      
     }
       
   const normFile = (e: any) => {
@@ -51,9 +49,9 @@ const AddCourse : React.FC = () => {
  
   return (
 <>
-  <Button type='primary' onClick={() => setVisiable(true)}>新增课程</Button>
+  <Button type='primary' onClick={() => setVisiable(true)}>新建用户</Button>
     <Modal
-      title="新增课程"
+      title="新增用户"
       open={visiable}
       onOk={onOk}
       onCancel={closeModal}
@@ -73,36 +71,56 @@ const AddCourse : React.FC = () => {
     autoComplete="off"
   >
     <Form.Item
-      label="课程名称"
-      name="courseName"
-      rules={[{ required: true, message: '请输入课程名称' }]}
+      label="用户名"
+      name="nickName"
+      rules={[{ required: true, message: '请输入用户名称' }]}
     >
-      <Input placeholder='请输入课程名称'/>
+      <Input placeholder='请输入用户名称'/>
     </Form.Item>
 
     <Form.Item
-      label="教师名称"
-      name="TeacherName"
-      rules={[{ required: true, message: '请输入教师名称' }]}
+      label="一卡通号"
+      name="ID"
+      rules={[{ required: true, message: '请输入一卡通号' }]}
     >
-      <Input placeholder='请输入教师名称'/>
+      <Input placeholder='请输入一卡通号'/>
     </Form.Item>    
     
+    <Form.Item name="access" label="Gender" rules={[{ required: true }]}>
+        <Select
+          placeholder="Select a option"
+          allowClear
+        >
+          <Option value="teacher">教师</Option>
+          <Option value="student">学生</Option>
+          <Option value="admin">管理员</Option>
+        </Select>
+      </Form.Item>
+
     <Form.Item
-      label="开设学期"
-      name="semester"
-      rules={[{ required: true, message: 'xxxx年x季学期  例:2023年夏季学期' }]}
+      label="电子邮箱"
+      name="email"
+      rules={[{ required: true, message: '请输入电子邮箱' }]}
     >
-      <Input placeholder='xxxx年夏/秋季学期  例:2023年夏季学期'/>
+      <Input placeholder='请输入电子邮箱'/>
     </Form.Item>
+
     <Form.Item
-      name="上传课程图片"
+      label="手机号"
+      name="phone"
+      rules={[{ required: true, message: '请输入手机号' }]}
+    >
+      <Input placeholder='请输入手机号'/>
+    </Form.Item>
+
+    <Form.Item
+      name="avatarUrl"
       label="Upload"
       valuePropName="fileList"
       getValueFromEvent={normFile}
     >
       <Upload name="logo" action="/upload.do" listType="picture">
-        <Button icon={<UploadOutlined />}>Click to upload</Button>
+        <Button icon={<UploadOutlined />}>上传头像</Button>
       </Upload>
     </Form.Item>      
     <Form.Item wrapperCol={{ span: 16, offset: 6 }}>
@@ -120,4 +138,4 @@ const AddCourse : React.FC = () => {
 
 };
  
-export default AddCourse;
+export default AddUser;

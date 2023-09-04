@@ -3,6 +3,9 @@ import { Divider, Button, List, Typography, message, Space, Tag } from 'antd';
 import { querySyllabus, sendCheckIn } from '../../service';
 import { ProList } from '@ant-design/pro-components';
 import { ClockCircleOutlined } from '@ant-design/icons';
+import FileModal from './components/fileModal';
+import HomeworkModal from './components/homeworkModal';
+import { Link, useModel } from 'umi';
 
 interface CourseIDParam {
   courseID: string;
@@ -14,8 +17,12 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
   const [listData, setListData] = useState<any[]>([]);
   const [totalNum, setTotalNum] = useState<number>(0);
   const [loadingForPagigation, setLoadingForPagigation] = useState<boolean>(false);
+  const [openFileModal, setOpenFileModal] = useState<boolean>(false);
+  const [openHomeworkModal, setOpenHomeworkModal] = useState<boolean>(false);
   const [loadingForCheckIn, setLoadingForCheckIn] = useState<string>('');
+  const [currentSyllabusID, setCurrentSyllabusID] = useState<string>('');
 
+  const { initialState } = useModel('@@initialState');
   // 获取列表数据
   useEffect(() => {
     changePage(1, pageSize);
@@ -64,10 +71,49 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
             >
               课程直播
             </Button>,
-            <Button type="text">课件资料</Button>,
-            <Button style={{ marginRight: '5px' }} type="text">
-              作业
+            <Button
+              type="text"
+              onClick={() => {
+                setCurrentSyllabusID(item.syllabusID);
+                setOpenFileModal(true);
+              }}
+            >
+              课件资料
             </Button>,
+            initialState?.currentUser?.access === 'teacher' ? (
+              item.haveHomework ? (
+                <Link to={`/profile/homework-info/${item.syllabusID}`}>
+                  <Button type="text" style={{ marginRight: '5px' }}>
+                    作业详情
+                  </Button>
+                </Link>
+              ) : (
+                <Button
+                  style={{ marginRight: '5px' }}
+                  type="text"
+                  onClick={() => {
+                    setCurrentSyllabusID(item.syllabusID);
+                  }}
+                >
+                  发布作业
+                </Button>
+              )
+            ) : item.haveHomework ? (
+              <Button
+                style={{ marginRight: '5px' }}
+                type="text"
+                onClick={() => {
+                  setCurrentSyllabusID(item.syllabusID);
+                  setOpenHomeworkModal(true);
+                }}
+              >
+                查看作业
+              </Button>
+            ) : (
+              <Button style={{ marginRight: '5px' }} type="text" disabled onClick={() => {}}>
+                作业待发布
+              </Button>
+            ),
           ],
           avatar: 'https://gw.alipayobjects.com/zos/antfincdn/UCSiy1j6jx/xingzhuang.svg',
           content: (
@@ -77,7 +123,6 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
             </div>
           ),
         }));
-        console.log(list);
         setListData(list);
         setCurrentPage(_page);
         setPageSize(_pageSize);
@@ -112,25 +157,37 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
   };
 
   return (
-    <ProList<any>
-      grid={{ gutter: 16, xxl: 3, xl: 3, lg: 3, md: 2, sm: 1, xs: 1 }}
-      headerTitle="课程大纲"
-      loading={loadingForPagigation}
-      dataSource={listData}
-      pagination={paginationProps}
-      showActions="hover"
-      showExtra="always"
-      metas={{
-        title: {},
-        subTitle: {},
-        type: {},
-        avatar: {},
-        content: {},
-        actions: {
-          cardActionProps,
-        },
-      }}
-    />
+    <>
+      <ProList<any>
+        grid={{ gutter: 16, xxl: 3, xl: 3, lg: 2, md: 2, sm: 1, xs: 1 }}
+        headerTitle="课程大纲"
+        loading={loadingForPagigation}
+        dataSource={listData}
+        pagination={paginationProps}
+        showActions="hover"
+        showExtra="always"
+        metas={{
+          title: {},
+          subTitle: {},
+          type: {},
+          avatar: {},
+          content: {},
+          actions: {
+            cardActionProps,
+          },
+        }}
+      />
+      <FileModal
+        open={openFileModal}
+        setOpen={setOpenFileModal}
+        syllabusID={currentSyllabusID}
+      ></FileModal>
+      <HomeworkModal
+        open={openHomeworkModal}
+        setOpen={setOpenHomeworkModal}
+        syllabusID={currentSyllabusID}
+      ></HomeworkModal>
+    </>
   );
 };
 export default Syllabus;

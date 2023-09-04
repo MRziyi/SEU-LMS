@@ -64,10 +64,9 @@ function fakeSyllabusList(currentPage: number, pageSize: number) {
     list.push({
       syllabusID: 'Syllabus - ' + i,
       title: 'Lesson ' + (i + 1) + ': ' + itemName[i % 8],
-      materials: ['URL1', 'URL2'],
-      homework: ['URL3', 'URL4'],
       isCheckedIn: i < 3,
       time: new Date(new Date().getTime() - 1000 * 60 * 60 * 2 * i).toLocaleString(),
+      haveHomework: true,
     });
   }
   const startIndex = (currentPage - 1) * pageSize;
@@ -183,6 +182,39 @@ async function receiveFakeCheckIn(req: Request, res: Response) {
   });
 }
 
+async function postFakeFileList(req: Request, res: Response) {
+  const { syllabusID } = req.body;
+  console.log('fileList: ' + syllabusID);
+  return res.json({
+    code: 0,
+    data: {
+      fileList: [
+        {
+          type: 'pdf',
+          name: 'Introduction to Biology',
+          description: 'A comprehensive guide to the basics of biology for ',
+          status: 0,
+          url: 'https://example.com/files/intro_biology.pdf',
+        },
+        {
+          type: 'doc',
+          name: 'Chemistry Formulas',
+          description: 'A collection of important chemistry formulas',
+          status: 1,
+          url: 'https://example.com/files/chemistry_formulas.doc',
+        },
+        {
+          type: 'ppt',
+          name: 'History of World War II',
+          description: 'A presentation on the events and impact of World War II',
+          status: 1,
+          url: 'https://example.com/files/world_war_ii.ppt',
+        },
+      ],
+    },
+  });
+}
+
 export default {
   'POST  /api/syllabus/list': postFakeSyllabusList,
   'POST  /api/discussion/list': postFakeDiscussionList,
@@ -190,4 +222,5 @@ export default {
   'POST  /api/discussion/reply-list': postFakeReplyList,
   'POST  /api/discussion/reply-send': receiveFakeReply,
   'POST  /api/syllabus/check-in': receiveFakeCheckIn,
+  'POST  /api/syllabus/material-list': postFakeFileList,
 };
