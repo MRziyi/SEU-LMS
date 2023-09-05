@@ -4,6 +4,7 @@ import { queryMaterialList } from '../../../service';
 import { ProList } from '@ant-design/pro-components';
 import {
   BarsOutlined,
+  ClockCircleOutlined,
   FileExcelOutlined,
   FileImageOutlined,
   FilePdfOutlined,
@@ -93,9 +94,13 @@ const FileModal: React.FC<modalCtrl> = ({ open, setOpen, syllabusID }) => {
             </Button>,
           ],
           content: (
-            <div style={{ marginTop: '-10px' }}>
+            <div style={{ marginTop: '-15px' }}>
               <BarsOutlined />
               <em style={{ marginLeft: '5px' }}>课件描述：{item.description}</em>
+              <div style={{ marginTop: '5px' }}>
+                <ClockCircleOutlined />
+                <em style={{ marginLeft: '5px' }}>上传时间：{item.time}</em>
+              </div>
             </div>
           ),
           type: item.type,

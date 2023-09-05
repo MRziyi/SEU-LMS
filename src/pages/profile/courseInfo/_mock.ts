@@ -1,5 +1,4 @@
 import type { Request, Response } from 'express';
-import user from 'mock/user';
 
 const courseName = [
   '数据结构',
@@ -211,6 +210,7 @@ async function postFakeFileList(req: Request, res: Response) {
           description: 'A comprehensive guide to the basics of biology',
           status: 1,
           url: 'https://example.com/files/intro_biology.pdf',
+          time: new Date(new Date().getTime() - 1000 * 60 * 60 * 2).toLocaleString(),
         },
         {
           type: 'doc',
@@ -218,6 +218,7 @@ async function postFakeFileList(req: Request, res: Response) {
           description: 'A collection of important chemistry formulas',
           status: 1,
           url: 'https://example.com/files/chemistry_formulas.doc',
+          time: new Date(new Date().getTime() - 1000 * 60 * 60 * 2).toLocaleString(),
         },
         {
           type: 'ppt',
@@ -225,6 +226,7 @@ async function postFakeFileList(req: Request, res: Response) {
           description: 'A presentation on the events and impact of World War II',
           status: 1,
           url: 'https://example.com/files/world_war_ii.ppt',
+          time: new Date(new Date().getTime() - 1000 * 60 * 60 * 2).toLocaleString(),
         },
       ],
     },

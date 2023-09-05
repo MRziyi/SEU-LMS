@@ -37,6 +37,7 @@ export type FileData = {
   description: string;
   status: number;
   url: string;
+  time: string;
 };
 
 export type ReplyData = {
