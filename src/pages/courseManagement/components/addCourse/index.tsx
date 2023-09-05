@@ -1,5 +1,5 @@
 import { useState, type FC } from 'react';
-import { Button, Modal, Checkbox, Form, Input, Upload} from 'antd';
+import { Button, Modal, Checkbox, Form, Input, Upload, message} from 'antd';
 import React from 'react';
 import { UploadOutlined } from '@ant-design/icons';
 import request from 'umi-request';
@@ -22,9 +22,7 @@ const AddCourse : React.FC<Props> = (Props) => {
 
 
 
-  const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo);
-  };
+
   const onChange = (value: string) => {
     console.log(`selected ${value}`);
     setSelectedTeacherName(value);
@@ -40,6 +38,11 @@ const AddCourse : React.FC<Props> = (Props) => {
     setVisiable(false);
   };
 
+  const onFinishFailed = (errorInfo: any) => {
+    console.log('Failed:', errorInfo);
+    message.error('创建失败，请重试');
+  };
+
   const handleSubmit = (params:any) => {
     //alert("!!");
     console.log('请求参数:', params);
@@ -49,10 +52,10 @@ const AddCourse : React.FC<Props> = (Props) => {
       params
     })
       .then(() => {
-        //alert('新增成功');
+        message.success('创建成功');
       })
       .catch((error) => {
-        alert('创建失败，请重试');
+        message.error('创建失败，请重试');
       });
       form.resetFields();
       

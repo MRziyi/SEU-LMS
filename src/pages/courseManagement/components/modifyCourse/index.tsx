@@ -1,5 +1,5 @@
 import { useState, type FC } from 'react';
-import { Button, Modal, Checkbox, Form, Input, Upload, Select} from 'antd';
+import { Button, Modal, Checkbox, Form, Input, Upload, Select, message} from 'antd';
 import React from 'react';
 import { UploadOutlined } from '@ant-design/icons';
 import request from 'umi-request';
@@ -9,9 +9,7 @@ import request from 'umi-request';
 const filterOption = (input: string, option: { label: string; value: string }) =>
 (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
 
-const onFinishFailed = (errorInfo: any) => {
-  console.log('Failed:', errorInfo);
-};
+
 
 interface CourseInfoProps {
     courseID:string;
@@ -30,6 +28,7 @@ const ModifyCourse : React.FC<CourseInfoProps> = (props) => {
 
  
   const onOk = () => {
+    alert("!!ok");
     closeModal();
   };
 
@@ -42,24 +41,45 @@ const ModifyCourse : React.FC<CourseInfoProps> = (props) => {
     setVisiable(false);
   };
 
+  const onFinishFailed = (errorInfo: any) => {
+    console.log('Failed:', errorInfo);
+    closeModal;
+  };
+
   const handleSubmit = (formValues:any) => {
-    //alert("!!");
+
+    closeModal();
     const { courseID } = props;
-    formValues.teacherName = selectedTeacherName;
+    const courseName = form.getFieldValue('courseName');
+    // 如果输入框的值为空，则使用默认值
+    if (!courseName) {
+      formValues.courseName = props.courseName;
+    }
+
+    const semester = form.getFieldValue('semester');
+    // 如果输入框的值为空，则使用默认值
+    if (!semester) {
+      formValues.semester = props.semester;
+    }
+
+    formValues.teacherName = selectedTeacherName || props.teacherName;
+
+    //formValues.teacherName = selectedTeacherName;
     const params = {
         ...formValues,
         courseID, // 将 courseID 添加到 params 对象中
       };
-    console.log('请求参数:', params);
+      console.log("提交的教师名",selectedTeacherName,props.teacherName,formValues.teacherName)
+    console.log('请求参数:', params,);
     request('/api/course/modify-course', {
       method: 'POST',
       data:params,
     })
       .then(() => {
-        //alert('新增成功');
+        message.success("修改成功");
       })
       .catch((error) => {
-        alert('创建失败，请重试');
+        message.error('创建失败，请重试');
       });
       form.resetFields();
       
@@ -108,15 +128,15 @@ const ModifyCourse : React.FC<CourseInfoProps> = (props) => {
     <Form.Item
       label="课程名称"
       name="courseName"
-      rules={[{ required: true, message: '请输入课程名称' }]}
+      rules={[{  message: '请输入课程名称' }]}
     >
       <Input placeholder={props.courseName} defaultValue={props.courseName}/>
     </Form.Item>
 
     <Form.Item
       label="教师名称"
-      name="TeacherName"
-      rules={[{ required: true, message: '请输入教师名称' }]}
+      name="teacherName"
+      rules={[{  message: '请输入教师名称' }]}
     >
     <Select
     showSearch
@@ -132,7 +152,7 @@ const ModifyCourse : React.FC<CourseInfoProps> = (props) => {
     <Form.Item
       label="开设学期"
       name="semester"
-      rules={[{ required: true, message: 'xxxx年x季学期  例:2023年夏季学期' }]}
+      rules={[{  message: 'xxxx年x季学期  例:2023年夏季学期' }]}
     >
       <Input placeholder={props.semester} defaultValue={props.semester}/>
     </Form.Item>
@@ -147,7 +167,7 @@ const ModifyCourse : React.FC<CourseInfoProps> = (props) => {
       </Upload>
     </Form.Item>      
     <Form.Item wrapperCol={{ span: 16, offset: 6 }}>
-        <Button type="primary" htmlType="submit" onClick={(closeModal)}>
+        <Button type="primary" htmlType="submit">
           提交
         </Button>
     </Form.Item>

@@ -1,5 +1,5 @@
 import { request } from 'umi';
-import { CourseData, DiscussionData, FileData, ReplyData, SyllabusData } from './data';
+import { CheckInData, CourseData, DiscussionData, FileData, ReplyData, SyllabusData } from './data';
 
 export async function queryDiscussionList(
   courseIDParam: string,
@@ -93,7 +93,18 @@ export async function queryCourseName(
 export async function queryMaterialList(
   syllabusIDParam: string,
 ): Promise<{ data: { fileList: FileData[] } }> {
-  return request('/api/syllabus/material/list', {
+  return request('/api/syllabus/material-list', {
+    method: 'POST',
+    data: {
+      syllabusID: syllabusIDParam,
+    },
+  });
+}
+
+export async function queryCheckInData(
+  syllabusIDParam:string,
+): Promise<{ data: {checkInData:CheckInData} }> {
+  return request('/api/syllabus/check-in-data', {
     method: 'POST',
     data: {
       syllabusID: syllabusIDParam,

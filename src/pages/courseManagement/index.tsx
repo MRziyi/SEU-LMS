@@ -8,6 +8,7 @@ import { ProList } from '@ant-design/pro-components';
 import request from 'umi-request';
 import CourseInfo from './components/intro';
 import ModifyCourse from './components/modifyCourse';
+import { query } from 'express';
 
 
 
@@ -17,7 +18,7 @@ const CourseManagement: FC<Record<string, any>> = () => {
 
   const [refresh, setRefresh] = useState(false);
   const [keyWord,setKeyWord] = useState<string>('');
-
+  const [keyWord2,setKeyWord2] = useState<string>('');
 
 
 
@@ -42,7 +43,7 @@ const CourseManagement: FC<Record<string, any>> = () => {
     if (preSearchContent.current !== searchContent.current) _page = 1;
     try {
       let result;
-      result = await queryCourseList(keyWord, _page, _pageSize);
+      result = await queryCourseList(keyWord, keyWord2, _page, _pageSize);
       if (result.data) {
         setTotalNum(result.data.totalNum);
         setListData(result.data.list);
@@ -62,16 +63,17 @@ const CourseManagement: FC<Record<string, any>> = () => {
 
 
   useEffect(() => {
-    console.log('拿到的关键字为:', keyWord);
+    console.log('拿到的关键字为:', keyWord, keyWord2);
     changePage(1, pageSize)
-  }, [keyWord]);
+  }, [keyWord,keyWord2]);
 
   const fetchKeyword = async (params: any) => {
     setKeyWord(params.courseName);
-    console.log('请求参数:', params.courseName);
+    setKeyWord2(params.teacherName);
   };
+
   function test(){
-    console.log('拿到的关键字是:', keyWord);
+    console.log('拿到的关键字是:', keyWord, keyWord2);
   }
   //搜索功能雏形
 
@@ -96,6 +98,7 @@ const CourseManagement: FC<Record<string, any>> = () => {
         alert('删除失败，请重试');
       });
   };
+
 
   return (
     <PageContainer>
@@ -140,6 +143,7 @@ const CourseManagement: FC<Record<string, any>> = () => {
               search: false,
             },
             description: {
+              valueType: 'text',
               render: (_, row) => {
                 return (
                   <div>
@@ -148,7 +152,8 @@ const CourseManagement: FC<Record<string, any>> = () => {
                 );
               },
               dataIndex: 'teacherName',
-              search: false,
+              title:'教师姓名',
+              
             },
             subTitle: {
               render: (_, row) => {

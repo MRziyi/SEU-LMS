@@ -48,3 +48,8 @@ export type ReplyData = {
   isRead: bool;
   time: string;
 };
+
+export type CheckInData={
+  isCheckedIn:number;
+  notCheckedIn:number;
+}

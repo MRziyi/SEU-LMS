@@ -6,7 +6,7 @@ import { ClockCircleOutlined } from '@ant-design/icons';
 import FileModal from './components/fileModal';
 import HomeworkModal from './components/homeworkModal';
 import { Link, useModel } from 'umi';
-import DoubleInputModal from '@/components/Modal/doubleInput';
+import StartCheckInModal from './components/startCheckInModal';
 
 interface CourseIDParam {
   courseID: string;
@@ -19,10 +19,11 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
   const [totalNum, setTotalNum] = useState<number>(0);
   const [loadingForPagigation, setLoadingForPagigation] = useState<boolean>(false);
   const [openFileModal, setOpenFileModal] = useState<boolean>(false);
-  const [openPublishHWModal, setOpenPublishHWModal] = useState<boolean>(false);
   const [openHomeworkModal, setOpenHomeworkModal] = useState<boolean>(false);
   const [loadingForCheckIn, setLoadingForCheckIn] = useState<string>('');
   const [currentSyllabusID, setCurrentSyllabusID] = useState<string>('');
+  const [openStartCheckInModal, setOpenStartCheckInModal] = useState<boolean>(false);
+  const [haveCheckedIn,setHaveCheckedIn]=useState<number>(0);
 
   const { initialState } = useModel('@@initialState');
   // 获取列表数据
@@ -108,7 +109,9 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
                     size="small"
                     loading={loadingForCheckIn === item.syllabusID}
                     onClick={() => {
-                      checkIn(item.syllabusID);
+                      setCurrentSyllabusID(item.syllabusID);
+                      setOpenStartCheckInModal(true);
+                      setHaveCheckedIn(0);
                     }}
                   >
                     发起签到
@@ -120,7 +123,9 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
                     size="small"
                     loading={loadingForCheckIn === item.syllabusID}
                     onClick={() => {
-                      checkIn(item.syllabusID);
+                      setCurrentSyllabusID(item.syllabusID);
+                      setOpenStartCheckInModal(true);
+                      setHaveCheckedIn(1);
                     }}
                   >
                     签到管理
@@ -132,7 +137,9 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
                     size="small"
                     loading={loadingForCheckIn === item.syllabusID}
                     onClick={() => {
-                      checkIn(item.syllabusID);
+                      setCurrentSyllabusID(item.syllabusID);
+                      setOpenStartCheckInModal(true);
+                      setHaveCheckedIn(0);
                     }}
                   >
                     再次发起签到
@@ -204,7 +211,6 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
                   type="text"
                   onClick={() => {
                     setCurrentSyllabusID(item.syllabusID);
-                    setOpenPublishHWModal(true);
                   }}
                 >
                   发布作业
@@ -293,19 +299,22 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
           },
         }}
       />
-      <FileModal open={openFileModal} setOpen={setOpenFileModal} syllabusID={currentSyllabusID} />
+      <FileModal
+        open={openFileModal}
+        setOpen={setOpenFileModal}
+        syllabusID={currentSyllabusID}
+      ></FileModal>
       <HomeworkModal
         open={openHomeworkModal}
         setOpen={setOpenHomeworkModal}
         syllabusID={currentSyllabusID}
-      />
-      <DoubleInputModal
-        open={openPublishHWModal}
-        setOpen={setOpenPublishHWModal}
-        url="/api/syllabus/homework/publish"
-        title="发布作业"
-        idParam={currentSyllabusID}
-      />
+      ></HomeworkModal>
+      <StartCheckInModal
+        open={openStartCheckInModal}
+        setOpen={setOpenStartCheckInModal}
+        syllabusID={currentSyllabusID}
+        haveCheckedIn={haveCheckedIn}
+      ></StartCheckInModal>
     </>
   );
 };

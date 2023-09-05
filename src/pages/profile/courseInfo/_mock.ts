@@ -234,6 +234,19 @@ async function postFakeFileList(req: Request, res: Response) {
   });
 }
 
+async function postCheckInData(req: Request, res: Response) {
+  //const { syllabusID } = req.body;
+  //console.log('check in for: ' + syllabusID);
+  return res.json({
+    code: 0,
+    data: {
+      checkInData:{isCheckedIn:32,
+      notCheckedIn:6,
+      }
+    },
+  });
+}
+
 export default {
   'POST  /api/syllabus/list': postFakeSyllabusList,
   'POST  /api/discussion/list': postFakeDiscussionList,
@@ -242,5 +255,6 @@ export default {
   'POST  /api/discussion/reply-send': receiveFakeReply,
   'POST  /api/syllabus/check-in': receiveFakeCheckIn,
   'POST  /api/course/get-name': postFakeName,
-  'POST  /api/syllabus/material/list': postFakeFileList,
+  'POST  /api/syllabus/material-list': postFakeFileList,
+  'POST  /api/syllabus/check-in-data':postCheckInData,
 };

@@ -26,7 +26,7 @@ const columns: ProColumns<UserListData>[] = [
   },
   {
     title: '用户身份',
-    width: 40,
+    width: 60,
     align: 'center',
     dataIndex: 'access',
     search:false,
@@ -35,12 +35,12 @@ const columns: ProColumns<UserListData>[] = [
     title: '手机',
     dataIndex: 'phone',
     align: 'left',
-    width: 80,
+    width: 100,
     search:false,
   },
   {
     title: '电子邮箱',
-    width: 120,
+    width: 100,
     dataIndex: 'email',
     align: 'left',
     search:false,
@@ -84,7 +84,9 @@ const handleDelete = async (params: any) => {
   // 发起删除请求
   request('/api/user/delete', {
     method: 'POST',
-    params,
+    data:{
+      id:params,
+    }
   })
     .then(() => {
       alert('删除成功');
@@ -235,7 +237,7 @@ export default () => {
           </Space>
         );
       }}
-      scroll={{ x: 1300 }}
+      scroll={{ x: 400 }}
       options={false}
       pagination={{
         onChange: changePage,

@@ -21,6 +21,7 @@ const ownerUrl = [
   'https://gw.alipayobjects.com/zos/rmsportal/nxkuOJlFJuAUhzlMTCEe.png', // Webpack
 ];
 
+
 const ownerName = [
   '付小小',
   '曲丽丽',
@@ -38,11 +39,11 @@ function homeworkListData(currentPage: number, pageSize: number) {
   const list = [];
   for (let i = 0; i < 18; i += 1) {
     list.push({
-      studentAvatar: 'https://gw.alipayobjects.com/zos/antfincdn/UCSiy1j6jx/xingzhuang.svg',
-      studentNickName: ownerName[i % 10],
-      fileName: itemName[i % 8],
-      fileUrl: ownerUrl[i % 8],
-      status: i % 2,
+      studentAvatar:'https://gw.alipayobjects.com/zos/antfincdn/UCSiy1j6jx/xingzhuang.svg',
+      studentNickName:ownerName[i % 10],
+      fileName:itemName[i % 8],
+      fileUrl:ownerUrl[i%8],
+      status:i%2,
     });
   }
   const startIndex = (currentPage - 1) * pageSize;
@@ -57,16 +58,16 @@ async function postHomeworkData(req: Request, res: Response) {
     data: {
       totalNum: 18,
       list: homeworkListData(currentPage, pageSize),
-      info: {
-        homeworkName: '这是一份作业',
-        homeworkDescription: '乱七八糟的描述balabala',
-        toBeCorrectedNum: 31,
-        uncommittedNum: 5,
-      },
+      info:{
+        homeworkName:'这是一份作业',
+        homeworkDescription:'乱七八糟的描述balabala',
+        toBeCorrectedNum:31,
+        uncommittedNum:5,
+      }
     },
   });
 }
 
 export default {
-  'POST  /api/syllabus/homework/list': postHomeworkData,
+  'POST  /api/syllabus/homework': postHomeworkData,
 };

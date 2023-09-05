@@ -119,9 +119,7 @@ const QuestionAnswer: FC<Record<string, any>> = () => {
       headerTitle="答疑列表"
       pagination={paginationProps}
       showActions="hover"
-      onRow={(item) => ({
-        onClick: () => handleRowClick(item),//点击事件
-      })}
+
     
       metas={{
         title: {
@@ -159,6 +157,15 @@ const QuestionAnswer: FC<Record<string, any>> = () => {
                       学生
                     </Tag>
                   )}
+                  {row.isSolved == true ? (
+                    <Tag color="green" key="1">
+                      已解决
+                    </Tag>
+                  ) : (
+                    <Tag color="red" key="1">
+                      未解决
+                    </Tag>
+                  )}
                   <div style={{ marginLeft: '10px' }}>{moment(row.time).fromNow()}</div>
                 </Space>
               </>
@@ -172,10 +179,10 @@ const QuestionAnswer: FC<Record<string, any>> = () => {
               return (
                 <Button
                   style={{ marginRight: '10px' }}
-                  loading={loadingForMark === row.QAID}
-              
+                  loading={loadingForMark === row.QAID}           
+                  onClick={()=>handleRowClick(row)}  
                 >
-                  已回答
+                  修改回答
                 </Button>
               );
             else {
@@ -184,9 +191,9 @@ const QuestionAnswer: FC<Record<string, any>> = () => {
                   loading={loadingForMark === row.QAID}
                   style={{ marginRight: '10px' }}
                   type="primary"
-              
+                  onClick={()=>handleRowClick(row)}
                 >
-                  未回答
+                  进行回答
                 </Button>
               );
             }
