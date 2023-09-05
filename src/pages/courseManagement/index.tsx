@@ -1,8 +1,8 @@
-import { useState, type FC } from 'react';
+import { useState, type FC, useEffect, useRef } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Avatar, Button, Divider, Input, List, Modal, Space, Typography, Tag } from 'antd';
 import AddCourse from './components/addCourse';
-import { CourseListData } from './data';
+import { CourseListData } from './data.d';
 import { queryCourseList } from './service';
 import { ProList } from '@ant-design/pro-components';
 import request from 'umi-request';
@@ -14,19 +14,116 @@ import ModifyCourse from './components/modifyCourse';
 const CourseManagement: FC<Record<string, any>> = () => {
 
 
-  const [searchKeyword, setSearchKeyword] = useState<string>('');
   const [refresh, setRefresh] = useState(false);
+  const [keyWord,setKeyWord] = useState<string>('');
 
-  const fetchData = async (params: any) => {
-    // params 包含了请求的参数，包括搜索条件
-    console.log('请求参数:', params);
-    return request<{
-      data: CourseListData[];
-    }>('/api/course/admin-list', {
-      method: 'POST',
-      params,
-    });
+
+  
+  // 创建一个 CourseListData 数组
+  const courseList: CourseListData[] = [
+    {
+      courseID: '1',
+      courseName: 'Course 1',
+      imgUrl: 'img1.jpg',
+      teacherName: 'Teacher 1',
+      teacherAvatar: 'avatar1.jpg',
+      semester: 'Spring 2023',
+      description: 'Description for Course 1',
+      teacherEmail: 'teacher1@example.com',
+      teacherPhone: '123-456-7890',
+      key: '1',
+    },
+    {
+      courseID: '2',
+      courseName: 'Course 2',
+      imgUrl: 'img2.jpg',
+      teacherName: 'Teacher 2',
+      teacherAvatar: 'avatar2.jpg',
+      semester: 'Fall 2023',
+      description: 'Description for Course 2',
+      teacherEmail: 'teacher2@example.com',
+      teacherPhone: '987-654-3210',
+      key: '2',
+    },
+    // 添加更多的课程数据...
+  ];
+
+
+
+
+  const [pageSize, setPageSize] = useState<number>(8);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [listData, setListData] = useState<CourseListData[]>([]);
+  const [totalNum, setTotalNum] = useState<number>(0);
+  const [loadingForPagigation, setLoadingForPagigation] = useState<boolean>(false);
+  const [loadingForSearch, setLoadingForSearch] = useState<boolean>(false);
+  const [teacherList, setTeacherList] = useState<string[]>([]);
+
+  const searchContent = useRef<string>('');
+  const preSearchContent = useRef<string>('');
+
+  //  获取用户信息
+
+  useEffect(() => {
+    changePage(1, pageSize);
+  }, []);
+
+  async function changePage(_page: number, _pageSize: number) {
+    setLoadingForPagigation(true);
+    if (preSearchContent.current !== searchContent.current) _page = 1;
+    try {
+      let result;
+      result = await queryCourseList(keyWord, _page, _pageSize);
+      if (result.data) {
+        setTotalNum(result.data.totalNum);
+        setListData(result.data.list);
+        setPageSize(_pageSize);
+        setCurrentPage(_page);
+        setTeacherList(result.data.teacherList);
+      }
+    } catch {}
+      
+    setLoadingForPagigation(false);
+  }
+
+
+
+  // async function onSearch(keyword: string) {
+  //   setLoadingForSearch(true);
+  //   try {
+  //     searchContent.current = keyword;
+  //     changePage(1, pageSize);
+  //   } catch {}
+  //   setLoadingForSearch(false);
+  // }
+
+
+
+
+  function showTotal(total: number, range: [number, number]) {
+    return `${range[0]}-${range[1]} 共 ${total} 条`;
+  }
+
+
+
+  useEffect(() => {
+    console.log('拿到的关键字为:', keyWord);
+    changePage(1, pageSize)
+  }, [keyWord]);
+
+  const fetchKeyword = async (params: any) => {
+    setKeyWord(params.courseName);
+    console.log('请求参数:', params.courseName);
   };
+  function test(){
+    console.log('拿到的关键字是:', keyWord);
+  }
+  //搜索功能雏形
+
+
+
+
+  
 
   const handleDelete = async (params: any) => {
     console.log('请求参数:', params);
@@ -48,24 +145,33 @@ const CourseManagement: FC<Record<string, any>> = () => {
     <PageContainer>
       <div>
         <ProList<CourseListData>
-          request={fetchData}
+          request={fetchKeyword}
+          dataSource={listData}
           //一种新的方式
-
+          search={{}}
+          onSubmit={test}
           toolBarRender={() => {
             return [
               <Space>
-                <AddCourse></AddCourse>
+                <AddCourse teacherList = {teacherList}></AddCourse>
               </Space>,
             ];
           }}
-          search={{}}
+
           rowKey="name"
           //获得数据，另一种
           //dataSource={courseList}
 
           headerTitle="全部课程"
           pagination={{
-            pageSize: 10,
+            onChange: changePage,
+            showQuickJumper: true,
+            showSizeChanger: true,
+            pageSizeOptions: [8, 12, 16, 20],
+            current: currentPage,
+            pageSize: pageSize,
+            total: totalNum,
+            showTotal: showTotal,
           }}
           showActions="hover"
           metas={{
@@ -122,6 +228,7 @@ const CourseManagement: FC<Record<string, any>> = () => {
                     semester={row.semester}
                     description={row.description}
                     ></CourseInfo>
+                    
                     <ModifyCourse
                     courseID={row.courseID}
                     courseName={row.courseName} 
@@ -149,3 +256,7 @@ const CourseManagement: FC<Record<string, any>> = () => {
 };
 
 export default CourseManagement;
+function useModel(arg0: string): { initialState: any; } {
+  throw new Error('Function not implemented.');
+}
+

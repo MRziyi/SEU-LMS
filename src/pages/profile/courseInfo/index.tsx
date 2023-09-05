@@ -77,7 +77,7 @@ const CourseInfo: React.FC<RouteChildrenProps> = () => {
               setOpen={setOpenSendAnnouncement}
               displayMessage="通知内容"
               title="发布通知"
-              url="/api/order/message/send-to-class"
+              url="/api/message/send-to-class"
               idParam={courseID}
             />
           </Button>

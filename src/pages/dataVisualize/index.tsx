@@ -40,6 +40,7 @@ const DataVisualize: React.FC<RouteChildrenProps> = () => {
             key: element.courseID,
             tab: element.courseName,
           }));
+          console.log(newTabList);
           setTabList(newTabList);
           setTabKey(result.data.descriptionList[0].courseID);
         }

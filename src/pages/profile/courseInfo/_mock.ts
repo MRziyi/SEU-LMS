@@ -64,8 +64,8 @@ function fakeSyllabusList(currentPage: number, pageSize: number) {
     list.push({
       syllabusID: 'Syllabus - ' + i,
       title: 'Lesson ' + (i + 1) + ': ' + itemName[i % 8],
-      haveHomework:true,
-      isCheckedIn: i < 3,
+      haveHomework: i % 2 == 0,
+      isCheckedIn: i < 4 ? i : 0,
       time: new Date(new Date().getTime() - 1000 * 60 * 60 * 2 * i).toLocaleString(),
     });
   }
@@ -126,12 +126,12 @@ async function postFakeCourseIntro(req: Request, res: Response) {
         teacherAvatar: ownerUrl[1],
         semester: '2023秋季学期',
         description: {
-          unit:'软件学院',
-          credit:'4',
-          teachingTime:'1-16周 星期二 3-5节',
-          teachingLocation:'教1-301',
-          teachingMethod:'讲授',
-          introduction:'balabalabalalalalalalalalalalalalalallla',
+          unit: '软件学院',
+          credit: '4',
+          teachingTime: '1-16周 星期二 3-5节',
+          teachingLocation: '教1-301',
+          teachingMethod: '讲授',
+          introduction: 'balabalabalalalalalalalalalalalalalallla',
         },
         teacherPhone: '18777777777',
         teacherEmail: 'teacher@seu.edu.cn',
@@ -194,11 +194,43 @@ async function postFakeName(req: Request, res: Response) {
   console.log('check in for: ' + syllabusID);
   return res.json({
     code: 0,
-    data: {courseName:'离散数学'},
+    data: { courseName: '离散数学' },
     description: 'ok',
   });
 }
-
+async function postFakeFileList(req: Request, res: Response) {
+  const { syllabusID } = req.body;
+  console.log('file list for: ' + syllabusID);
+  return res.json({
+    code: 0,
+    data: {
+      fileList: [
+        {
+          type: 'pdf',
+          name: 'Introduction to Biology',
+          description: 'A comprehensive guide to the basics of biology',
+          status: 1,
+          url: 'https://example.com/files/intro_biology.pdf',
+        },
+        {
+          type: 'doc',
+          name: 'Chemistry Formulas',
+          description: 'A collection of important chemistry formulas',
+          status: 1,
+          url: 'https://example.com/files/chemistry_formulas.doc',
+        },
+        {
+          type: 'ppt',
+          name: 'History of World War II',
+          description: 'A presentation on the events and impact of World War II',
+          status: 1,
+          url: 'https://example.com/files/world_war_ii.ppt',
+        },
+      ],
+    },
+    description: 'ok',
+  });
+}
 
 export default {
   'POST  /api/syllabus/list': postFakeSyllabusList,
@@ -208,4 +240,5 @@ export default {
   'POST  /api/discussion/reply-send': receiveFakeReply,
   'POST  /api/syllabus/check-in': receiveFakeCheckIn,
   'POST  /api/course/get-name': postFakeName,
+  'POST  /api/syllabus/material-list': postFakeFileList,
 };

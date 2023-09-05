@@ -86,7 +86,7 @@ const AddUser : React.FC = () => {
       <Input placeholder='请输入一卡通号'/>
     </Form.Item>    
     
-    <Form.Item name="access" label="Gender" rules={[{ required: true }]}>
+    <Form.Item name="access" label="身份" rules={[{ required: true }]}>
         <Select
           placeholder="Select a option"
           allowClear

@@ -32,7 +32,7 @@ export async function searchTeacherCourse(
   currentPageParam: number,
   pageSizeParam: number,
 ): Promise<{ data: { totalNum: number; list: CourseListData[] } }> {
-  return request('/api/course/student-search', {
+  return request('/api/course/teacher-search', {
     method: 'POST',
     data: {
       keyword: keywordParam,

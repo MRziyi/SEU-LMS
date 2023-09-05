@@ -47,39 +47,14 @@ const ownerName = [
   '仲尼',
 ];
 
-function fakeCourseList() {
-  const list = [];
-  for (let i = 0; i < 24; i += 1) {
-    if (i % 2) {
-      list.push({
-        courseID: 'Course-' + i,
-        courseName: courseName[i % 8],
-        imgUrl: imgUrl[i % 4],
-        teacherName: ownerName[i % 10],
-        teacherAvatar: ownerUrl[i % 8],
-        semester: '2023秋季学期',
-        description: "俺是描述俺是描述",
-      });
-    } else {
-      list.push({
-        courseID: 'Course-' + i,
-        courseName: courseName[i % 8],
-        imgUrl: imgUrl[i % 4],
-        teacherName: ownerName[i % 10],
-        teacherAvatar: ownerUrl[i % 8],
-        semester: '2023夏季学期',
-        description: "俺是描述俺是描述",
-      });
-    }
-  }
-  return list;
-}
 
 async function postFakeCourseList(req: Request, res: Response) {
-  const queryParams = req.query;
-  const paramName = req.query.courseName;
+
+  const { keyword, currentPage, pageSize } = req.body;
+
+  console.log('mock处理参数',keyword,currentPage,pageSize)
   const list = [];
-  for (let i = 0; i < 24; i += 1) {
+  for (let i = 0; i < 100; i += 1) {
     if (i % 2) {
       list.push({
         courseID: 'Course-' + i,
@@ -101,26 +76,40 @@ async function postFakeCourseList(req: Request, res: Response) {
         description: "俺是描述俺是描述",
       });
     }
-    //const filteredItems = list.filter(item => item.courseName.includes(paramName));
   }
 
   let filteredItems = list; // 初始化为整个列表
 
   // 如果 paramName 不为空，则进行筛选
-  if (paramName) {
-    filteredItems = list.filter((item) => item.courseName.includes(paramName));
+  if (keyword) {
+    filteredItems = list.filter((item) => item.courseName.includes(keyword));
   }
+
+
+
+  const startIndex = (currentPage - 1) * pageSize;
+  console.log('Page: ' + startIndex + ' - ' + (startIndex + pageSize));
+  
+
+  let finalList = filteredItems.slice(startIndex, startIndex + pageSize);
+
 
   return res.json({
     code: 0,
-    data: filteredItems,
+    data:{
+      list:finalList,
+      totalNum:1000,
+      teacherList:ownerName,
+    }
   });
+
 }
 
 async function deleteItem(req: Request, res: Response) {
-  const queryParams = req.query;
+  const deleteItem = req.body;
   return res.json({
     code: 0,
+    data:{deleteItem},
   });
 }
 

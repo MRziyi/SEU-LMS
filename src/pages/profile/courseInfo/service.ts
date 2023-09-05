@@ -1,5 +1,5 @@
 import { request } from 'umi';
-import { CourseData, DiscussionData, FileData, ReplyData, SyllabusData } from '../data';
+import { CourseData, DiscussionData, FileData, ReplyData, SyllabusData } from './data';
 
 export async function queryDiscussionList(
   courseIDParam: string,

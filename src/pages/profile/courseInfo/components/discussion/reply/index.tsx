@@ -1,13 +1,14 @@
 import { Avatar, List } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { ReplyData } from '@/pages/profile/data';
 import { queryReplyList } from '../../../service';
+import { ReplyData } from '../../../data';
 
 interface DiscussionIDParam {
   discussionID: string;
+  refreshFlag: boolean;
 }
 
-const ReplyList: React.FC<DiscussionIDParam> = ({ discussionID }) => {
+const ReplyList: React.FC<DiscussionIDParam> = ({ discussionID, refreshFlag }) => {
   const pageSize = 5;
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [replyList, setReplyList] = useState<ReplyData[]>([]);
@@ -15,8 +16,9 @@ const ReplyList: React.FC<DiscussionIDParam> = ({ discussionID }) => {
   const [loadingForPagigation, setLoadingForPagigation] = useState<boolean>(false);
 
   useEffect(() => {
+    console.log('REFREASHING');
     changeReplyPage(currentPage, pageSize);
-  }, []);
+  }, [refreshFlag]);
 
   async function changeReplyPage(_page: number, _pageSize: number) {
     setLoadingForPagigation(true);

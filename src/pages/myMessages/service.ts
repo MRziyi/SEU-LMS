@@ -17,7 +17,7 @@ export async function queryMessageList(
 export async function markMessage(
   messageIDParam: string,
   setToParam: boolean,
-): Promise<{ data: { totalNum: number; list: MessageData[] } }> {
+): Promise<{ code: number }> {
   return request('/api/message/mark', {
     method: 'POST',
     data: {

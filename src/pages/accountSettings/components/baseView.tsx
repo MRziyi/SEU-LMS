@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { UploadOutlined } from '@ant-design/icons';
-import { Button, Form, Upload, message } from 'antd';
+import { Avatar, Button, Form, Upload, message } from 'antd';
 import ProForm, { ProFormText } from '@ant-design/pro-form';
 import { request, useModel } from 'umi';
 
-import styles from './BaseView.less';
+import styles from './baseView.less';
 
 const BaseView: React.FC = () => {
+  const [avatarToShow, setAvatarToShow] = useState('');
   const [form] = Form.useForm<{
     name: string;
     phone: string;
@@ -14,56 +15,12 @@ const BaseView: React.FC = () => {
     email: string;
   }>();
 
-  const AvatarView = ({ avatar }: { avatar: string }) => (
-    <>
-      <div className={styles.avatar_title}>头像</div>
-      <div className={styles.avatar}>
-        <img src={avatar} alt="avatar" />
-      </div>
-      <Upload
-        showUploadList={false}
-        accept="image/*"
-        customRequest={async (options: any) => {
-          const data = new FormData();
-          data.append('file', options.file);
-          try {
-            const response = await fetch('/api/upload/image', {
-              method: 'POST',
-              body: data,
-            });
-            if (response.ok) {
-              response.json().then((res: any) => {
-                options.onSuccess({ url: res.data }, new Response());
-                form.setFieldsValue({ avatar: res.data });
-              });
-            } else {
-              options.onError(new Error('上传失败'));
-            }
-          } catch (error) {
-            console.error('上传图片出错:', error);
-            options.onError(error);
-          }
-        }}
-        onChange={async (info) => {
-          if (info.file.status === 'done') {
-            message.success(`${info.file.name} 上传成功`);
-          } else if (info.file.status === 'error') {
-            message.error(`${info.file.name} 上传失败`);
-          }
-        }}
-      >
-        <div className={styles.button_view}>
-          <Button>
-            <UploadOutlined />
-            更换头像
-          </Button>
-        </div>
-      </Upload>
-    </>
-  );
-
   //  获取用户信息
   const { initialState, loading } = useModel('@@initialState');
+
+  useEffect(() => {
+    if (initialState?.currentUser?.imgUrl) setAvatarToShow(initialState.currentUser.imgUrl);
+  }, []);
 
   return (
     <div className={styles.baseView}>
@@ -148,7 +105,50 @@ const BaseView: React.FC = () => {
             </ProForm>
           </div>
           <div className={styles.right}>
-            <AvatarView avatar={form.getFieldValue('avatar')} />
+            <div className={styles.avatar_title}>头像</div>
+            <div className={styles.avatar} style={{ width: '150px' }}>
+              <img src={avatarToShow} />
+            </div>
+            <Upload
+              showUploadList={false}
+              accept="image/*"
+              customRequest={async (options: any) => {
+                const data = new FormData();
+                data.append('file', options.file);
+                try {
+                  const response = await fetch('/api/upload/image', {
+                    method: 'POST',
+                    body: data,
+                  });
+                  if (response.ok) {
+                    response.json().then((res: any) => {
+                      options.onSuccess({ url: res.data }, new Response());
+                      form.setFieldsValue({ avatar: res.data });
+                      setAvatarToShow(res.data);
+                    });
+                  } else {
+                    options.onError(new Error('上传失败'));
+                  }
+                } catch (error) {
+                  console.error('上传图片出错:', error);
+                  options.onError(error);
+                }
+              }}
+              onChange={async (info) => {
+                if (info.file.status === 'done') {
+                  message.success(`${info.file.name} 上传成功`);
+                } else if (info.file.status === 'error') {
+                  message.error(`${info.file.name} 上传失败`);
+                }
+              }}
+            >
+              <div className={styles.button_view}>
+                <Button>
+                  <UploadOutlined />
+                  更换头像
+                </Button>
+              </div>
+            </Upload>
           </div>
         </>
       )}

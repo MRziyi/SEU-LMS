@@ -3,19 +3,35 @@ import { Button, Modal, Checkbox, Form, Input, Upload} from 'antd';
 import React from 'react';
 import { UploadOutlined } from '@ant-design/icons';
 import request from 'umi-request';
+import { Select } from 'antd';
+
+interface Props{
+  teacherList:string[];
+}
+
+const filterOption = (input: string, option: { label: string; value: string }) =>
+(option?.label ?? '').toLowerCase().includes(input.toLowerCase());
 
 
-
-const onFinishFailed = (errorInfo: any) => {
-  console.log('Failed:', errorInfo);
-};
-
-
-
-const AddCourse : React.FC = () => {
+const AddCourse : React.FC<Props> = (Props) => {
   const [visiable, setVisiable] = useState(false);
   const [form] = Form.useForm();
- 
+  const [selectedTeacherName, setSelectedTeacherName] = useState<string>('');
+
+  //console.log(teacherList);
+
+
+
+  const onFinishFailed = (errorInfo: any) => {
+    console.log('Failed:', errorInfo);
+  };
+  const onChange = (value: string) => {
+    console.log(`selected ${value}`);
+    setSelectedTeacherName(value);
+  };
+
+
+
   const onOk = () => {
     closeModal();
   };
@@ -27,6 +43,7 @@ const AddCourse : React.FC = () => {
   const handleSubmit = (params:any) => {
     //alert("!!");
     console.log('请求参数:', params);
+    params.teacherName = selectedTeacherName;
     request('/api/course/add', {
       method: 'POST',
       params
@@ -48,6 +65,16 @@ const AddCourse : React.FC = () => {
     }
     return e?.fileList;
   };
+
+  function convertArrayToOptions(array:string[]) {
+    return array.map((item) => ({
+      value: item,
+      label: item ,
+    }));
+  }
+  
+  const stringArray = ['jack', 'lucy', 'tom'];
+  const optionsArray = convertArrayToOptions(Props.teacherList);
  
   return (
 <>
@@ -81,12 +108,19 @@ const AddCourse : React.FC = () => {
     </Form.Item>
 
     <Form.Item
-      label="教师名称"
-      name="TeacherName"
-      rules={[{ required: true, message: '请输入教师名称' }]}
+      label="教师姓名"
+      name='teacherName'
+      rules={[{ required: true, message: '请输入教师姓名' }]}
     >
-      <Input placeholder='请输入教师名称'/>
-    </Form.Item>    
+    <Select
+    showSearch
+    placeholder="Select a person"
+    optionFilterProp="children"
+    onChange={onChange}
+    filterOption={filterOption}
+    options={optionsArray}
+  />
+    </Form.Item>
     
     <Form.Item
       label="开设学期"

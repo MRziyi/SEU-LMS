@@ -1,10 +1,11 @@
 import { Avatar, Card, Input, List, Typography, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import styles from './index.less';
-import { DiscussionData } from '@/pages/profile/data';
+
 import { queryDiscussionList, sendReply } from '../../service';
 import ProCard from '@ant-design/pro-card';
 import ReplyList from './reply';
+import { DiscussionData } from '../../data';
 
 const { Paragraph } = Typography;
 const { Search } = Input;
@@ -20,6 +21,7 @@ const Discussion: React.FC<CourseIDParam> = ({ courseID }) => {
   const [totalDiscussionNum, setTotalDiscussionNum] = useState<number>(0);
   const [loadingForPagigation, setLoadingForPagigation] = useState<boolean>(false);
   const [loadingForSendingReply, setLoadingForSendingReply] = useState<boolean>(false);
+  const [refreshFlag, setRefreshFlag] = useState<boolean>(false);
 
   // 获取讨论区列表数据
 
@@ -47,7 +49,8 @@ const Discussion: React.FC<CourseIDParam> = ({ courseID }) => {
       let result = await sendReply(value, courseID, discussionID);
       if (result.code === 0) {
         message.success('回复成功！');
-        changeDiscussionPage(currentPage, pageSize);
+        if (refreshFlag) setRefreshFlag(false);
+        else setRefreshFlag(true);
       }
     } catch {}
     setLoadingForSendingReply(false);
@@ -96,6 +99,7 @@ const Discussion: React.FC<CourseIDParam> = ({ courseID }) => {
                 <ReplyList
                   key={discussion.discussionID}
                   discussionID={discussion.discussionID}
+                  refreshFlag={refreshFlag}
                 ></ReplyList>
               </ProCard>
               <Search

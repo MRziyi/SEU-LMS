@@ -20,7 +20,7 @@ const ChartForTeacher: React.FC<ChartForTeacherInterface> = ({ courseID, loading
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    queryTeacherChartAdaptor();
+    if (courseID !== '') queryTeacherChartAdaptor();
   }, [courseID]);
 
   async function queryTeacherChartAdaptor() {

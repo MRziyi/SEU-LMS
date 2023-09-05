@@ -26,6 +26,7 @@ const MyMessages: FC<Record<string, any>> = () => {
         setListData(result.data.list);
         setCurrentPage(_page);
         setPageSize(_pageSize);
+        console.log(result.data);
       }
     } catch {}
     setLoadingForPagigation(false);
@@ -35,7 +36,7 @@ const MyMessages: FC<Record<string, any>> = () => {
     setLoadingForMark(messageID);
     try {
       const result = await markMessage(messageID, setTo);
-      if (result.data) {
+      if (result.code == 0) {
         message.success('标记成功！');
         changePage(currentPage, pageSize);
       }

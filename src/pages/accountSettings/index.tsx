@@ -1,12 +1,13 @@
 import React, { useState, useRef, useLayoutEffect } from 'react';
 import { GridContent } from '@ant-design/pro-layout';
 import { Menu } from 'antd';
-import BaseView from './components/base';
+import BaseView from './components/baseView';
 import styles from './style.less';
+import PasswordChange from './components/passwordChange';
 
 const { Item } = Menu;
 
-type SettingsStateKeys = 'base' | 'notification';
+type SettingsStateKeys = 'base' | 'psw';
 type SettingsState = {
   mode: 'inline' | 'horizontal';
   selectKey: SettingsStateKeys;
@@ -15,6 +16,7 @@ type SettingsState = {
 const Settings: React.FC = () => {
   const menuMap: Record<string, React.ReactNode> = {
     base: '基本设置',
+    psw: '修改密码',
   };
 
   const [initConfig, setInitConfig] = useState<SettingsState>({
@@ -59,6 +61,8 @@ const Settings: React.FC = () => {
     switch (selectKey) {
       case 'base':
         return <BaseView />;
+      case 'psw':
+        return <PasswordChange />;
       default:
         return null;
     }

@@ -38,18 +38,26 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
           title: item.title,
           subTitle: (
             <Space size={0}>
-              {item.isCheckedIn ? (
-                <Tag color="green" key="1">
-                  已签到
+              {item.isCheckedIn == 0 ? (
+                <Tag color="blue" key="1">
+                  签到未发起
+                </Tag>
+              ) : item.isCheckedIn == 1 ? (
+                <Tag color="green" key="2">
+                  已完成签到
+                </Tag>
+              ) : item.isCheckedIn == 2 ? (
+                <Tag color="purple" key="3">
+                  正在签到
                 </Tag>
               ) : (
-                <Tag color="red" key="2">
-                  待签到
+                <Tag color="red" key="3">
+                  未按时签到
                 </Tag>
               )}
               <Button
                 style={{ marginLeft: '5px' }}
-                disabled={item.isCheckedIn}
+                disabled={!(item.isCheckedIn === 2)}
                 type="primary"
                 size="small"
                 loading={loadingForCheckIn === item.syllabusID}
@@ -62,15 +70,19 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
             </Space>
           ),
           actions: [
-            <Button
-              style={{ marginLeft: '5px' }}
-              onClick={() => {
-                window.open('https://cvs.seu.edu.cn/jy-application-vod-he-ui/#/home', '_blank');
-              }}
-              type="text"
-            >
-              课程直播
-            </Button>,
+            initialState?.currentUser?.access == 'student' ? (
+              <Button
+                style={{ marginLeft: '5px' }}
+                onClick={() => {
+                  window.open('https://cvs.seu.edu.cn/jy-application-vod-he-ui/#/home', '_blank');
+                }}
+                type="text"
+              >
+                课程直播
+              </Button>
+            ) : (
+              ''
+            ),
             <Button
               type="text"
               onClick={() => {

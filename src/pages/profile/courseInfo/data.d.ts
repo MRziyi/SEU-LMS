@@ -27,7 +27,7 @@ export type SyllabusData = {
   syllabusID: string;
   title: string;
   haveHomework: boolean;
-  isCheckedIn: boolean;
+  isCheckedIn: number;
   time: string;
 };
 
