@@ -1,10 +1,13 @@
 import { useState, type FC } from 'react';
-import { Button, Modal, Checkbox, Form, Input, Upload} from 'antd';
+import { Button, Modal, Checkbox, Form, Input, Upload, Select} from 'antd';
 import React from 'react';
 import { UploadOutlined } from '@ant-design/icons';
 import request from 'umi-request';
 
 
+
+const filterOption = (input: string, option: { label: string; value: string }) =>
+(option?.label ?? '').toLowerCase().includes(input.toLowerCase());
 
 const onFinishFailed = (errorInfo: any) => {
   console.log('Failed:', errorInfo);
@@ -16,15 +19,23 @@ interface CourseInfoProps {
     imgUrl: string;
     semester: string;
     teacherName: string;
+    teacherList:string[];
   }
 
 
 const ModifyCourse : React.FC<CourseInfoProps> = (props) => {
   const [visiable, setVisiable] = useState(false);
   const [form] = Form.useForm();
+  const [selectedTeacherName, setSelectedTeacherName] = useState<string>('');
+
  
   const onOk = () => {
     closeModal();
+  };
+
+  const onChange = (value: string) => {
+    console.log(`selected ${value}`);
+    setSelectedTeacherName(value);
   };
  
   const closeModal = () => {
@@ -34,6 +45,7 @@ const ModifyCourse : React.FC<CourseInfoProps> = (props) => {
   const handleSubmit = (formValues:any) => {
     //alert("!!");
     const { courseID } = props;
+    formValues.teacherName = selectedTeacherName;
     const params = {
         ...formValues,
         courseID, // 将 courseID 添加到 params 对象中
@@ -60,6 +72,15 @@ const ModifyCourse : React.FC<CourseInfoProps> = (props) => {
     }
     return e?.fileList;
   };
+
+  function convertArrayToOptions(array:string[]) {
+    return array.map((item) => ({
+      value: item,
+      label: item ,
+    }));
+  }
+
+  const optionsArray = convertArrayToOptions(props.teacherList);
  
   return (
 <>
@@ -89,7 +110,7 @@ const ModifyCourse : React.FC<CourseInfoProps> = (props) => {
       name="courseName"
       rules={[{ required: true, message: '请输入课程名称' }]}
     >
-      <Input placeholder={props.courseName}/>
+      <Input placeholder={props.courseName} defaultValue={props.courseName}/>
     </Form.Item>
 
     <Form.Item
@@ -97,7 +118,15 @@ const ModifyCourse : React.FC<CourseInfoProps> = (props) => {
       name="TeacherName"
       rules={[{ required: true, message: '请输入教师名称' }]}
     >
-      <Input placeholder={props.teacherName}/>
+    <Select
+    showSearch
+    placeholder="Select a person"
+    optionFilterProp="children"
+    defaultValue={props.teacherName}
+    onChange={onChange}
+    filterOption={filterOption}
+    options={optionsArray}
+  />
     </Form.Item>    
     
     <Form.Item
@@ -105,7 +134,7 @@ const ModifyCourse : React.FC<CourseInfoProps> = (props) => {
       name="semester"
       rules={[{ required: true, message: 'xxxx年x季学期  例:2023年夏季学期' }]}
     >
-      <Input placeholder={props.semester}/>
+      <Input placeholder={props.semester} defaultValue={props.semester}/>
     </Form.Item>
     <Form.Item
       name="上传课程图片"

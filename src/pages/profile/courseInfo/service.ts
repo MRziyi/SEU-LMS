@@ -93,7 +93,7 @@ export async function queryCourseName(
 export async function queryMaterialList(
   syllabusIDParam: string,
 ): Promise<{ data: { fileList: FileData[] } }> {
-  return request('/api/syllabus/material-list', {
+  return request('/api/syllabus/material/list', {
     method: 'POST',
     data: {
       syllabusID: syllabusIDParam,

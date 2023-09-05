@@ -12,7 +12,14 @@ interface modalCtrl {
   idParam?: string;
 }
 
-const MyModal: React.FC<modalCtrl> = ({ open, setOpen, title, displayMessage, url, idParam }) => {
+const SingleInputModal: React.FC<modalCtrl> = ({
+  open,
+  setOpen,
+  title,
+  displayMessage,
+  url,
+  idParam,
+}) => {
   const [show, setShow] = useState(false);
   const [id, setId] = useState('');
 
@@ -90,4 +97,4 @@ const MyModal: React.FC<modalCtrl> = ({ open, setOpen, title, displayMessage, ur
     </Modal>
   );
 };
-export default MyModal;
+export default SingleInputModal;

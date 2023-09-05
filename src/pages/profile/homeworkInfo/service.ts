@@ -6,14 +6,14 @@ export async function queryAdvancedProfile() {
 }
 
 export async function queryHomeworkList(
-  syllabusIDParam:string,
+  syllabusIDParam: string,
   currentPageParam: number,
   pageSizeParam: number,
-): Promise<{ data: { totalNum: number; list: HomeworkList[];info:HomeworkInfo } }> {
-  return request('/api/syllabus/homework', {
+): Promise<{ data: { totalNum: number; list: HomeworkList[]; info: HomeworkInfo } }> {
+  return request('/api/syllabus/homework/list', {
     method: 'POST',
     data: {
-      syllabusID:syllabusIDParam,
+      syllabusID: syllabusIDParam,
       currentPage: currentPageParam,
       pageSize: pageSizeParam,
     },

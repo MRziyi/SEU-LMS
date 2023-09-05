@@ -12,38 +12,39 @@ import { queryUserList } from './service';
 const columns: ProColumns<UserListData>[] = [
   {
     title: '用户名称',
-    width: 70,
+    width: 50,
     dataIndex: 'nickName',
     fixed: 'left',
     
   },
   {
     title: '一卡通号',
-    width: 100,
+    width: 60,
     dataIndex: 'id',
-    align: 'right',
+    align: 'left',
 
   },
   {
     title: '用户身份',
-    width: 70,
-    align: 'right',
+    width: 40,
+    align: 'center',
     dataIndex: 'access',
     search:false,
   },
   {
     title: '手机',
     dataIndex: 'phone',
-    align: 'right',
-    width: 120,
+    align: 'left',
+    width: 80,
     search:false,
   },
   {
     title: '电子邮箱',
     width: 120,
     dataIndex: 'email',
-    align: 'right',
+    align: 'left',
     search:false,
+    
   },
   {
     title: '操作',
@@ -154,12 +155,6 @@ export default () => {
 
 
 
-
-
-
-
-
-
   useEffect(() => {
     console.log('拿到的关键字为:', keyWord1, keyWord2);
     changePage(1, pageSize)
@@ -172,13 +167,6 @@ export default () => {
   function test(){
     console.log('拿到的关键字是:', keyWord1,keyWord2);
   }
-
-
-
-
-
-
-
 
 
 

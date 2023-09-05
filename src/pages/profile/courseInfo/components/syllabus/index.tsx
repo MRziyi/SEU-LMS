@@ -6,6 +6,7 @@ import { ClockCircleOutlined } from '@ant-design/icons';
 import FileModal from './components/fileModal';
 import HomeworkModal from './components/homeworkModal';
 import { Link, useModel } from 'umi';
+import DoubleInputModal from '@/components/Modal/doubleInput';
 
 interface CourseIDParam {
   courseID: string;
@@ -18,6 +19,7 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
   const [totalNum, setTotalNum] = useState<number>(0);
   const [loadingForPagigation, setLoadingForPagigation] = useState<boolean>(false);
   const [openFileModal, setOpenFileModal] = useState<boolean>(false);
+  const [openPublishHWModal, setOpenPublishHWModal] = useState<boolean>(false);
   const [openHomeworkModal, setOpenHomeworkModal] = useState<boolean>(false);
   const [loadingForCheckIn, setLoadingForCheckIn] = useState<string>('');
   const [currentSyllabusID, setCurrentSyllabusID] = useState<string>('');
@@ -202,6 +204,7 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
                   type="text"
                   onClick={() => {
                     setCurrentSyllabusID(item.syllabusID);
+                    setOpenPublishHWModal(true);
                   }}
                 >
                   发布作业
@@ -290,16 +293,19 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
           },
         }}
       />
-      <FileModal
-        open={openFileModal}
-        setOpen={setOpenFileModal}
-        syllabusID={currentSyllabusID}
-      ></FileModal>
+      <FileModal open={openFileModal} setOpen={setOpenFileModal} syllabusID={currentSyllabusID} />
       <HomeworkModal
         open={openHomeworkModal}
         setOpen={setOpenHomeworkModal}
         syllabusID={currentSyllabusID}
-      ></HomeworkModal>
+      />
+      <DoubleInputModal
+        open={openPublishHWModal}
+        setOpen={setOpenPublishHWModal}
+        url="/api/syllabus/homework/publish"
+        title="发布作业"
+        idParam={currentSyllabusID}
+      />
     </>
   );
 };

@@ -11,42 +11,12 @@ import ModifyCourse from './components/modifyCourse';
 
 
 
+
 const CourseManagement: FC<Record<string, any>> = () => {
 
 
   const [refresh, setRefresh] = useState(false);
   const [keyWord,setKeyWord] = useState<string>('');
-
-
-  
-  // 创建一个 CourseListData 数组
-  const courseList: CourseListData[] = [
-    {
-      courseID: '1',
-      courseName: 'Course 1',
-      imgUrl: 'img1.jpg',
-      teacherName: 'Teacher 1',
-      teacherAvatar: 'avatar1.jpg',
-      semester: 'Spring 2023',
-      description: 'Description for Course 1',
-      teacherEmail: 'teacher1@example.com',
-      teacherPhone: '123-456-7890',
-      key: '1',
-    },
-    {
-      courseID: '2',
-      courseName: 'Course 2',
-      imgUrl: 'img2.jpg',
-      teacherName: 'Teacher 2',
-      teacherAvatar: 'avatar2.jpg',
-      semester: 'Fall 2023',
-      description: 'Description for Course 2',
-      teacherEmail: 'teacher2@example.com',
-      teacherPhone: '987-654-3210',
-      key: '2',
-    },
-    // 添加更多的课程数据...
-  ];
 
 
 
@@ -56,7 +26,6 @@ const CourseManagement: FC<Record<string, any>> = () => {
   const [listData, setListData] = useState<CourseListData[]>([]);
   const [totalNum, setTotalNum] = useState<number>(0);
   const [loadingForPagigation, setLoadingForPagigation] = useState<boolean>(false);
-  const [loadingForSearch, setLoadingForSearch] = useState<boolean>(false);
   const [teacherList, setTeacherList] = useState<string[]>([]);
 
   const searchContent = useRef<string>('');
@@ -85,20 +54,6 @@ const CourseManagement: FC<Record<string, any>> = () => {
       
     setLoadingForPagigation(false);
   }
-
-
-
-  // async function onSearch(keyword: string) {
-  //   setLoadingForSearch(true);
-  //   try {
-  //     searchContent.current = keyword;
-  //     changePage(1, pageSize);
-  //   } catch {}
-  //   setLoadingForSearch(false);
-  // }
-
-
-
 
   function showTotal(total: number, range: [number, number]) {
     return `${range[0]}-${range[1]} 共 ${total} 条`;
@@ -134,6 +89,7 @@ const CourseManagement: FC<Record<string, any>> = () => {
     })
       .then(() => {
         alert('删除成功');
+        setRefresh((prevRefresh) => !prevRefresh);
         setRefresh((prevRefresh) => !prevRefresh);
       })
       .catch((error) => {
@@ -230,6 +186,7 @@ const CourseManagement: FC<Record<string, any>> = () => {
                     ></CourseInfo>
                     
                     <ModifyCourse
+                    teacherList = {teacherList}
                     courseID={row.courseID}
                     courseName={row.courseName} 
                     imgUrl={row.imgUrl} 

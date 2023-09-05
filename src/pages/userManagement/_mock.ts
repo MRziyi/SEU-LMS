@@ -22,19 +22,19 @@ const access = [
 ]
 
 const phone = [
-    '20001234',
-    '20021568',
-    '15648978',
-    '11124445',
-    '55151578',
+    '13132526464',
+    '20021223568',
+    '15644458978',
+    '11124667445',
+    '55151324578',
 ]
 
 const email = [
-    '20001234',
-    '20021568',
-    '15648978',
-    '11124445',
-    '55151578',
+    '200012341655@mail.com',
+    '20021568@mail.com',
+    '15648@mail.com',
+    '1112444@mail.com',
+    '551@mail.com',
 ]
 const imgUrl = [
     'https://gw.alipayobjects.com/zos/rmsportal/uMfMFlvUuceEyPpotzlq.png',
@@ -67,7 +67,8 @@ async function postFakeUserList(req: Request, res: Response){
     }
   
     if (keyword2) {
-        filteredItems = list.filter((item) => item.id.includes(keyword1));
+        filteredItems = list.filter((item) => item.id.includes(keyword2));
+
     }
   
     const startIndex = (currentPage - 1) * pageSize;

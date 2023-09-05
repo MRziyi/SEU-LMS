@@ -1,5 +1,5 @@
 import { useState, type FC, useEffect } from 'react';
-import { Button, Modal, Space, Image, Row, Col, Card } from 'antd';
+import { Button, Modal, Space, Image, Row, Col, Card, Divider, Avatar } from 'antd';
 import React from 'react';
 import { ProSkeleton } from '@ant-design/pro-components';
 import { Layout } from 'antd';
@@ -69,17 +69,17 @@ const CourseInfo: FC<CourseInfoProps> = (props) => {
 
 </div> */}
 
-      <GridContent>
-        <Row gutter={15}>
+  <div>
+  <Row gutter={100}>
           <Col lg={12}>
-          <Card bordered={false} style={{ marginBottom: 24 }}>
-              <div>
+          <div>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
                 <img alt="课程图片" 
                 src={props.imgUrl} 
                 style={{
                   display: 'block',
                   margin: '0 auto',
-                  width: '80%',  // 调整图片的宽度
+                  width: '100%',  // 调整图片的宽度
                   marginBottom: '20px',  // 在图片下方添加 10px 的距离
                 }}
                 />
@@ -91,42 +91,27 @@ const CourseInfo: FC<CourseInfoProps> = (props) => {
                   <span><strong>课程描述:&nbsp;&nbsp;&nbsp;</strong>{props.description}</span>
                 </p>
               </div>
-          </Card>
+            </div>
           </Col>
           <Col lg={12}>
-          <Card bordered={false} style={{ marginBottom: 24 }}>
-            <div>
-              <img alt='教师图片'
-              src={props.teacherAvatar}
-              style={{
-                display: 'block',
-                margin: '0 auto',
-                width: '100px',  // 调整图片的宽度
-                marginBottom: '20px',  // 在图片下方添加 10px 的距离
-              }}></img>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <Avatar size={160} src={props.teacherAvatar} style={{marginBottom: '20px'}}/>
+          </div>
               <div className={styles.name}>{props.teacherName}</div>
                 
-                <p style={{textAlign:'center'}}>
+                <p>
                 <ContactsOutlined></ContactsOutlined>
                   <span>邮箱:&nbsp;&nbsp;&nbsp;{teacherData?.teacherEmail}</span>
                 </p>
-                <p style={{textAlign:'center'}}>
+                <p>
                   <PhoneOutlined></PhoneOutlined>
                   <span>电话:&nbsp;&nbsp;&nbsp;{teacherData?.teacherPhone}</span>
                 </p>
             </div>
-          </Card>
           </Col>
-
-
-
-
-
-
-
         </Row>
-      </GridContent>
-
+  </div>
       
       
     </Modal>

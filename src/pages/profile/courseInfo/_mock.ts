@@ -242,5 +242,5 @@ export default {
   'POST  /api/discussion/reply-send': receiveFakeReply,
   'POST  /api/syllabus/check-in': receiveFakeCheckIn,
   'POST  /api/course/get-name': postFakeName,
-  'POST  /api/syllabus/material-list': postFakeFileList,
+  'POST  /api/syllabus/material/list': postFakeFileList,
 };
