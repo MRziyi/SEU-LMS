@@ -1,357 +1,147 @@
-import {
-  DingdingOutlined,
-  DownOutlined,
-  EllipsisOutlined,
-  InfoCircleOutlined,
-} from '@ant-design/icons';
-import {
-  Badge,
-  Button,
-  Card,
-  Statistic,
-  Descriptions,
-  Divider,
-  Dropdown,
-  Menu,
-  Popover,
-  Steps,
-  Table,
-  Tooltip,
-  Empty,
-} from 'antd';
-import { GridContent, PageContainer, RouteContext } from '@ant-design/pro-layout';
-import type { FC } from 'react';
-import React, { Fragment, useState } from 'react';
-
-import classNames from 'classnames';
-import { useModel, useRequest } from 'umi';
-import type { AdvancedProfileData } from './data';
-import { queryAdvancedProfile } from './service';
+import React, { Fragment, useEffect, useState } from 'react';
+import { Link, useModel, useRequest } from 'umi';
+import { queryAdvancedProfile, queryHomeworkList } from './service';
 import styles from './style.less';
 import { RouteChildrenProps, useHistory, useParams } from 'react-router';
 import { RouteParams } from '../courseInfo/data';
+import { Button, Card, Col, Row, Space, Tag } from 'antd';
+import { FileOutlined } from '@ant-design/icons';
+import { ProList } from '@ant-design/pro-components';
+import { HomeworkInfo, } from './data';
+import './style.less';
 
-const { Step } = Steps;
-const ButtonGroup = Button.Group;
-
-const menu = (
-  <Menu>
-    <Menu.Item key="1">选项一</Menu.Item>
-    <Menu.Item key="2">选项二</Menu.Item>
-    <Menu.Item key="3">选项三</Menu.Item>
-  </Menu>
-);
-
-const mobileMenu = (
-  <Menu>
-    <Menu.Item key="1">操作一</Menu.Item>
-    <Menu.Item key="2">操作二</Menu.Item>
-    <Menu.Item key="3">选项一</Menu.Item>
-    <Menu.Item key="4">选项二</Menu.Item>
-    <Menu.Item key="">选项三</Menu.Item>
-  </Menu>
-);
-
-const action = (
-  <RouteContext.Consumer>
-    {({ isMobile }) => {
-      if (isMobile) {
-        return (
-          <Dropdown.Button
-            type="primary"
-            icon={<DownOutlined />}
-            overlay={mobileMenu}
-            placement="bottomRight"
-          >
-            主操作
-          </Dropdown.Button>
-        );
-      }
-      return (
-        <Fragment>
-          <ButtonGroup>
-            <Button>操作一</Button>
-            <Button>操作二</Button>
-            <Dropdown overlay={menu} placement="bottomRight">
-              <Button>
-                <EllipsisOutlined />
-              </Button>
-            </Dropdown>
-          </ButtonGroup>
-          <Button type="primary">主操作</Button>
-        </Fragment>
-      );
-    }}
-  </RouteContext.Consumer>
-);
-
-const extra = (
-  <div className={styles.moreInfo}>
-    <Statistic title="状态" value="待审批" />
-    <Statistic title="订单金额" value={568.08} prefix="¥" />
-  </div>
-);
-
-const description = (
-  <RouteContext.Consumer>
-    {({ isMobile }) => (
-      <Descriptions className={styles.headerList} size="small" column={isMobile ? 1 : 2}>
-        <Descriptions.Item label="创建人">曲丽丽</Descriptions.Item>
-        <Descriptions.Item label="订购产品">XX 服务</Descriptions.Item>
-        <Descriptions.Item label="创建时间">2017-07-07</Descriptions.Item>
-        <Descriptions.Item label="关联单据">
-          <a href="">12421</a>
-        </Descriptions.Item>
-        <Descriptions.Item label="生效日期">2017-07-07 ~ 2017-08-08</Descriptions.Item>
-        <Descriptions.Item label="备注">请于两个工作日内确认</Descriptions.Item>
-      </Descriptions>
-    )}
-  </RouteContext.Consumer>
-);
-
-const desc1 = (
-  <div className={classNames(styles.textSecondary, styles.stepDescription)}>
-    <Fragment>
-      曲丽丽
-      <DingdingOutlined style={{ marginLeft: 8 }} />
-    </Fragment>
-    <div>2016-12-12 12:32</div>
-  </div>
-);
-
-const desc2 = (
-  <div className={styles.stepDescription}>
-    <Fragment>
-      周毛毛
-      <DingdingOutlined style={{ color: '#00A0E9', marginLeft: 8 }} />
-    </Fragment>
-    <div>
-      <a href="">催一下</a>
-    </div>
-  </div>
-);
-
-const popoverContent = (
-  <div style={{ width: 160 }}>
-    吴加号
-    <span className={styles.textSecondary} style={{ float: 'right' }}>
-      <Badge status="default" text={<span style={{ color: 'rgba(0, 0, 0, 0.45)' }}>未响应</span>} />
-    </span>
-    <div className={styles.textSecondary} style={{ marginTop: 4 }}>
-      耗时：2小时25分钟
-    </div>
-  </div>
-);
-
-const customDot = (dot: React.ReactNode, { status }: { status: string }) => {
-  if (status === 'process') {
-    return (
-      <Popover placement="topLeft" arrowPointAtCenter content={popoverContent}>
-        <span>{dot}</span>
-      </Popover>
-    );
-  }
-  return dot;
-};
-
-const operationTabList = [
-  {
-    key: 'tab1',
-    tab: '操作日志一',
-  },
-  {
-    key: 'tab2',
-    tab: '操作日志二',
-  },
-  {
-    key: 'tab3',
-    tab: '操作日志三',
-  },
-];
-
-const columns = [
-  {
-    title: '操作类型',
-    dataIndex: 'type',
-    key: 'type',
-  },
-  {
-    title: '操作人',
-    dataIndex: 'name',
-    key: 'name',
-  },
-  {
-    title: '执行结果',
-    dataIndex: 'status',
-    key: 'status',
-    render: (text: string) => {
-      if (text === 'agree') {
-        return <Badge status="success" text="成功" />;
-      }
-      return <Badge status="error" text="驳回" />;
-    },
-  },
-  {
-    title: '操作时间',
-    dataIndex: 'updatedAt',
-    key: 'updatedAt',
-  },
-  {
-    title: '备注',
-    dataIndex: 'memo',
-    key: 'memo',
-  },
-];
-
-type AdvancedState = {
-  operationKey: string;
-  tabActiveKey: string;
-};
 
 const HomeWorkInfo: React.FC<RouteChildrenProps> = () => {
-  const { initialState } = useModel('@@initialState');
-  const history = useHistory();
+  
+  const [pageSize, setPageSize] = useState<number>(8);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [listData, setListData] = useState<any[]>([]);
+  const [totalNum, setTotalNum] = useState<number>(0);
+  const [loadingForPagigation, setLoadingForPagigation] = useState<boolean>(false);
+  const [homeworkInfoData,setHomeworkInfoData]=useState<HomeworkInfo>();
+  
 
-  const handleGoBack = () => {
-    history.goBack();
-  };
+  //const { initialState } = useModel('@@initialState');
+  //可能是不对的哦莫
+  const syllabusID  = useParams<string>();
 
-  const { courseID } = useParams<RouteParams>();
-  const [tabStatus, seTabStatus] = useState<AdvancedState>({
-    operationKey: 'tab1',
-    tabActiveKey: 'detail',
-  });
-  const { data = {}, loading } = useRequest<{ data: AdvancedProfileData }>(queryAdvancedProfile);
-  const { advancedOperation1, advancedOperation2, advancedOperation3 } = data;
-  const contentList = {
-    tab1: (
-      <Table
-        pagination={false}
-        loading={loading}
-        dataSource={advancedOperation1}
-        columns={columns}
-      />
-    ),
-    tab2: (
-      <Table
-        pagination={false}
-        loading={loading}
-        dataSource={advancedOperation2}
-        columns={columns}
-      />
-    ),
-    tab3: (
-      <Table
-        pagination={false}
-        loading={loading}
-        dataSource={advancedOperation3}
-        columns={columns}
-      />
-    ),
-  };
-  const onTabChange = (tabActiveKey: string) => {
-    seTabStatus({ ...tabStatus, tabActiveKey });
-  };
-  const onOperationTabChange = (key: string) => {
-    seTabStatus({ ...tabStatus, operationKey: key });
+  // 获取列表数据
+  useEffect(() => {
+    changePage(1, pageSize);
+  }, []);
+
+  async function changePage(_page: number, _pageSize: number) {
+    setLoadingForPagigation(true);
+    try {
+      const result = await queryHomeworkList(syllabusID, _page, _pageSize);
+      if (result.data) {
+        setTotalNum(result.data.totalNum);
+        setHomeworkInfoData(result.data.info);
+        const list = result.data.list.map((item) => ({
+          title: item.studentNickName,
+          subTitle: (
+            <Space size={0}>
+              {item.status ? (
+                <Tag color="green" key="1">
+                  已批改
+                </Tag>
+              ) : (
+                <Tag color="orange" key="2">
+                  待批改
+                </Tag>
+              )}
+            </Space>
+          ),
+          actions: 
+            item.status === 0 ? (
+              <Button 
+                //onClick={handleScore}
+              >评分</Button>
+            ) : (
+              <Button disabled>已评分</Button>
+            ),
+          avatar: item.studentAvatar,
+          content: (
+            <div style={{ marginTop: '-10px' ,whiteSpace: 'nowrap',overflow: 'hidden',textOverflow: 'ellipsis'}}>
+                  <FileOutlined 
+                    style={{ fontSize: '16px'}}
+                  />
+                  <a href={item.fileUrl} target="_blank" rel="noopener noreferrer" style={{ marginLeft: '8px'}}><span >{item.fileName}</span></a>
+            </div>
+          ),
+        }));
+        setListData(list);
+        setCurrentPage(_page);
+        setPageSize(_pageSize);
+      }
+    } catch {}
+    setLoadingForPagigation(false);
+  }
+
+  const cardActionProps = 'actions';
+  function showTotal(total: number, range: [number, number]) {
+    return `${range[0]}-${range[1]} 共 ${total} 条`;
+  }
+  const paginationProps = {
+    onChange: changePage,
+    showQuickJumper: true,
+    showSizeChanger: true,
+    pageSizeOptions: [8, 12, 16, 24],
+    current: currentPage,
+    pageSize: pageSize,
+    total: totalNum,
+    showTotal: showTotal,
   };
 
   return (
-    <PageContainer
-      title="单号：234231029431"
-      extra={action}
-      className={styles.pageHeader}
-      content={description}
-      extraContent={extra}
-      tabActiveKey={tabStatus.tabActiveKey}
-      onTabChange={onTabChange}
-      tabList={[
-        {
-          key: 'detail',
-          tab: '详情',
-        },
-        {
-          key: 'rule',
-          tab: '规则',
-        },
-      ]}
-    >
-      <div className={styles.main}>
-        <GridContent>
-          <Card title="流程进度" style={{ marginBottom: 24 }}>
-            <RouteContext.Consumer>
-              {({ isMobile }) => (
-                <Steps
-                  direction={isMobile ? 'vertical' : 'horizontal'}
-                  progressDot={customDot}
-                  current={1}
-                >
-                  <Step title="创建项目" description={desc1} />
-                  <Step title="部门初审" description={desc2} />
-                  <Step title="财务复核" />
-                  <Step title="完成" />
-                </Steps>
-              )}
-            </RouteContext.Consumer>
-          </Card>
-          <Card title="用户信息" style={{ marginBottom: 24 }} bordered={false}>
-            <Descriptions style={{ marginBottom: 24 }}>
-              <Descriptions.Item label="用户姓名">付小小</Descriptions.Item>
-              <Descriptions.Item label="会员卡号">32943898021309809423</Descriptions.Item>
-              <Descriptions.Item label="身份证">3321944288191034921</Descriptions.Item>
-              <Descriptions.Item label="联系方式">18112345678</Descriptions.Item>
-              <Descriptions.Item label="联系地址">
-                曲丽丽 18100000000 浙江省杭州市西湖区黄姑山路工专路交叉路口
-              </Descriptions.Item>
-            </Descriptions>
-            <Descriptions style={{ marginBottom: 24 }} title="信息组">
-              <Descriptions.Item label="某某数据">725</Descriptions.Item>
-              <Descriptions.Item label="该数据更新时间">2017-08-08</Descriptions.Item>
-              <Descriptions.Item
-                label={
-                  <span>
-                    某某数据
-                    <Tooltip title="数据说明">
-                      <InfoCircleOutlined style={{ color: 'rgba(0, 0, 0, 0.43)', marginLeft: 4 }} />
-                    </Tooltip>
-                  </span>
-                }
-              >
-                725
-              </Descriptions.Item>
-              <Descriptions.Item label="该数据更新时间">2017-08-08</Descriptions.Item>
-            </Descriptions>
-            <h4 style={{ marginBottom: 16 }}>信息组</h4>
-            <Card type="inner" title="多层级信息组">
-              <Descriptions style={{ marginBottom: 16 }} title="组名称">
-                <Descriptions.Item label="负责人">林东东</Descriptions.Item>
-                <Descriptions.Item label="角色码">1234567</Descriptions.Item>
-                <Descriptions.Item label="所属部门">XX公司 - YY部</Descriptions.Item>
-                <Descriptions.Item label="过期时间">2017-08-08</Descriptions.Item>
-                <Descriptions.Item label="描述">
-                  这段描述很长很长很长很长很长很长很长很长很长很长很长很长很长很长...
-                </Descriptions.Item>
-              </Descriptions>
-              <Divider style={{ margin: '16px 0' }} />
-              <Descriptions style={{ marginBottom: 16 }} title="组名称" column={1}>
-                <Descriptions.Item label="学名">
-                  Citrullus lanatus (Thunb.) Matsum. et
-                  Nakai一年生蔓生藤本；茎、枝粗壮，具明显的棱。卷须较粗..
-                </Descriptions.Item>
-              </Descriptions>
-              <Divider style={{ margin: '16px 0' }} />
-              <Descriptions title="组名称">
-                <Descriptions.Item label="负责人">付小小</Descriptions.Item>
-                <Descriptions.Item label="角色码">1234568</Descriptions.Item>
-              </Descriptions>
-            </Card>
-          </Card>
-          <Card title="用户近半年来电记录" style={{ marginBottom: 24 }} bordered={false}>
-            <Empty />
-          </Card>
-        </GridContent>
-      </div>
-    </PageContainer>
+    <>
+    <Row gutter={24} className="card-row">
+      <Col xl={16} lg={24} md={24} sm={24} xs={24}>
+        <Card>
+          <div style={{whiteSpace: 'nowrap',overflow: 'hidden',textOverflow: 'ellipsis'}}>
+            <strong>作业名：</strong>{homeworkInfoData?.homeworkName}
+          </div>
+          <div style={{whiteSpace: 'nowrap',overflow: 'hidden',textOverflow: 'ellipsis'}}>
+            <strong>描述：</strong>{homeworkInfoData?.homeworkDescription}
+          </div>
+        </Card>
+      </Col>
+      <Col xl={8} lg={24} md={24} sm={24} xs={24}>
+        <Card>
+          <div>
+            <strong>待批改人数：
+            <span style={{color:'orange'}}>{homeworkInfoData?.toBeCorrectedNum}</span>
+            </strong>
+          </div>
+          <div>
+            <strong>未提交人数：
+            <span style={{color:'red'}}>{homeworkInfoData?.uncommittedNum}</span>
+            </strong>
+          </div>
+        </Card>
+      </Col>
+    </Row>
+
+      <ProList<any>
+        grid={{ gutter: 16, xxl: 4, xl: 4, lg: 3, md: 3, sm: 2, xs: 1 }}
+        headerTitle="作业批改"
+        loading={loadingForPagigation}
+        dataSource={listData}
+        pagination={paginationProps}
+        showActions="hover"
+        showExtra="always"
+        metas={{
+          title: {},
+          subTitle: {},
+          type: {},
+          avatar: {},
+          content: {},
+          actions: {
+            cardActionProps,
+          },
+        }}
+      />
+    </>
   );
 };
 

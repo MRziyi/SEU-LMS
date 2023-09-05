@@ -1,81 +1,73 @@
 import type { Request, Response } from 'express';
 
-const advancedOperation1 = [
-  {
-    key: 'op1',
-    type: '订购关系生效',
-    name: '曲丽丽',
-    status: 'agree',
-    updatedAt: '2017-10-03  19:23:12',
-    memo: '-',
-  },
-  {
-    key: 'op2',
-    type: '财务复审',
-    name: '付小小',
-    status: 'reject',
-    updatedAt: '2017-10-03  19:23:12',
-    memo: '不通过原因',
-  },
-  {
-    key: 'op3',
-    type: '部门初审',
-    name: '周毛毛',
-    status: 'agree',
-    updatedAt: '2017-10-03  19:23:12',
-    memo: '-',
-  },
-  {
-    key: 'op4',
-    type: '提交订单',
-    name: '林东东',
-    status: 'agree',
-    updatedAt: '2017-10-03  19:23:12',
-    memo: '很棒',
-  },
-  {
-    key: 'op5',
-    type: '创建订单',
-    name: '汗牙牙',
-    status: 'agree',
-    updatedAt: '2017-10-03  19:23:12',
-    memo: '-',
-  },
+const itemName = [
+  'Alipay',
+  'Angular',
+  'Ant Design',
+  'Ant Design Pro',
+  'Bootstrap',
+  'React',
+  'Vue',
+  'Webpack',
+];
+const ownerUrl = [
+  'https://gw.alipayobjects.com/zos/rmsportal/WdGqmHpayyMjiEhcKoVE.png', // Alipay
+  'https://gw.alipayobjects.com/zos/rmsportal/zOsKZmFRdUtvpqCImOVY.png', // Angular
+  'https://gw.alipayobjects.com/zos/rmsportal/dURIMkkrRFpPgTuzkwnB.png', // Ant Design
+  'https://gw.alipayobjects.com/zos/rmsportal/sfjbOqnsXXJgNCjCzDBL.png', // Ant Design Pro
+  'https://gw.alipayobjects.com/zos/rmsportal/siCrBXXhmvTQGWPNLBow.png', // Bootstrap
+  'https://gw.alipayobjects.com/zos/rmsportal/kZzEzemZyKLKFsojXItE.png', // React
+  'https://gw.alipayobjects.com/zos/rmsportal/ComBAopevLwENQdKWiIn.png', // Vue
+  'https://gw.alipayobjects.com/zos/rmsportal/nxkuOJlFJuAUhzlMTCEe.png', // Webpack
 ];
 
-const advancedOperation2 = [
-  {
-    key: 'op1',
-    type: '订购关系生效',
-    name: '曲丽丽',
-    status: 'agree',
-    updatedAt: '2017-10-03  19:23:12',
-    memo: '-',
-  },
+
+const ownerName = [
+  '付小小',
+  '曲丽丽',
+  '林东东',
+  '周星星',
+  '吴加好',
+  '朱偏右',
+  '鱼酱',
+  '乐哥',
+  '谭小仪',
+  '仲尼',
 ];
 
-const advancedOperation3 = [
-  {
-    key: 'op1',
-    type: '创建订单',
-    name: '汗牙牙',
-    status: 'agree',
-    updatedAt: '2017-10-03  19:23:12',
-    memo: '-',
-  },
-];
+function homeworkListData(currentPage: number, pageSize: number) {
+  const list = [];
+  for (let i = 0; i < 18; i += 1) {
+    list.push({
+      studentAvatar:'https://gw.alipayobjects.com/zos/antfincdn/UCSiy1j6jx/xingzhuang.svg',
+      studentNickName:ownerName[i % 10],
+      fileName:itemName[i % 8],
+      fileUrl:ownerUrl[i%8],
+      status:i%2,
+    });
+  }
+  const startIndex = (currentPage - 1) * pageSize;
+  return list.slice(startIndex, startIndex + pageSize);
+}
 
-function getProfileAdvancedData(req: Request, res: Response) {
-  const result = {
+async function postHomeworkData(req: Request, res: Response) {
+  const { courseID, currentPage, pageSize } = req.body;
+  console.log('CourseID: ' + courseID);
+  return res.json({
+    code: 0,
     data: {
-      advancedOperation1,
-      advancedOperation2,
-      advancedOperation3,
+      totalNum: 18,
+      list: homeworkListData(currentPage, pageSize),
+      info:{
+        homeworkName:'这是一份作业',
+        homeworkDescription:'乱七八糟的描述balabala',
+        toBeCorrectedNum:31,
+        uncommittedNum:5,
+      }
     },
-  };
-  return res.json(result);
+  });
 }
 
 export default {
-  'GET  /api/profile/advanced': getProfileAdvancedData,
+  'POST  /api/syllabus/homework': postHomeworkData,
 };
