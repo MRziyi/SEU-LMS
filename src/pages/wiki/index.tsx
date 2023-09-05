@@ -55,6 +55,23 @@ const Wiki: FC<Record<string, any>> = () => {
       headerTitle="使用帮助"
       pagination={paginationProps}
       showActions="hover"
+      onRow={(record) => ({
+        onClick: () => {
+          const newExpandedRowKeys = [...expandedRowKeys];
+          if (newExpandedRowKeys.includes(record.wikiID)) {
+            // 如果当前行已展开，就移除它
+            const index = newExpandedRowKeys.indexOf(record.wikiID);
+            if (index !== -1) {
+              newExpandedRowKeys.splice(index, 1);
+            }
+          } else {
+            // 否则，将当前行加入展开行的数组
+            newExpandedRowKeys.push(record.wikiID);
+          }
+          // 更新展开行的状态
+          setExpandedRowKeys(newExpandedRowKeys);
+        },
+      })}
       toolBarRender={() => {
         return [
           <Button key="3" type="primary">

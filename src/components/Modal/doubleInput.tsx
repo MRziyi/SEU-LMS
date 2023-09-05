@@ -74,9 +74,6 @@ const DoubleInputModal: React.FC<modalCtrl> = ({ open, setOpen, title, url, idPa
               return false;
             }
           }}
-          onFinishFailed={(errorInfo: any) => {
-            console.log('提交失败:', errorInfo);
-          }}
         >
           <ProFormText
             style={{ width: '50%' }}

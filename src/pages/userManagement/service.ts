@@ -1,18 +1,28 @@
 import { request } from 'umi';
 import { UserListData } from './data';
 
-export async function queryUserList(  
-  keyword1Param:string,
-  keyword2Param:string,
-  currentPageParam: number,
-  pageSizeParam: number,): Promise<{ data: { totalNum: number; list: UserListData[] } }> {
+export async function queryUserList(
+  nickNameParam: string,
+  idParam: string,
+  currentPageParam?: number,
+  pageSizeParam?: number,
+): Promise<{ code: number; data: { totalNum: number; list: UserListData[] } }> {
   return request('/api/user/list-for-admin', {
     method: 'POST',
-    data:{
-      keyword1: keyword1Param,
-      keyword2: keyword2Param,
+    data: {
+      nickName: nickNameParam,
+      id: idParam,
       currentPage: currentPageParam,
       pageSize: pageSizeParam,
-    }
+    },
+  });
+}
+
+export async function deleteUserList(IDListParam: string[]): Promise<{ code: number }> {
+  return request('/api/user/delete-users', {
+    method: 'POST',
+    data: {
+      id: IDListParam,
+    },
   });
 }

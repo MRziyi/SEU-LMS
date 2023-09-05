@@ -1,13 +1,11 @@
 import { useState, type FC } from 'react';
-import { Button, Modal, Checkbox, Form, Input, Upload, Select} from 'antd';
+import { Button, Modal, Checkbox, Form, Input, Upload, Select, message} from 'antd';
 import React from 'react';
 import { UploadOutlined } from '@ant-design/icons';
 import request from 'umi-request';
 
 
-const onFinishFailed = (errorInfo: any) => {
-  console.log('Failed:', errorInfo);
-};
+
 const { Option } = Select;
 
 interface UserInfoProps {
@@ -26,6 +24,11 @@ const ModifyUser : React.FC<UserInfoProps> = (props) => {
     setVisiable(false);
   };
 
+  const onFinishFailed = (errorInfo: any) => {
+    console.log('Failed:', errorInfo);
+    message.error('创建失败，请重试');
+  };
+
   const handleSubmit = (formValues:any) => {
     //alert("!!");
     const ID = props.ID;
@@ -39,10 +42,10 @@ const ModifyUser : React.FC<UserInfoProps> = (props) => {
       params
     })
       .then(() => {
-        //alert('新增成功');
+        message.success('创建成功');
       })
       .catch((error) => {
-        alert('创建失败，请重试');
+        message.error('创建失败，请重试');
       });
       form.resetFields();
     }

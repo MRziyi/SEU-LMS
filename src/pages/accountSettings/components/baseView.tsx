@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { UploadOutlined } from '@ant-design/icons';
-import { Avatar, Button, Form, Upload, message } from 'antd';
+import { Button, Form, Upload, message } from 'antd';
 import ProForm, { ProFormText } from '@ant-design/pro-form';
 import { request, useModel } from 'umi';
 

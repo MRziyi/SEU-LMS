@@ -4,7 +4,6 @@ const nickName =[
     "Joe",
     "小红",
     "小平",
-    "小江",
     "小民",
 ]
 
@@ -48,7 +47,7 @@ async function postFakeUserList(req: Request, res: Response){
     for(let i = 0 ;i<25;i++){
         list.push({
             key:i,
-            nickName:nickName[i%5],
+            nickName:nickName[i%4],
             id:ID[i%5],
             access:access[i%2],
             phone:phone[i%5],
@@ -62,14 +61,15 @@ async function postFakeUserList(req: Request, res: Response){
     let filteredItems = list; // 初始化为整个列表
 
     // 如果 paramName 不为空，则进行筛选
-    if (keyword1) {
-      filteredItems = list.filter((item) => item.nickName.includes(keyword1));
+    if (keyword1 && keyword2) {
+      filteredItems = list.filter((item) => item.nickName.includes(keyword1) && item.id.includes(keyword2));
+    }else if(keyword1){
+        filteredItems = list.filter((item) => item.nickName.includes(keyword1)) ;     
+    }else if(keyword2){
+        filteredItems = list.filter((item) => item.id.includes(keyword2));
     }
   
-    if (keyword2) {
-        filteredItems = list.filter((item) => item.id.includes(keyword2));
 
-    }
   
     const startIndex = (currentPage - 1) * pageSize;
     console.log('Page: ' + startIndex + ' - ' + (startIndex + pageSize));
