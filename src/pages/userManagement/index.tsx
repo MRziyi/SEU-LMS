@@ -1,202 +1,134 @@
 import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
-import { Button, DatePicker, Space, Table } from 'antd';
-import type {UserListData} from './data'
-import { request } from 'umi';
+import { Button, message, Space, Table } from 'antd';
+import type { SearchParams, UserListData } from './data';
+import { useParams } from 'umi';
 import AddUser from './components/addUser';
 import ModifyUser from './components/modifyUser';
 import UserInfo from './components/userInfo';
-import { useEffect, useRef, useState } from 'react';
-import { queryUserList } from './service';
+import { FC, useState } from 'react';
+import { deleteUserList, queryUserList } from './service';
 
-const columns: ProColumns<UserListData>[] = [
-  {
-    title: '用户名称',
-    width: 50,
-    dataIndex: 'nickName',
-    fixed: 'left',
-    
-  },
-  {
-    title: '一卡通号',
-    width: 60,
-    dataIndex: 'id',
-    align: 'left',
-
-  },
-  {
-    title: '用户身份',
-    width: 60,
-    align: 'center',
-    dataIndex: 'access',
-    search:false,
-  },
-  {
-    title: '手机',
-    dataIndex: 'phone',
-    align: 'left',
-    width: 100,
-    search:false,
-  },
-  {
-    title: '电子邮箱',
-    width: 100,
-    dataIndex: 'email',
-    align: 'left',
-    search:false,
-    
-  },
-  {
-    title: '操作',
-    width: 100,
-    key: 'option',
-    valueType: 'option',
-    fixed: 'right',
-    search:false,
-    render: (_,row) => {
-      return(
-        <Space>
-          <UserInfo 
-          id = {row.id}
-          nickName={row.nickName}
-          access={row.access}
-          avatarUrl={row.avatarUrl}
-          phone={row.phone}
-          email={row.phone}
-          ></UserInfo>     
-          <ModifyUser ID = {row.id}></ModifyUser>
-          <Button
-            type="link"
-            key="delete"
-            danger
-            onClick={() => handleDelete(row.id)}
-          >
-            删除
-         </Button>
-        </Space>
-      )
-    }
-  },
-];
-
-const handleDelete = async (params: any) => {
-  console.log('请求参数:', params);
-  // 发起删除请求
-  request('/api/user/delete', {
-    method: 'POST',
-    data:{
-      id:params,
-    }
-  })
-    .then(() => {
-      alert('删除成功');
-    })
-    .catch((error) => {
-      alert('删除失败，请重试');
-    });
-};
-
-
-
-
-
-
-
-
-export default () => {
-
-  // const fetchData = async (params: any) => {
-  //   // params 包含了请求的参数，包括搜索条件
-  //   console.log('请求参数:', params);
-  //   return request<{
-  //     data: UserListData[];
-  //   }>('/api/user/list-for-admin', {
-  //     method: 'POST',
-  //     params,
-  //   });
-  // };
-
-  const [keyWord1,setKeyWord1] = useState<string>('');
-  const [keyWord2,setKeyWord2] = useState<string>('');
-  const [pageSize, setPageSize] = useState<number>(8);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [loadingForPagigation, setLoadingForPagigation] = useState<boolean>(false);
-  const [totalNum, setTotalNum] = useState<number>(0);
-  const searchContent = useRef<string>('');
-  const preSearchContent = useRef<string>('');
-  const [listData, setListData] = useState<UserListData[]>([]);
-
-
-
-  useEffect(() => {
-    changePage(1, pageSize);
-  }, []);
-
-  async function changePage(_page: number, _pageSize: number) {
-    setLoadingForPagigation(true);
-    if (preSearchContent.current !== searchContent.current) _page = 1;
-    try {
-      let result;
-      result = await queryUserList(keyWord1, keyWord2, _page, _pageSize);
-      if (result.data) {
-        setTotalNum(result.data.totalNum);
-        setListData(result.data.list);
-        setPageSize(_pageSize);
-        setCurrentPage(_page);
-      }
-    } catch {}
-      
-    setLoadingForPagigation(false);
-  }
+const UserManagement: FC = () => {
+  const params = useParams<SearchParams>();
+  const [loadingDelete, setLoadingDelete] = useState<boolean>(false);
 
   function showTotal(total: number, range: [number, number]) {
     return `${range[0]}-${range[1]} 共 ${total} 条`;
   }
 
-
-
-
-
-  useEffect(() => {
-    console.log('拿到的关键字为:', keyWord1, keyWord2);
-    changePage(1, pageSize)
-  }, [keyWord1,keyWord2]);
-
-  const fetchKeyword = async (params: any) => {
-    setKeyWord1(params.nickName);
-    setKeyWord2(params.id);
-  };
-  function test(){
-    console.log('拿到的关键字是:', keyWord1,keyWord2);
+  async function deleteUserListAdaptor(IDList: string[]) {
+    setLoadingDelete(true);
+    try {
+      const result = await deleteUserList(IDList);
+      if (result.code == 0) {
+        message.success('用户批量删除成功');
+      }
+    } catch {}
+    setLoadingDelete(false);
   }
 
-
-
+  const columns: ProColumns<UserListData>[] = [
+    {
+      title: '用户名称',
+      width: 50,
+      dataIndex: 'nickName',
+      fixed: 'left',
+    },
+    {
+      title: '一卡通号',
+      width: 60,
+      dataIndex: 'id',
+      align: 'left',
+    },
+    {
+      title: '用户身份',
+      width: 60,
+      align: 'center',
+      dataIndex: 'access',
+      search: false,
+    },
+    {
+      title: '手机',
+      dataIndex: 'phone',
+      align: 'left',
+      width: 100,
+      search: false,
+    },
+    {
+      title: '电子邮箱',
+      width: 100,
+      dataIndex: 'email',
+      align: 'left',
+      search: false,
+    },
+    {
+      title: '操作',
+      width: 100,
+      key: 'option',
+      valueType: 'option',
+      fixed: 'right',
+      search: false,
+      render: (_, row) => {
+        return (
+          <Space>
+            <UserInfo
+              id={row.id}
+              nickName={row.nickName}
+              access={row.access}
+              avatarUrl={row.avatarUrl}
+              phone={row.phone}
+              email={row.phone}
+            ></UserInfo>
+            <ModifyUser ID={row.id}></ModifyUser>
+            <Button
+              type="link"
+              key="delete"
+              danger
+              loading={loadingDelete}
+              onClick={() => {
+                const IDList: string[] = [row.id];
+                deleteUserListAdaptor(IDList);
+              }}
+            >
+              删除
+            </Button>
+          </Space>
+        );
+      },
+    },
+  ];
 
   return (
-    <ProTable<UserListData>
-
-    search={{
-      labelWidth: 'auto',
-    }}
-      onSubmit={test}
-
-
-
-      //获得数据
-      request={fetchKeyword}
-      dataSource={listData}
-      
+    <ProTable<UserListData, SearchParams>
+      search={{
+        labelWidth: 'auto',
+      }}
+      params={params}
+      request={async (
+        params: SearchParams & {
+          pageSize?: number;
+          current?: number;
+          keyword?: string;
+        },
+      ) => {
+        const msg = await queryUserList(
+          params.nickName,
+          params.userID,
+          params.current,
+          params.pageSize,
+        );
+        return {
+          data: msg.data.list,
+          success: msg.code == 0,
+          total: msg.data.totalNum,
+        };
+      }}
       columns={columns}
       rowSelection={{
         selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
       }}
-
-      tableAlertRender={({
-        selectedRowKeys,
-        selectedRows,
-        onCleanSelected,
-      }) => {
+      tableAlertRender={({ selectedRowKeys, selectedRows, onCleanSelected }) => {
         console.log(selectedRowKeys, selectedRows);
         return (
           <Space size={24}>
@@ -209,47 +141,31 @@ export default () => {
           </Space>
         );
       }}
-      tableAlertOptionRender={(
-        {
-          selectedRowKeys,
-        }
-      ) => {
+      tableAlertOptionRender={(values) => {
         return (
           <Space size={16}>
-            <a onClick={()=>{
-              const deleteList = [];
-              for(let i = 0 ; i < selectedRowKeys.length ; i++){
-                deleteList[i] = selectedRowKeys[i];
+            <Button
+              danger
+              loading={loadingDelete}
+              onClick={() =>
+                deleteUserListAdaptor(values.selectedRows.map((element) => element.id))
               }
-              console.log('删除:', deleteList);
-              // 发起删除请求
-              request('/api/user/delete-users', {
-                method: 'POST',
-                data: { deleteList },
-              })
-                .then(() => {
-                  alert('删除成功');
-                })
-                .catch((error) => {
-                  alert('删除失败，请重试');
-                });
-            }}>批量删除</a>
+            >
+              批量删除
+            </Button>
           </Space>
         );
       }}
       scroll={{ x: 400 }}
       options={false}
       pagination={{
-        onChange: changePage,
+        size: 'default',
         showQuickJumper: true,
         showSizeChanger: true,
-        pageSizeOptions: [8, 12, 16, 20],
-        current: currentPage,
-        pageSize: pageSize,
-        total: totalNum,
+        pageSizeOptions: [8, 12, 16],
         showTotal: showTotal,
       }}
-      rowKey="key"
+      rowKey="id"
       headerTitle="用户管理"
       toolBarRender={() => {
         return [
@@ -261,3 +177,4 @@ export default () => {
     />
   );
 };
+export default UserManagement;

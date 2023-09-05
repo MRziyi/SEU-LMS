@@ -186,5 +186,5 @@ export default {
   'POST  /api/data-visualize/course-statistics': postCourseStatistic,
 
   'GET  /api/course/list-description': postFakeCourseDiscription,
-  'GET  /api/user/list-teacher': postFakeTeacherDiscription,
+  'POST  /api/user/list-teacher': postFakeTeacherDiscription,
 };

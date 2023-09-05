@@ -5,8 +5,12 @@ export type CourseListData = {
   teacherName: string;
   teacherAvatar: string;
   semester: string;
-  description:string;
+  description: string;
   teacherEmail: string;
   teacherPhone: string;
-  key: string;
+};
+
+export type SearchParams = {
+  courseName: string;
+  teacherName: string;
 };

@@ -21,7 +21,6 @@ const ownerUrl = [
   'https://gw.alipayobjects.com/zos/rmsportal/nxkuOJlFJuAUhzlMTCEe.png', // Webpack
 ];
 
-
 const ownerName = [
   '付小小',
   '曲丽丽',
@@ -39,18 +38,18 @@ function homeworkListData(currentPage: number, pageSize: number) {
   const list = [];
   for (let i = 0; i < 18; i += 1) {
     list.push({
-      studentAvatar:'https://gw.alipayobjects.com/zos/antfincdn/UCSiy1j6jx/xingzhuang.svg',
-      studentNickName:ownerName[i % 10],
-      fileName:itemName[i % 8],
-      fileUrl:ownerUrl[i%8],
-      status:i%2,
+      studentAvatar: 'https://gw.alipayobjects.com/zos/antfincdn/UCSiy1j6jx/xingzhuang.svg',
+      studentNickName: ownerName[i % 10],
+      fileName: itemName[i % 8],
+      fileUrl: ownerUrl[i % 8],
+      status: i % 2,
     });
   }
   const startIndex = (currentPage - 1) * pageSize;
   return list.slice(startIndex, startIndex + pageSize);
 }
 
-async function postHomeworkList(req: Request, res: Response) {
+async function postHomeworkData(req: Request, res: Response) {
   const { courseID, currentPage, pageSize } = req.body;
   console.log('CourseID: ' + courseID);
   return res.json({
@@ -58,27 +57,16 @@ async function postHomeworkList(req: Request, res: Response) {
     data: {
       totalNum: 18,
       list: homeworkListData(currentPage, pageSize),
-      homeworkName:'这是一份作业',
-      homeworkDescription:'乱七八糟的描述balabala',
-    },
-  });
-}
-
-async function postHomeworkCorrection(req: Request, res: Response) {
-  const { courseID} = req.body;
-  console.log('CourseID: ' + courseID);
-  return res.json({
-    code: 0,
-    data: {
-      correctionData:{
-        toBeCorrectedNum:30,
-        uncommittedNum:2,
+      info: {
+        homeworkName: '这是一份作业',
+        homeworkDescription: '乱七八糟的描述balabala',
+        toBeCorrectedNum: 31,
+        uncommittedNum: 5,
       },
     },
   });
 }
 
 export default {
-  'POST  /api/syllabus/homework/list': postHomeworkList,
-  'POST  /api/syllabus/homework/correction':postHomeworkCorrection,
+  'POST  /api/syllabus/homework/list': postHomeworkData,
 };

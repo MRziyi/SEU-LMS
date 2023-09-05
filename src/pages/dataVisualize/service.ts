@@ -25,8 +25,15 @@ export async function queryCourseList(): Promise<{
   return request('/api/course/list-description');
 }
 
-export async function queryTeacherList(): Promise<{ data: { teacherList: TeacherDiscription[] } }> {
-  return request('/api/user/list-teacher');
+export async function queryTeacherList(
+  teacherIDParam: string,
+): Promise<{ data: { teacherList: TeacherDiscription[] } }> {
+  return request('/api/user/list-teacher', {
+    method: 'POST',
+    data: {
+      teacherID: teacherIDParam,
+    },
+  });
 }
 
 export async function queryGeneralOverview(): Promise<{

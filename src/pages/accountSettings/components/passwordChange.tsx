@@ -43,7 +43,6 @@ const PasswordChange: React.FC = () => {
       <Form.Item label="新密码" name="password" rules={[{ required: true }]}>
         <Input.Password />
       </Form.Item>
-      {/* Field */}
       <Form.Item
         label="确认密码"
         name="password2"
