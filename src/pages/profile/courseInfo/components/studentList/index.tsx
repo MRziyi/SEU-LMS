@@ -85,7 +85,6 @@ const StudentList: FC<CourseIDParam> = (props) => {
       ) => {
         const msg = await queryUserList(
           params.name,
-          params.id,
           props.courseID,
           params.current,
           params.pageSize,

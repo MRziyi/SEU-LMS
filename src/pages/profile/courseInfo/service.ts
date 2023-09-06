@@ -144,7 +144,6 @@ export async function postStopCheckedIn(syllabusIDParam: string): Promise<{ code
 
 export async function queryUserList(
   nickNameParam: string,
-  idParam: string,
   courseIDParam: string,
   currentPageParam?: number,
   pageSizeParam?: number,
@@ -153,7 +152,6 @@ export async function queryUserList(
     method: 'POST',
     data: {
       nickName: nickNameParam,
-      id: idParam,
       courseID: courseIDParam,
       currentPage: currentPageParam,
       pageSize: pageSizeParam,
