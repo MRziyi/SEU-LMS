@@ -18,6 +18,8 @@ export async function queryUserList(
   });
 }
 
+
+
 export async function deleteUserList(IDListParam: string[]): Promise<{ code: number }> {
   return request('/api/user/delete-users', {
     method: 'POST',

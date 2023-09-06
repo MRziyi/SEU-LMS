@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 
-const nickName =[
+const nickNames =[
     "Joe",
     "小红",
     "小平",
@@ -42,12 +42,12 @@ const imgUrl = [
     'https://gw.alipayobjects.com/zos/rmsportal/gLaIAoVWTtLbBWZNYEMg.png',
   ];
 async function postFakeUserList(req: Request, res: Response){
-    const { keyword1, keyword2, currentPage, pageSize } = req.body;
+    const { nickName, id, currentPage, pageSize } = req.body;
     const list = [];
     for(let i = 0 ;i<25;i++){
         list.push({
             key:i,
-            nickName:nickName[i%4],
+            nickName:nickNames[i%4],
             id:ID[i%5],
             access:access[i%2],
             phone:phone[i%5],
@@ -56,17 +56,17 @@ async function postFakeUserList(req: Request, res: Response){
             
         })
     }
-    console.log('mock处理参数',keyword1,keyword2,currentPage,pageSize)
+    console.log('mock处理参数',nickName,id,currentPage,pageSize)
 
     let filteredItems = list; // 初始化为整个列表
 
     // 如果 paramName 不为空，则进行筛选
-    if (keyword1 && keyword2) {
-      filteredItems = list.filter((item) => item.nickName.includes(keyword1) && item.id.includes(keyword2));
-    }else if(keyword1){
-        filteredItems = list.filter((item) => item.nickName.includes(keyword1)) ;     
-    }else if(keyword2){
-        filteredItems = list.filter((item) => item.id.includes(keyword2));
+    if (nickName && id) {
+      filteredItems = list.filter((item) => item.nickName.includes(nickName) && item.id.includes(id));
+    }else if(nickName){
+        filteredItems = list.filter((item) => item.nickName.includes(nickName)) ;     
+    }else if(id){
+        filteredItems = list.filter((item) => item.id.includes(id));
     }
   
 
@@ -97,8 +97,16 @@ async function deleteUsers(req: Request, res: Response) {
         deleteList: list,
     })
 }
+
+async function sendPM(req: Request, res: Response) {
+    return res.json({
+        code:0,
+    })
+}
+
 export default {
     'POST  /api/user/list-for-admin': postFakeUserList,
     'POST  /api/user/delete-users': deleteUsers,
+    'POST  /api/user/sendPM': sendPM,
   };
   

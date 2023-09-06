@@ -8,6 +8,7 @@ import ModifyUser from './components/modifyUser';
 import UserInfo from './components/userInfo';
 import { FC, useState } from 'react';
 import { deleteUserList, queryUserList } from './service';
+import SendMessage from './components/sendMessage';
 
 const UserManagement: FC = () => {
   const params = useParams<SearchParams>();
@@ -52,19 +53,19 @@ const UserManagement: FC = () => {
       title: '手机',
       dataIndex: 'phone',
       align: 'left',
-      width: 100,
+      width: 90,
       search: false,
     },
     {
       title: '电子邮箱',
-      width: 100,
+      width: 90,
       dataIndex: 'email',
       align: 'left',
       search: false,
     },
     {
       title: '操作',
-      width: 100,
+      width: 120,
       key: 'option',
       valueType: 'option',
       fixed: 'right',
@@ -72,6 +73,10 @@ const UserManagement: FC = () => {
       render: (_, row) => {
         return (
           <Space>
+            <SendMessage
+            id={row.id}
+            nickName={row.nickName}
+            ></SendMessage>
             <UserInfo
               id={row.id}
               nickName={row.nickName}

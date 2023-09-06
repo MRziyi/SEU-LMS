@@ -9,6 +9,7 @@ import Discussion from './components/discussion';
 import { queryCourseName } from './service';
 //import MyModal from '@/components/Modal';
 import Description from './components/description';
+import StudentList from './components/studentList';
 
 const CourseInfo: React.FC<RouteChildrenProps> = () => {
   const { initialState } = useModel('@@initialState');
@@ -37,6 +38,9 @@ const CourseInfo: React.FC<RouteChildrenProps> = () => {
     if (tabValue === '3') {
       return <Discussion courseID={courseID} key="3" />;
     }
+    if (tabValue === '4') {
+      return <StudentList courseID={courseID} key="4" />;
+    }
     return null;
   };
 
@@ -55,6 +59,10 @@ const CourseInfo: React.FC<RouteChildrenProps> = () => {
         {
           key: '3',
           tab: '讨论区',
+        },
+        {
+          key: '4',
+          tab: '学生列表',
         },
       ]}
       header={{
