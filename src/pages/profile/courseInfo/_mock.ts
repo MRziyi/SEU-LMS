@@ -21,20 +21,6 @@ const itemName = [
   'Webpack',
 ];
 
-const ID = ['20001234', '20021568', '15648978', '11124445', '55151578'];
-
-const nickName = ['Joe', '小红', '小平', '小民'];
-
-const phone = ['13132526464', '20021223568', '15644458978', '11124667445', '55151324578'];
-
-const email = [
-  '200012341655@mail.com',
-  '20021568@mail.com',
-  '15648@mail.com',
-  '1112444@mail.com',
-  '551@mail.com',
-];
-
 const ownerUrl = [
   'https://gw.alipayobjects.com/zos/rmsportal/WdGqmHpayyMjiEhcKoVE.png', // Alipay
   'https://gw.alipayobjects.com/zos/rmsportal/zOsKZmFRdUtvpqCImOVY.png', // Angular
@@ -317,5 +303,5 @@ export default {
   'POST  /api/syllabus/check-in-data': postCheckInData,
   'POST  /api/syllabus/checkin/start': receivePassword,
   'POST  /api/syllabus/checkin/stop': receiveHaveCheckedIn,
-  'POST  /api/syllabus/student-list': postFakeStudentList,
+  'POST  /api/course/list-student': postFakeStudentList,
 };
