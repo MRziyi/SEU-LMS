@@ -166,35 +166,52 @@ export function createWebSocketConnection() {
 }
 
 export async function postPublishHomework(
-  syllabusIDParam:string,
-  homeworkNameParam:string,
-  homeworkDescriptionParam:string,
-  deadlineParam:string,
-): Promise<{code:number}> {
-return request('/api/syllabus/homework/publish', {
-  method: 'POST',
-  data: {
-    syllabusID: syllabusIDParam,
-    homeworkName:homeworkNameParam,
-    homeworkDescription:homeworkDescriptionParam,
-    deadline:deadlineParam,
-  },
-});
+  syllabusIDParam: string,
+  homeworkNameParam: string,
+  homeworkDescriptionParam: string,
+  deadlineParam: string,
+): Promise<{ code: number }> {
+  return request('/api/syllabus/homework/publish', {
+    method: 'POST',
+    data: {
+      syllabusID: syllabusIDParam,
+      homeworkName: homeworkNameParam,
+      homeworkDescription: homeworkDescriptionParam,
+      deadline: deadlineParam,
+    },
+  });
 }
 
 export async function postPublishDiscussion(
-  courseIDParam:string,
-  userIDParam:string,
-  discussionNameParam:string,
-  discussionContentParam:string,
-): Promise<{code:number}> {
-return request('/api/discussion/publish', {
-  method: 'POST',
-  data: {
-    courseID:courseIDParam,
-    userID:userIDParam,
-    discussionName:discussionNameParam,
-    discussionContent:discussionContentParam,
-  },
-});
+  courseIDParam: string,
+  userIDParam: string,
+  discussionNameParam: string,
+  discussionContentParam: string,
+): Promise<{ code: number }> {
+  return request('/api/discussion/publish', {
+    method: 'POST',
+    data: {
+      courseID: courseIDParam,
+      userID: userIDParam,
+      discussionName: discussionNameParam,
+      discussionContent: discussionContentParam,
+    },
+  });
+}
+
+export async function postHomeworkUrl(
+  syllabusIDParam: string,
+  userIDParam: string,
+  homeworkTitleParam: string,
+  homeworkUrlParam: string,
+): Promise<{ code: number }> {
+  return request('/api/syllabus/homework/post-file', {
+    method: 'POST',
+    data: {
+      syllabusID: syllabusIDParam,
+      userID: userIDParam,
+      homeworkTitle: homeworkTitleParam,
+      homeworkUrl: homeworkUrlParam,
+    },
+  });
 }

@@ -1,4 +1,4 @@
-import { Modal, message, Space, Tag, Button } from 'antd';
+import { Modal, message, Space, Tag, Button, Divider } from 'antd';
 import { useEffect, useState } from 'react';
 import { queryMaterialList } from '../../../service';
 import { ProList } from '@ant-design/pro-components';
@@ -13,22 +13,22 @@ import {
   FileWordOutlined,
   FileZipOutlined,
 } from '@ant-design/icons';
+import UploadFileModal from './uploadFileModal';
 
-interface modalCtrl {
-  open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+interface modalInterface {
   syllabusID: string;
+  isTeacher: boolean;
 }
 
-const FileModal: React.FC<modalCtrl> = ({ open, setOpen, syllabusID }) => {
-  const [show, setShow] = useState(false);
-  const [listData, setListData] = useState<any>();
-  const [loading, setLoading] = useState<boolean>(false);
+const FileModal: React.FC<modalInterface> = ({ syllabusID, isTeacher }) => {
+  const [visiable, setVisiable] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [listData, setListData] = useState<any[]>([]);
   const cardActionProps = 'actions';
 
   useEffect(() => {
-    if (syllabusID !== '' && open) queryMaterialAdaptor();
-  }, [syllabusID]);
+    if (syllabusID !== '' && visiable) queryMaterialAdaptor();
+  }, [syllabusID, visiable]);
 
   async function queryMaterialAdaptor() {
     setLoading(true);
@@ -105,65 +105,66 @@ const FileModal: React.FC<modalCtrl> = ({ open, setOpen, syllabusID }) => {
           ),
           type: item.type,
         }));
-        console.log(list);
         setListData(list);
       }
     } catch {}
     setLoading(false);
   }
 
-  useEffect(() => {
-    setShow(open);
-  }, [open]);
-
-  useEffect(() => {
-    setOpen(show);
-  }, [show]);
-
   return (
-    <Modal
-      title={'课件资料'}
-      width={700}
-      open={open}
-      okButtonProps={{ style: { display: 'none' } }}
-      onCancel={() => {
-        setShow(false);
-        return true;
-      }}
-    >
-      <ProList<any>
-        grid={{ gutter: 16, xxl: 2, xl: 1, lg: 1, md: 1, sm: 1, xs: 1 }}
-        loading={loading}
-        dataSource={listData}
-        showActions="hover"
-        showExtra="always"
-        metas={{
-          title: {},
-          subTitle: {},
-          avatar: {
-            render: (_, row) => {
-              if (row.type === 'xlsx')
-                return <FileExcelOutlined style={{ fontSize: '20pt', marginRight: '10px' }} />;
-              else if (row.type === 'ppt')
-                return <FilePptOutlined style={{ fontSize: '20pt', marginRight: '10px' }} />;
-              else if (row.type === 'pdf')
-                return <FilePdfOutlined style={{ fontSize: '20pt', marginRight: '10px' }} />;
-              else if (row.type === 'doc')
-                return <FileWordOutlined style={{ fontSize: '20pt', marginRight: '10px' }} />;
-              else if (row.type === 'zip' || row.type === 'rar')
-                return <FileZipOutlined style={{ fontSize: '20pt', marginRight: '10px' }} />;
-              else if (row.type === 'Image')
-                return <FileImageOutlined style={{ fontSize: '20pt', marginRight: '10px' }} />;
-              else return <FileTextOutlined style={{ fontSize: '20pt', marginRight: '10px' }} />;
-            },
-          },
-          content: {},
-          actions: {
-            cardActionProps,
-          },
+    <>
+      <Button type="text" onClick={() => setVisiable(true)}>
+        {isTeacher ? '修改课件资料' : '查看课件资料'}
+      </Button>
+      <Modal
+        title={'课件资料'}
+        width={700}
+        open={visiable}
+        okButtonProps={{ style: { display: 'none' } }}
+        onCancel={() => {
+          setVisiable(false);
+          return true;
         }}
-      />
-    </Modal>
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          {isTeacher ? <UploadFileModal syllabusID={syllabusID} isLarge={true} /> : ''}
+          <Divider>已上传课件</Divider>
+          <ProList<any>
+            grid={{ gutter: 16, xxl: 2, xl: 1, lg: 1, md: 1, sm: 1, xs: 1 }}
+            loading={loading}
+            dataSource={listData}
+            showActions="hover"
+            showExtra="always"
+            metas={{
+              title: {},
+              subTitle: {},
+              avatar: {
+                render: (_, row) => {
+                  if (row.type === 'xlsx')
+                    return <FileExcelOutlined style={{ fontSize: '20pt', marginRight: '10px' }} />;
+                  else if (row.type === 'ppt')
+                    return <FilePptOutlined style={{ fontSize: '20pt', marginRight: '10px' }} />;
+                  else if (row.type === 'pdf')
+                    return <FilePdfOutlined style={{ fontSize: '20pt', marginRight: '10px' }} />;
+                  else if (row.type === 'doc')
+                    return <FileWordOutlined style={{ fontSize: '20pt', marginRight: '10px' }} />;
+                  else if (row.type === 'zip' || row.type === 'rar')
+                    return <FileZipOutlined style={{ fontSize: '20pt', marginRight: '10px' }} />;
+                  else if (row.type === 'Image')
+                    return <FileImageOutlined style={{ fontSize: '20pt', marginRight: '10px' }} />;
+                  else
+                    return <FileTextOutlined style={{ fontSize: '20pt', marginRight: '10px' }} />;
+                },
+              },
+              content: {},
+              actions: {
+                cardActionProps,
+              },
+            }}
+          />
+        </div>
+      </Modal>
+    </>
   );
 };
 export default FileModal;

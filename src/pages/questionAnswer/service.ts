@@ -1,10 +1,10 @@
 import { request } from 'umi';
-import { QAData } from './data';
+import { wikiData } from './data';
 
 export async function queryMessageList(
   currentPageParam: number,
   pageSizeParam: number,
-): Promise<{ data: { totalNum: number; list: QAData[] } }> {
+): Promise<{ data: { totalNum: number; list: wikiData[] } }> {
   return request('/api/wiki/admin-list', {
     method: 'POST',
     data: {
@@ -14,25 +14,15 @@ export async function queryMessageList(
   });
 }
 
-export async function postAnswer(QAIDParam:string,answerParam:string):Promise<{code:number}> {
-  return request('/api/wiki/postAnswer',{
-    method:'POST',
-    data:{
-      wikiID:QAIDParam,
-      answer:answerParam,
-    }
-  })
-}
-
-export async function markMessage(
-  QAIDParam: string,
-  setToParam: boolean,
-): Promise<{ code:number }> {
-  return request('/api/wiki/mark', {
+export async function postAnswer(
+  wikiIDParam: string,
+  answerParam: string,
+): Promise<{ code: number }> {
+  return request('/api/wiki/answer', {
     method: 'POST',
     data: {
-      wikiID: QAIDParam,
-      setTo: setToParam,
+      wikiID: wikiIDParam,
+      answer: answerParam,
     },
   });
 }

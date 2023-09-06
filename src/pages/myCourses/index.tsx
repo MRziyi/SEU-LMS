@@ -1,4 +1,4 @@
-import { Avatar, Button, Card, List, Typography } from 'antd';
+import { Avatar, Button, Card, List, Typography, message } from 'antd';
 import type { FC } from 'react';
 import { Link, useModel } from 'umi';
 import styles from './style.less';
@@ -12,7 +12,6 @@ import {
   searchStudentCourse,
   searchTeacherCourse,
 } from './service';
-import { queryTeacherChart } from '../dataVisualize/service';
 
 const { Paragraph } = Typography;
 
@@ -153,7 +152,13 @@ const MyCourses: FC = () => {
           title: '我的课程',
           ghost: true,
           extra: [
-            <Button key="1" type="primary" size="large" style={{ marginRight: '20px' }}>
+            <Button
+              key="1"
+              type="primary"
+              size="large"
+              style={{ marginRight: '20px' }}
+              onClick={() => message.warning('待教务处公开API')}
+            >
               同步课程
             </Button>,
             <Input.Search

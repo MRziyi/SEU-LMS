@@ -46,7 +46,7 @@ const TextEditor: React.FC<Props> = ({ value, onChange, placeholder }) => {
         formats={formats}
         onChange={onChange}
         placeholder={placeholder}
-        style={{ height: `calc(100vh - 500px)`, marginBottom: '50px' }}
+        style={{ height: `calc(100vh - 600px)`, marginBottom: '50px' }}
       />
     </>
   );

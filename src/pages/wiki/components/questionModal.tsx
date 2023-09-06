@@ -3,12 +3,7 @@ import { Button, Modal, Form, Input, message } from 'antd';
 import request from 'umi-request';
 import { useModel } from 'umi';
 
-interface modalInterface {
-  syllabusID: string;
-  canCheckIn: boolean;
-}
-
-const StudentCheckInModal: FC<modalInterface> = ({ syllabusID, canCheckIn }) => {
+const QuestionModal: FC = () => {
   const [visiable, setVisiable] = useState(false);
   const [form] = Form.useForm();
   const { initialState } = useModel('@@initialState');
@@ -23,11 +18,12 @@ const StudentCheckInModal: FC<modalInterface> = ({ syllabusID, canCheckIn }) => 
 
   return (
     <>
-      <Button type="primary" size="small" disabled={!canCheckIn} onClick={() => setVisiable(true)}>
-        签到
+      <Button key="3" type="primary" onClick={() => setVisiable(true)}>
+        创建提问
       </Button>
+      ,
       <Modal
-        title="进行签到"
+        title="创建提问"
         open={visiable}
         onOk={onOk}
         onCancel={closeModal}
@@ -41,44 +37,34 @@ const StudentCheckInModal: FC<modalInterface> = ({ syllabusID, canCheckIn }) => 
           wrapperCol={{ span: 16 }}
           style={{ maxWidth: 600 }}
           initialValues={{
-            syllabusID: syllabusID,
             userID: initialState?.currentUser?.id,
           }}
           onFinish={async (values) => {
-            const { syllabusID, userID, checkInPsw } = values;
             try {
               // 发送表单数据到服务器
               const response = await request<{
-                data: number;
-              }>('/api/syllabus/check-in', {
+                code: number;
+              }>('/api/wiki/question', {
                 method: 'POST',
-                body: JSON.stringify({ syllabusID, userID, checkInPsw }),
+                body: JSON.stringify({ ...values }),
               });
-              if (response.data === 1) {
-                message.success('签到成功');
+              if (response.code === 0) {
+                message.success('提问成功');
                 closeModal();
-              } else if (response.data === 0) message.error('签到密码错误');
-              else if (response.data === -1) message.error('签到已停止');
-              else message.error('签到异常');
+              } else message.error('提问异常');
             } catch (error) {
               message.error('提交出错');
             }
           }}
           autoComplete="off"
         >
-          <Form.Item
-            label="大纲ID"
-            name="syllabusID"
-            rules={[{ required: true }]}
-            hidden
-          ></Form.Item>
           <Form.Item label="用户ID" name="userID" rules={[{ required: true }]} hidden></Form.Item>
           <Form.Item
-            label="签到密码"
-            name="checkInPsw"
-            rules={[{ required: true, message: '请输入签到密码' }]}
+            label="问题"
+            name="question"
+            rules={[{ required: true, message: '请输入想提问的问题' }]}
           >
-            <Input placeholder="请输入签到密码" />
+            <Input placeholder="请输入想提问的问题" />
           </Form.Item>
 
           <Form.Item wrapperCol={{ span: 16, offset: 6 }}>
@@ -92,4 +78,4 @@ const StudentCheckInModal: FC<modalInterface> = ({ syllabusID, canCheckIn }) => 
   );
 };
 
-export default StudentCheckInModal;
+export default QuestionModal;

@@ -1,7 +1,7 @@
 import { Avatar, Badge, Button, Col, Divider, Modal, Row, Space, Tag, message } from 'antd';
 import { useState, type FC, useEffect } from 'react';
-import { markMessage, postAnswer, queryMessageList } from './service';
-import { QAData } from './data';
+import { postAnswer, queryMessageList } from './service';
+import { wikiData } from './data';
 import moment from 'moment';
 import { ProList } from '@ant-design/pro-components';
 import { Input } from 'antd';
@@ -9,19 +9,17 @@ import { Input } from 'antd';
 const QuestionAnswer: FC<Record<string, any>> = () => {
   const [pageSize, setPageSize] = useState<number>(8);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [listData, setListData] = useState<QAData[]>([]);
+  const [listData, setListData] = useState<wikiData[]>([]);
   const [totalNum, setTotalNum] = useState<number>(0);
   const [loadingForPagigation, setLoadingForPagigation] = useState<boolean>(false);
-  const [loadingForMark, setLoadingForMark] = useState<string>('');
+  const [loadingForAnswer, setLoadingForAnswer] = useState<string>('');
 
-  
-  const [currentQAID,setCurrentQAID] = useState<string>('');
-  const [fromUserName,setFromUserName] = useState<string>('');
-  const [question,setQuestion] = useState<string>('');
+  const [currentWikiID, setCurrentWikiID] = useState<string>('');
+  const [fromUserName, setFromUserName] = useState<string>('');
+  const [question, setQuestion] = useState<string>('');
   const [answer, setAnswer] = useState(''); // 使用状态管理 TextArea 的值
 
   const { TextArea } = Input;
-
 
   useEffect(() => {
     changePage(1, pageSize);
@@ -57,154 +55,157 @@ const QuestionAnswer: FC<Record<string, any>> = () => {
     showTotal: showTotal,
   };
 
-  
   const [visiable, setVisiable] = useState(false);
 
+  async function postAnswerAdaptor() {
+    setLoadingForAnswer(currentWikiID);
+    try {
+      const result = await postAnswer(currentWikiID, answer);
+      if (result.code == 0) {
+        message.success('课程删除成功');
+      }
+    } catch {}
+    setLoadingForAnswer(currentWikiID);
+  }
 
   const onOk = () => {
-    console.log('提交的回答内容:', answer);
-    markMessage(currentQAID,true)//将状态设置为已完成
-    postAnswer(currentQAID,answer);//将内容提交上去
-    closeModal();
+    postAnswerAdaptor();
   };
- 
+
   const closeModal = () => {
     setVisiable(false);
   };
 
-
-  const handleRowClick = (item:QAData) => {
+  const handleRowClick = (item: wikiData) => {
     // 在这里触发回调函数，处理点击列表行的逻辑
-    console.log(`Clicked on item: ${item.question}`);
     setVisiable(true);
-    setCurrentQAID(item.wikiID);
+    setCurrentWikiID(item.wikiID);
     setFromUserName(item.fromUserName);
-    setQuestion(item.question)
-
+    setQuestion(item.question);
+    setAnswer(item.answer);
   };
   return (
     <>
-    <Modal
-      title="提交回复"
-      open={visiable}
-      onOk={onOk}
-      onCancel={closeModal}
-      afterClose={closeModal}
-      width={600}
-    >
-      <Row gutter={50}>
+      <Modal
+        title="提交回复"
+        open={visiable}
+        onOk={onOk}
+        onCancel={closeModal}
+        afterClose={closeModal}
+        width={600}
+      >
+        <Row gutter={50}>
+          <Col span={24}>
+            <p>
+              <b>提问用户</b>: {fromUserName}
+            </p>
+            <p>
+              <b>问题描述</b>: {question}
+            </p>
+            <Divider />
+            <TextArea
+              rows={4}
+              placeholder="请输入回答"
+              maxLength={600} // 你可以根据需要调整最大长度
+              value={answer} // 使用状态管理 TextArea 的值
+              onChange={(e) => setAnswer(e.target.value)} // 在输入变化时更新状态
+            />
+          </Col>
+        </Row>
+      </Modal>
 
-        <Col span={24} >
-          <p><b>提问用户</b>:&nbsp;&nbsp;&nbsp;{fromUserName}</p>
-          <p><b>问题描述</b>:&nbsp;&nbsp;&nbsp;{question}</p>
-          <Divider />
-          <TextArea 
-        rows={4}
-        placeholder="请输入回答"
-        maxLength={600} // 你可以根据需要调整最大长度
-        value={answer} // 使用状态管理 TextArea 的值
-        onChange={(e) => setAnswer(e.target.value)} // 在输入变化时更新状态
-        />
-        </Col>
-
-
-      </Row>
-
-    </Modal>
-
-    <ProList<QAData>
-      loading={loadingForPagigation}
-      dataSource={listData}
-      rowKey="wikiID"
-      headerTitle="答疑列表"
-      pagination={paginationProps}
-      showActions="hover"
-
-    
-      metas={{
-        title: {
-          dataIndex: 'fromUserName',
-          search: false,
-        },
-        avatar: {
-          render: (_, row) => {
-            if (row.isSolved) return <Avatar src={row.fromUserAvatar}></Avatar>;
-            else
-              return (
-                <Badge dot>
-                  <Avatar src={row.fromUserAvatar}></Avatar>
-                </Badge>
-              );
+      <ProList<wikiData>
+        loading={loadingForPagigation}
+        dataSource={listData}
+        rowKey="wikiID"
+        headerTitle="答疑列表"
+        pagination={paginationProps}
+        showActions="hover"
+        metas={{
+          title: {
+            dataIndex: 'question',
+            search: false,
           },
-          search: false,
-        },
-        description: {
-          dataIndex: 'question',
-          search: false,
-        },
-        subTitle: {
-          dataIndex: 'fromUserAccess',
-          render: (_, row) => {
-            return (
-              <>
-                <Space size={0}>
-                  {row.fromUserAccess == 'teacher' ? (
-                    <Tag color="blue" key="1">
-                      教师
-                    </Tag>
-                  ) : (
-                    <Tag color="orange" key="1">
-                      学生
-                    </Tag>
-                  )}
-                  {row.isSolved == true ? (
-                    <Tag color="green" key="1">
-                      已解决
-                    </Tag>
-                  ) : (
-                    <Tag color="red" key="1">
-                      未解决
-                    </Tag>
-                  )}
-                  <div style={{ marginLeft: '10px' }}>{moment(row.time).fromNow()}</div>
-                </Space>
-              </>
-            );
+          avatar: {
+            render: (_, row) => {
+              if (row.answer !== '') return <Avatar src={row.fromUserAvatar}></Avatar>;
+              else
+                return (
+                  <Badge dot>
+                    <Avatar src={row.fromUserAvatar}></Avatar>
+                  </Badge>
+                );
+            },
+            search: false,
           },
-          search: false,
-        },
-        actions: {
-          render: (_, row) => {
-            if (row.isSolved)
-              return (
-                <Button
-                  style={{ marginRight: '10px' }}
-                  loading={loadingForMark === row.wikiID}           
-                  onClick={()=>handleRowClick(row)}  
-                >
-                  修改回答
-                </Button>
-              );
-            else {
-              return (
-                <Button
-                  loading={loadingForMark === row.wikiID}
-                  style={{ marginRight: '10px' }}
-                  type="primary"
-                  onClick={()=>handleRowClick(row)}
-                >
-                  进行回答
-                </Button>
-              );
-            }
+          description: {
+            dataIndex: 'fromUserName',
+            valueType: 'text',
+            render: (_, row) => {
+              return <div>提问者: {row.fromUserName}</div>;
+            },
+            search: false,
           },
-        },
-      }}
-      
-    />
+          subTitle: {
+            dataIndex: 'fromUserAccess',
+            render: (_, row) => {
+              return (
+                <>
+                  <Space size={0}>
+                    {row.fromUserAccess == 'teacher' ? (
+                      <Tag color="blue" key="1">
+                        教师
+                      </Tag>
+                    ) : (
+                      <Tag color="orange" key="1">
+                        学生
+                      </Tag>
+                    )}
+                    {row.answer !== '' ? (
+                      <Tag color="green" key="1">
+                        已解决
+                      </Tag>
+                    ) : (
+                      <Tag color="red" key="1">
+                        未解决
+                      </Tag>
+                    )}
+                    <div style={{ marginLeft: '10px' }}>{moment(row.time).fromNow()}</div>
+                  </Space>
+                </>
+              );
+            },
+            search: false,
+          },
+          actions: {
+            render: (_, row) => {
+              if (row.answer !== '')
+                return (
+                  <Button
+                    loading={loadingForAnswer == row.wikiID}
+                    style={{ marginRight: '10px' }}
+                    onClick={() => handleRowClick(row)}
+                  >
+                    修改回答
+                  </Button>
+                );
+              else {
+                return (
+                  <Button
+                    loading={loadingForAnswer == row.wikiID}
+                    style={{ marginRight: '10px' }}
+                    type="primary"
+                    onClick={() => handleRowClick(row)}
+                  >
+                    进行回答
+                  </Button>
+                );
+              }
+            },
+          },
+        }}
+      />
     </>
-    
-    
   );
 };
 

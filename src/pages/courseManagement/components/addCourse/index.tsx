@@ -122,15 +122,20 @@ const AddCourse: FC = () => {
               listType="picture"
               action={'/api/upload/image'}
               onChange={(value) => {
-                if (value.file.response && value.file.response.code == 0)
-                  form.setFieldValue('imgUrl', value.file.response.data);
+                const { status } = value.file;
+                if (status === 'done') {
+                  if (value.file.response && value.file.response.code == 0)
+                    form.setFieldValue('imgUrl', value.file.response.data);
+                } else if (status === 'error') {
+                  message.error(`${value.file.name} file upload failed.`);
+                }
               }}
             >
               <Button icon={<UploadOutlined />}>Click to upload</Button>
             </Upload>
           </Form.Item>
           <Form.Item wrapperCol={{ span: 16, offset: 6 }}>
-            <Button type="primary" htmlType="submit" onClick={closeModal}>
+            <Button type="primary" htmlType="submit">
               提交
             </Button>
           </Form.Item>

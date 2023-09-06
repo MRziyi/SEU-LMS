@@ -6,12 +6,12 @@ import { ClockCircleOutlined } from '@ant-design/icons';
 import FileModal from './components/fileModal';
 import HomeworkModal from './components/homeworkModal';
 import { Link, useModel } from 'umi';
-import ModifyFileModal from './components/modifyFileModal';
 import UploadFileModal from './components/uploadFileModal';
 import AddSyllabus from './components/addSyllabus';
 import ModifySyllabus from './components/modifySyllabus';
 import CheckInManageModal from './components/checkInManageModal';
 import PublishHomeworkModal from './components/publishHomeworkModal';
+import StudentCheckInModal from './components/studentCheckInModal';
 
 interface CourseIDParam {
   courseID: string;
@@ -23,14 +23,7 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
   const [listData, setListData] = useState<any[]>([]);
   const [totalNum, setTotalNum] = useState<number>(0);
   const [loadingForPagigation, setLoadingForPagigation] = useState<boolean>(false);
-  const [openFileModal, setOpenFileModal] = useState<boolean>(false);
-  const [openHomeworkModal, setOpenHomeworkModal] = useState<boolean>(false);
   const [loadingForCheckIn, setLoadingForCheckIn] = useState<string>('');
-  const [currentSyllabusID, setCurrentSyllabusID] = useState<string>('');
-  const [openPublishHomeworkModal, setOpenPublishHomeworkModal] = useState<boolean>(false);
-  const [openModifyFileModal,setOpenModifyFileModal]=useState<boolean>(false);
-  const [openUploadFileModal,setOpenUploadFileModal]=useState<boolean>(false);
-
   const { initialState } = useModel('@@initialState');
   // 获取列表数据
   useEffect(() => {
@@ -65,18 +58,10 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
                     未按时签到
                   </Tag>
                 )}
-                <Button
-                  style={{ marginLeft: '5px' }}
-                  disabled={!(item.isCheckedIn === 2)}
-                  type="primary"
-                  size="small"
-                  loading={loadingForCheckIn === item.syllabusID}
-                  onClick={() => {
-                    checkIn(item.syllabusID);
-                  }}
-                >
-                  签到
-                </Button>
+                <StudentCheckInModal
+                  canCheckIn={item.isCheckedIn == 2}
+                  syllabusID={item.syllabusID}
+                />
               </Space>
             ) : (
               <Space size={0}>
@@ -116,93 +101,60 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
                 )}
               </Space>
             ),
-          actions: [
-            initialState?.currentUser?.access == 'student' ? (
-              <Button
-                style={{ marginLeft: '5px' }}
-                onClick={() => {
-                  window.open('https://cvs.seu.edu.cn/jy-application-vod-he-ui/#/home', '_blank');
-                }}
-                type="text"
-              >
-                课程直播
-              </Button>
-            ) : (
-              <ModifySyllabus syllabusID={item.syllabusID}></ModifySyllabus>
-            ),
-            initialState?.currentUser?.access == 'teacher' ? (
-              item.haveHomework ? (
+          actions: (
+            <Space
+              direction="horizontal"
+              size="large"
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+              }}
+            >
+              {initialState?.currentUser?.access == 'student' ? (
                 <Button
-                  type="text"
+                  style={{ marginLeft: '5px' }}
                   onClick={() => {
-                    setCurrentSyllabusID(item.syllabusID);
-                    setOpenModifyFileModal(true);
+                    window.open('https://cvs.seu.edu.cn/jy-application-vod-he-ui/#/home', '_blank');
                   }}
+                  type="text"
                 >
-                  修改课件资料
+                  课程直播
                 </Button>
               ) : (
-                <Button
-                  type="text"
-                  onClick={() => {
-                    setCurrentSyllabusID(item.syllabusID);
-                    setOpenUploadFileModal(true);
-                  }}
-                >
-                  上传课件资料
-                </Button>
-              )
-            ) : item.haveHomework ? (
-              <Button
-                type="text"
-                onClick={() => {
-                  setCurrentSyllabusID(item.syllabusID);
-                  setOpenFileModal(true);
-                }}
-              >
-                查看课件资料
-              </Button>
-            ) : (
-              <Button type="text" disabled>
-                课程资料待上传
-              </Button>
-            ),
-            initialState?.currentUser?.access === 'teacher' ? (
-              item.haveHomework ? (
-                <Link to={`/profile/homework-info/${item.syllabusID}`}>
-                  <Button type="text" style={{ marginRight: '5px' }}>
-                    作业详情
-                  </Button>
-                </Link>
+                <ModifySyllabus syllabusID={item.syllabusID}></ModifySyllabus>
+              )}
+              {initialState?.currentUser?.access == 'teacher' ? (
+                item.haveMaterial ? (
+                  <FileModal syllabusID={item.syllabusID} isTeacher={true} />
+                ) : (
+                  <UploadFileModal syllabusID={item.syllabusID} isLarge={false} />
+                )
+              ) : item.haveHomework ? (
+                <FileModal syllabusID={item.syllabusID} isTeacher={false} />
               ) : (
-                <Button
-                  style={{ marginRight: '5px' }}
-                  type="text"
-                  onClick={() => {
-                    setCurrentSyllabusID(item.syllabusID);
-                    setOpenPublishHomeworkModal(true);
-                  }}
-                >
-                  发布作业
+                <Button type="text" disabled>
+                  课程资料待上传
                 </Button>
-              )
-            ) : item.haveHomework ? (
-              <Button
-                style={{ marginRight: '5px' }}
-                type="text"
-                onClick={() => {
-                  setCurrentSyllabusID(item.syllabusID);
-                  setOpenHomeworkModal(true);
-                }}
-              >
-                查看作业
-              </Button>
-            ) : (
-              <Button style={{ marginRight: '5px' }} type="text" disabled onClick={() => {}}>
-                作业待发布
-              </Button>
-            ),
-          ],
+              )}
+              {initialState?.currentUser?.access === 'teacher' ? (
+                item.haveHomework ? (
+                  <Link to={`/profile/homework-info/${item.syllabusID}`}>
+                    <Button type="text" style={{ marginRight: '5px' }}>
+                      作业详情
+                    </Button>
+                  </Link>
+                ) : (
+                  <PublishHomeworkModal syllabusID={item.syllabusID} />
+                )
+              ) : item.haveHomework ? (
+                <HomeworkModal syllabusID={item.syllabusID} />
+              ) : (
+                <Button style={{ marginRight: '5px' }} type="text" disabled onClick={() => {}}>
+                  作业待发布
+                </Button>
+              )}
+            </Space>
+          ),
           avatar: 'https://gw.alipayobjects.com/zos/antfincdn/UCSiy1j6jx/xingzhuang.svg',
           content: (
             <div style={{ marginTop: '-10px' }}>
@@ -252,9 +204,15 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
     <>
       <ProList<any>
         toolbar={{
-          actions: [<AddSyllabus></AddSyllabus>],
+          actions: [
+            initialState?.currentUser?.access == 'teacher' ? (
+              <AddSyllabus courseID={courseID} />
+            ) : (
+              ''
+            ),
+          ],
         }}
-        grid={{ gutter: 16, xxl: 3, xl: 3, lg: 2, md: 2, sm: 1, xs: 1 }}
+        grid={{ gutter: 16, xxl: 3, xl: 2, lg: 2, md: 2, sm: 1, xs: 1 }}
         headerTitle="课程大纲"
         loading={loadingForPagigation}
         dataSource={listData}
@@ -272,31 +230,6 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
           },
         }}
       />
-      <FileModal
-        open={openFileModal}
-        setOpen={setOpenFileModal}
-        syllabusID={currentSyllabusID}
-      ></FileModal>
-      <HomeworkModal
-        open={openHomeworkModal}
-        setOpen={setOpenHomeworkModal}
-        syllabusID={currentSyllabusID}
-      ></HomeworkModal>
-      <ModifyFileModal
-        open={openModifyFileModal}
-        setOpen={setOpenModifyFileModal}
-        syllabusID={currentSyllabusID}
-      ></ModifyFileModal>
-      <UploadFileModal
-        open={openUploadFileModal}
-        setOpen={setOpenUploadFileModal}
-        syllabusID={currentSyllabusID}
-      ></UploadFileModal>
-      <PublishHomeworkModal
-        open={openPublishHomeworkModal}
-        setOpen={setOpenPublishHomeworkModal}
-        syllabusID={currentSyllabusID}
-      ></PublishHomeworkModal>
     </>
   );
 };

@@ -1,9 +1,10 @@
-import { Button, Space, Tag } from 'antd';
+import { Space, Tag } from 'antd';
 import { useState, type FC, ReactText, useEffect } from 'react';
 import { queryWiki } from './service';
 import { WikiData } from './data';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { ProList } from '@ant-design/pro-components';
+import QuestionModal from './components/questionModal';
 
 const Wiki: FC<Record<string, any>> = () => {
   const [pageSize, setPageSize] = useState<number>(10);
@@ -73,11 +74,7 @@ const Wiki: FC<Record<string, any>> = () => {
         },
       })}
       toolBarRender={() => {
-        return [
-          <Button key="3" type="primary">
-            创建提问
-          </Button>,
-        ];
+        return [<QuestionModal />];
       }}
       metas={{
         avatar: {
@@ -110,7 +107,7 @@ const Wiki: FC<Record<string, any>> = () => {
           render: (_, row) => {
             return (
               <Space size={0}>
-                {row.answer !== '待管理员解答' ? (
+                {row.answer !== '' ? (
                   <Tag color="green" key="1">
                     已解答
                   </Tag>

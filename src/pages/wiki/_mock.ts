@@ -27,7 +27,7 @@ function fakeWikiList(currentPage: number, pageSize: number) {
     list.push({
       wikiID: 'Wiki - ' + i,
       question: question[i % 10],
-      answer: i > 2 ? answer[i % 5] : '待管理员解答',
+      answer: i > 2 ? answer[i % 5] : '',
     });
   }
   const startIndex = (currentPage - 1) * pageSize;
