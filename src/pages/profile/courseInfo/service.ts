@@ -112,11 +112,11 @@ export async function queryCheckInData(
   });
 }
 
-export async function postPassword(
+export async function postStartCheckedIn(
   syllabusIDParam:string,
   passwordParam:string,
 ): Promise<{code:number}> {
-  return request('/api/syllabus/password', {
+  return request('/api/syllabus/checkin/start', {
     method: 'POST',
     data: {
       syllabusID: syllabusIDParam,
@@ -125,20 +125,18 @@ export async function postPassword(
   });
 }
 
-export async function postHaveCheckedIn(
+export async function postStopCheckedIn(
   syllabusIDParam:string,
-  haveCheckedInParam:number,
 ): Promise<{code:number}> {
-return request('/api/syllabus/have-checked-in', {
+return request('/api/syllabus/checkin/stop', {
   method: 'POST',
   data: {
     syllabusID: syllabusIDParam,
-    haveCheckedIn:haveCheckedInParam,
   },
 });
 }
 
-const WS_BASE_URL = 'ws://your-websocket-url'; // 替换成实际的WebSocket URL
+const WS_BASE_URL = 'ws://10.203.134.111:8081/api/ws/test'; // 替换成实际的WebSocket URL
 
 export function createWebSocketConnection() {
   return new WebSocket(WS_BASE_URL);

@@ -1,4 +1,4 @@
-import { Avatar, Card, Input, List, Typography, message } from 'antd';
+import { Avatar, Button, Card, Input, List, Typography, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import styles from './index.less';
 
@@ -6,6 +6,7 @@ import { queryDiscussionList, sendReply } from '../../service';
 import ProCard from '@ant-design/pro-card';
 import ReplyList from './reply';
 import { DiscussionData } from '../../data';
+import './index.less';
 
 const { Paragraph } = Typography;
 const { Search } = Input;
@@ -128,6 +129,12 @@ const Discussion: React.FC<CourseIDParam> = ({ courseID }) => {
           </List.Item>
         )}
       />
+
+      <div className="floating-button-container">
+        <Button type="primary" shape="round" size='large'>
+          悬浮按钮
+        </Button>
+      </div>
     </>
   );
 };

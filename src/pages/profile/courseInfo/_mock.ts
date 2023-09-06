@@ -275,6 +275,6 @@ export default {
   'POST  /api/course/get-name': postFakeName,
   'POST  /api/syllabus/material-list': postFakeFileList,
   'POST  /api/syllabus/check-in-data':postCheckInData,
-  'POST  /api/syllabus/password':receivePassword,
-  'POST  /api/syllabus/have-checked-in':receiveHaveCheckedIn,
+  'POST  /api/syllabus/checkin/start':receivePassword,
+  'POST  /api/syllabus/checkin/stop':receiveHaveCheckedIn,
 };

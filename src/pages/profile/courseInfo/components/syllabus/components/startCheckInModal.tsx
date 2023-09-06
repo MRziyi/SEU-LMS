@@ -1,7 +1,7 @@
 import { Modal, Button, Card, Row, Col, Input, Space, message } from 'antd';
 import { useEffect, useState } from 'react';
 import { CheckInData } from '../../../data';
-import { createWebSocketConnection, postHaveCheckedIn, postPassword, queryCheckInData } from '../../../service';
+import { createWebSocketConnection, postStartCheckedIn, postStopCheckedIn, queryCheckInData } from '../../../service';
 
 
 interface modalCtrl {
@@ -17,7 +17,7 @@ const StartCheckInModal: React.FC<modalCtrl> = ({ open, setOpen, syllabusID, hav
   const [currentSyllabusID, setCurrentSyllabusID] = useState<string>('');
   const [checkInData,setCheckInData]=useState<CheckInData>();
   const [haveCheckedInData,setHaveCheckedInData]= useState<number>();//0:未签到；1：正在签到；2：停止签到
-  const [password, setPassword] = useState(''); 
+  const [password, setPassword] = useState<string>(''); 
 
 
   useEffect(() => {
@@ -32,6 +32,7 @@ const StartCheckInModal: React.FC<modalCtrl> = ({ open, setOpen, syllabusID, hav
   useEffect(() => {
     fetchCheckInData();
 
+    console.log('Try WebSocket');
     // 建立WebSocket连接并处理消息
     const socket = createWebSocketConnection();
 
@@ -46,14 +47,17 @@ const StartCheckInModal: React.FC<modalCtrl> = ({ open, setOpen, syllabusID, hav
     };
 
     socket.onmessage = (event) => {
+      console.log(event.data)
       const data = JSON.parse(event.data);
       if (data.type === 'checkin_update') {
         // 更新签到情况
         setCheckInData(data.checkInData);
+        setPassword(data.password);
       }
     };
 
-    socket.onclose = () => {
+    socket.onclose = (event) => {
+      console.log('WebSocket disconnected:', event.code, event.reason);
       console.log('WebSocket disconnected');
     };
 
@@ -77,19 +81,19 @@ const StartCheckInModal: React.FC<modalCtrl> = ({ open, setOpen, syllabusID, hav
 
   const handleStartStopSign = () => {
     // 切换签到状态
-    if(haveCheckedInData===1){
+    if(haveCheckedInData===1){//当前是正在签到
         setHaveCheckedInData(2);
-        
+        fetchStopCheckedIn();
     }else{
         setHaveCheckedInData(1);
         //console.log(currentSyllabusID+password)
-        fetchPassword();
+        fetchStartCheckedIn();
     } 
   };
 
-  async function fetchPassword() {
+  async function fetchStartCheckedIn() {
     try{
-      const result =await postPassword(currentSyllabusID,password);
+      const result =await postStartCheckedIn(currentSyllabusID,password);
       if(result.code===0){
         message.success('签到密码设置成功');
       }  else {
@@ -98,9 +102,9 @@ const StartCheckInModal: React.FC<modalCtrl> = ({ open, setOpen, syllabusID, hav
     }catch{} 
   }
 
-  async function fetchHaveCheckedIn() {
+  async function fetchStopCheckedIn() {
     try{
-      const result =await postHaveCheckedIn(currentSyllabusID,haveCheckedInData?haveCheckedInData:0);
+      const result =await postStopCheckedIn(currentSyllabusID);
       if(result.code===0){
         message.success('签到状态变换成功');
       }  else {
@@ -119,7 +123,6 @@ const StartCheckInModal: React.FC<modalCtrl> = ({ open, setOpen, syllabusID, hav
       onCancel={() => {
         refresh;
         setShow(false);
-        fetchHaveCheckedIn();
       }}
     >
     <Row gutter={24} className="card-row">
@@ -157,7 +160,7 @@ const StartCheckInModal: React.FC<modalCtrl> = ({ open, setOpen, syllabusID, hav
         <Col xl={24} lg={24} md={24} sm={24} xs={24}>
         <Space.Compact style={{ width: '95%', margin:'10px',marginTop:'20px',textAlign: 'center'}}>
         <Input 
-            defaultValue="Combine input and button" 
+            defaultValue={password}
             value={password}
             placeholder='请设置签到密码'
             size='large'
