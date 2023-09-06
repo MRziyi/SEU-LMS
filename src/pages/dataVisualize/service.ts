@@ -59,7 +59,7 @@ export async function queryCourseSiatistics(courseIDParam: string): Promise<{
   return request('/api/data-visualize/course-statistics', {
     method: 'POST',
     data: {
-      courseID: courseIDParam,
+      courseName: courseIDParam,
     },
   });
 }

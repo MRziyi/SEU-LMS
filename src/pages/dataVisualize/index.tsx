@@ -73,12 +73,12 @@ const DataVisualize: React.FC<RouteChildrenProps> = () => {
     const courseResult = await queryCourseList();
     if (courseResult.data.descriptionList) {
       const newTabList = courseResult.data.descriptionList.map((element) => ({
-        value: element.courseID,
+        value: element.courseName,
         label: element.courseName,
       }));
       setCourseSelectList(newTabList);
-      setDefaultCourseValue(courseResult.data.descriptionList[0].courseID);
-      setCurrentCourseValue(courseResult.data.descriptionList[0].courseID);
+      setDefaultCourseValue(courseResult.data.descriptionList[0].courseName);
+      setCurrentCourseValue(courseResult.data.descriptionList[0].courseName);
     }
 
     setLoadingForTab(false);
