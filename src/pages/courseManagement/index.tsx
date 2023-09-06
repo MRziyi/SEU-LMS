@@ -5,7 +5,6 @@ import AddCourse from './components/addCourse';
 import { CourseListData, SearchParams } from './data.d';
 import { deleteCourse, queryCourseList } from './service';
 import { ProList } from '@ant-design/pro-components';
-import request from 'umi-request';
 import CourseInfo from './components/intro';
 import ModifyCourse from './components/modifyCourse';
 import { useParams } from 'umi';
@@ -63,6 +62,7 @@ const CourseManagement: FC<Record<string, any>> = () => {
       search={{}}
       headerTitle="全部课程"
       pagination={{
+        defaultPageSize: 8,
         showQuickJumper: true,
         showSizeChanger: true,
         pageSizeOptions: [8, 12, 16, 20],

@@ -73,10 +73,7 @@ const UserManagement: FC = () => {
       render: (_, row) => {
         return (
           <Space>
-            <SendMessage
-            id={row.id}
-            nickName={row.nickName}
-            ></SendMessage>
+            <SendMessage id={row.id} nickName={row.nickName}></SendMessage>
             <UserInfo
               id={row.id}
               nickName={row.nickName}
@@ -164,6 +161,7 @@ const UserManagement: FC = () => {
       scroll={{ x: 400 }}
       options={false}
       pagination={{
+        defaultPageSize: 8,
         size: 'default',
         showQuickJumper: true,
         showSizeChanger: true,

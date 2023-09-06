@@ -1,4 +1,4 @@
-import { useState, type FC, useEffect } from 'react';
+import { useState, type FC } from 'react';
 import { Button, Modal, Form, Input, Upload, message } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import request from 'umi-request';
@@ -109,14 +109,23 @@ const AddCourse: FC = () => {
           >
             <Input placeholder="例:2023年夏季学期" />
           </Form.Item>
+          <Form.Item label="课程封面" name="imgUrl" hidden></Form.Item>
           <Form.Item
-            name="imgUrl"
+            name="imgUpload"
             label="上传课程图片"
             valuePropName="fileList"
             rules={[{ required: true, message: '请上传课程封面' }]}
             getValueFromEvent={normFile}
           >
-            <Upload name="file" listType="picture" action={'/api/upload/image'}>
+            <Upload
+              name="file"
+              listType="picture"
+              action={'/api/upload/image'}
+              onChange={(value) => {
+                if (value.file.response && value.file.response.code == 0)
+                  form.setFieldValue('imgUrl', value.file.response.data);
+              }}
+            >
               <Button icon={<UploadOutlined />}>Click to upload</Button>
             </Upload>
           </Form.Item>

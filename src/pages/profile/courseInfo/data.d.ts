@@ -26,6 +26,7 @@ export type CourseData = {
 export type SyllabusData = {
   syllabusID: string;
   title: string;
+  haveMaterial: boolean;
   haveHomework: boolean;
   isCheckedIn: number;
   time: string;
@@ -49,7 +50,20 @@ export type ReplyData = {
   time: string;
 };
 
-export type CheckInData={
-  isCheckedIn:number;
-  notCheckedIn:number;
-}
+export type CheckInData = {
+  isCheckedIn: number;
+  notCheckedIn: number;
+};
+
+export type SearchParams = {
+  name: string;
+  id: string;
+};
+
+export type StudentData = {
+  name: string;
+  id: string;
+  phone: string;
+  email: string;
+  avatarUrl: string;
+};

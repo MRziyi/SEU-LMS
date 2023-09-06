@@ -1,5 +1,13 @@
 import { request } from 'umi';
-import { CheckInData, CourseData, DiscussionData, FileData, ReplyData, SyllabusData } from './data';
+import {
+  CheckInData,
+  CourseData,
+  DiscussionData,
+  FileData,
+  ReplyData,
+  StudentData,
+  SyllabusData,
+} from './data';
 
 export async function queryDiscussionList(
   courseIDParam: string,
@@ -102,8 +110,8 @@ export async function queryMaterialList(
 }
 
 export async function queryCheckInData(
-  syllabusIDParam:string,
-): Promise<{ data: {checkInData:CheckInData} }> {
+  syllabusIDParam: string,
+): Promise<{ data: { checkInData: CheckInData } }> {
   return request('/api/syllabus/check-in-data', {
     method: 'POST',
     data: {
@@ -113,29 +121,48 @@ export async function queryCheckInData(
 }
 
 export async function postPassword(
-  syllabusIDParam:string,
-  passwordParam:string,
-): Promise<{code:number}> {
+  syllabusIDParam: string,
+  passwordParam: string,
+): Promise<{ code: number }> {
   return request('/api/syllabus/password', {
     method: 'POST',
     data: {
       syllabusID: syllabusIDParam,
-      password:passwordParam,
+      password: passwordParam,
     },
   });
 }
 
 export async function postHaveCheckedIn(
-  syllabusIDParam:string,
-  haveCheckedInParam:number,
-): Promise<{code:number}> {
-return request('/api/syllabus/have-checked-in', {
-  method: 'POST',
-  data: {
-    syllabusID: syllabusIDParam,
-    haveCheckedIn:haveCheckedInParam,
-  },
-});
+  syllabusIDParam: string,
+  haveCheckedInParam: number,
+): Promise<{ code: number }> {
+  return request('/api/syllabus/have-checked-in', {
+    method: 'POST',
+    data: {
+      syllabusID: syllabusIDParam,
+      haveCheckedIn: haveCheckedInParam,
+    },
+  });
+}
+
+export async function queryUserList(
+  nickNameParam: string,
+  idParam: string,
+  courseIDParam: string,
+  currentPageParam?: number,
+  pageSizeParam?: number,
+): Promise<{ code: number; data: { totalNum: number; list: StudentData[] } }> {
+  return request('/api/syllabus/student-list', {
+    method: 'POST',
+    data: {
+      nickName: nickNameParam,
+      id: idParam,
+      courseID: courseIDParam,
+      currentPage: currentPageParam,
+      pageSize: pageSizeParam,
+    },
+  });
 }
 
 const WS_BASE_URL = 'ws://your-websocket-url'; // 替换成实际的WebSocket URL

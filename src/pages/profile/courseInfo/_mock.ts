@@ -20,6 +20,21 @@ const itemName = [
   'Vue',
   'Webpack',
 ];
+
+const ID = ['20001234', '20021568', '15648978', '11124445', '55151578'];
+
+const nickName = ['Joe', '小红', '小平', '小民'];
+
+const phone = ['13132526464', '20021223568', '15644458978', '11124667445', '55151324578'];
+
+const email = [
+  '200012341655@mail.com',
+  '20021568@mail.com',
+  '15648@mail.com',
+  '1112444@mail.com',
+  '551@mail.com',
+];
+
 const ownerUrl = [
   'https://gw.alipayobjects.com/zos/rmsportal/WdGqmHpayyMjiEhcKoVE.png', // Alipay
   'https://gw.alipayobjects.com/zos/rmsportal/zOsKZmFRdUtvpqCImOVY.png', // Angular
@@ -156,6 +171,21 @@ function fakeReplyList(discussionID: number, currentPage: number, pageSize: numb
   return list.slice(startIndex, startIndex + pageSize);
 }
 
+function fakeStudentList(courseID: number, currentPage: number, pageSize: number) {
+  const list = [];
+  for (let i = 0; i < 100; i += 1) {
+    list.push({
+      name: ownerName[i % 10],
+      id: 'Student - ' + i,
+      phone: '1877777' + i,
+      email: '3333333' + i + '@seu.edu.cn',
+      avatarUrl: ownerUrl[i % 8],
+    });
+  }
+  const startIndex = (currentPage - 1) * pageSize;
+  return list.slice(startIndex, startIndex + pageSize);
+}
+
 async function postFakeReplyList(req: Request, res: Response) {
   const { discussionID, currentPage, pageSize } = req.body;
   console.log('DiscussionID: ' + discussionID);
@@ -164,6 +194,18 @@ async function postFakeReplyList(req: Request, res: Response) {
     data: {
       totalNum: 100,
       list: fakeReplyList(discussionID, currentPage, pageSize),
+    },
+  });
+}
+
+async function postFakeStudentList(req: Request, res: Response) {
+  const { discussionID, currentPage, pageSize } = req.body;
+  console.log('DiscussionID: ' + discussionID);
+  return res.json({
+    code: 0,
+    data: {
+      totalNum: 100,
+      list: fakeStudentList(discussionID, currentPage, pageSize),
     },
   });
 }
@@ -240,16 +282,14 @@ async function postCheckInData(req: Request, res: Response) {
   return res.json({
     code: 0,
     data: {
-      checkInData:{isCheckedIn:32,
-      notCheckedIn:6,
-      }
+      checkInData: { isCheckedIn: 32, notCheckedIn: 6 },
     },
   });
 }
 
 async function receivePassword(req: Request, res: Response) {
-  const { syllabusID,password } = req.body;
-  console.log('check in for: ' + syllabusID +'; password :'+ password);
+  const { syllabusID, password } = req.body;
+  console.log('check in for: ' + syllabusID + '; password :' + password);
   return res.json({
     code: 0,
     data: {},
@@ -257,8 +297,8 @@ async function receivePassword(req: Request, res: Response) {
 }
 
 async function receiveHaveCheckedIn(req: Request, res: Response) {
-  const { syllabusID,haveCheckedIn } = req.body;
-  console.log('check in for: ' + syllabusID +'; haveCheckedIn :'+ haveCheckedIn);
+  const { syllabusID, haveCheckedIn } = req.body;
+  console.log('check in for: ' + syllabusID + '; haveCheckedIn :' + haveCheckedIn);
   return res.json({
     code: 0,
     data: {},
@@ -274,7 +314,8 @@ export default {
   'POST  /api/syllabus/check-in': receiveFakeCheckIn,
   'POST  /api/course/get-name': postFakeName,
   'POST  /api/syllabus/material-list': postFakeFileList,
-  'POST  /api/syllabus/check-in-data':postCheckInData,
-  'POST  /api/syllabus/password':receivePassword,
-  'POST  /api/syllabus/have-checked-in':receiveHaveCheckedIn,
+  'POST  /api/syllabus/check-in-data': postCheckInData,
+  'POST  /api/syllabus/password': receivePassword,
+  'POST  /api/syllabus/have-checked-in': receiveHaveCheckedIn,
+  'POST  /api/syllabus/student-list': postFakeStudentList,
 };

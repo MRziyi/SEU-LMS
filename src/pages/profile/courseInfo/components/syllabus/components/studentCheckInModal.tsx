@@ -1,8 +1,6 @@
 import { useState, type FC, useEffect } from 'react';
-import { Button, Modal, Form, Input, Upload, message } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import { Button, Modal, Form, Input, message } from 'antd';
 import request from 'umi-request';
-import { Select } from 'antd';
 import { queryTeacherList } from '@/pages/dataVisualize/service';
 
 const StudentCheckInModal: FC = () => {

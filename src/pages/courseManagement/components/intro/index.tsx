@@ -16,20 +16,19 @@ interface CourseInfoProps {
 
 const CourseInfo: FC<CourseInfoProps> = (props) => {
   const [visiable, setVisiable] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [teacherData, setTeacherData] = useState<TeacherData | null>(null);
-  useEffect(() => {
-    const fetchTeacherInfo = async () => {
-      try {
-        const response = await queryTeacherInfo(props.courseID);
-        setTeacherData(response.data.teacherData);
-      } catch (error) {}
-    };
 
-    fetchTeacherInfo();
-  }, [props.courseID]);
+  async function getTeacherIntro() {
+    setLoading(true);
+    try {
+      const response = await queryTeacherInfo(props.courseID);
+      setTeacherData(response.data.teacherData);
+    } catch (error) {}
+    setLoading(false);
+  }
 
   const onOk = () => {
-    console.log('编写自己的onOk逻辑');
     closeModal();
   };
 
@@ -39,7 +38,14 @@ const CourseInfo: FC<CourseInfoProps> = (props) => {
 
   return (
     <>
-      <Button type="link" onClick={() => setVisiable(true)}>
+      <Button
+        loading={loading}
+        type="link"
+        onClick={() => {
+          getTeacherIntro();
+          setVisiable(true);
+        }}
+      >
         详情
       </Button>
       <Modal
