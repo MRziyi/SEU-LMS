@@ -2,7 +2,7 @@ export type QAData = {
   fromUserName: string;
   fromUserAvatar: string;
   fromUserAccess: string;
-  QAID: string;
+  wikiID: string;
   question: string;
   isSolved: boolean;
   time: string;

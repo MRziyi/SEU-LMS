@@ -36,7 +36,7 @@ function fakeMessageList(currentPage: number, pageSize: number) {
       fromUserName: ownerName[i % 10],
       fromUserAvatar: ownerUrl[i % 8],
       fromUserAccess: i < 5 ? 'teacher' : 'admin',
-      QAID: 'Reply - ' + i,
+      wikiID: 'Reply - ' + i,
       question: description[i % 5],
       time: new Date(new Date().getTime() - 1000 * 60 * 60 * 2 * i).toLocaleString(),
       isSolved: i > 3,
@@ -60,5 +60,5 @@ async function postFakeMessageList(req: Request, res: Response) {
 }
 
 export default {
-  'POST  /api/questionAnswer/list': postFakeMessageList,
+  'POST  /api/wiki/admin-list': postFakeMessageList,
 };

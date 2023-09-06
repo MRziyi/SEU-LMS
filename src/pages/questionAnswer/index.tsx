@@ -77,7 +77,7 @@ const QuestionAnswer: FC<Record<string, any>> = () => {
     // 在这里触发回调函数，处理点击列表行的逻辑
     console.log(`Clicked on item: ${item.question}`);
     setVisiable(true);
-    setCurrentQAID(item.QAID);
+    setCurrentQAID(item.wikiID);
     setFromUserName(item.fromUserName);
     setQuestion(item.question)
 
@@ -115,7 +115,7 @@ const QuestionAnswer: FC<Record<string, any>> = () => {
     <ProList<QAData>
       loading={loadingForPagigation}
       dataSource={listData}
-      rowKey="QAID"
+      rowKey="wikiID"
       headerTitle="答疑列表"
       pagination={paginationProps}
       showActions="hover"
@@ -179,7 +179,7 @@ const QuestionAnswer: FC<Record<string, any>> = () => {
               return (
                 <Button
                   style={{ marginRight: '10px' }}
-                  loading={loadingForMark === row.QAID}           
+                  loading={loadingForMark === row.wikiID}           
                   onClick={()=>handleRowClick(row)}  
                 >
                   修改回答
@@ -188,7 +188,7 @@ const QuestionAnswer: FC<Record<string, any>> = () => {
             else {
               return (
                 <Button
-                  loading={loadingForMark === row.QAID}
+                  loading={loadingForMark === row.wikiID}
                   style={{ marginRight: '10px' }}
                   type="primary"
                   onClick={()=>handleRowClick(row)}

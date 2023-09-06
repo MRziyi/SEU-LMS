@@ -5,7 +5,7 @@ export async function queryMessageList(
   currentPageParam: number,
   pageSizeParam: number,
 ): Promise<{ data: { totalNum: number; list: QAData[] } }> {
-  return request('/api/questionAnswer/list', {
+  return request('/api/wiki/admin-list', {
     method: 'POST',
     data: {
       currentPage: currentPageParam,
@@ -15,10 +15,10 @@ export async function queryMessageList(
 }
 
 export async function postAnswer(QAIDParam:string,answerParam:string):Promise<{code:number}> {
-  return request('/api/questionAnswer/postAnswer',{
+  return request('/api/wiki/postAnswer',{
     method:'POST',
     data:{
-      QAID:QAIDParam,
+      wikiID:QAIDParam,
       answer:answerParam,
     }
   })
@@ -28,10 +28,10 @@ export async function markMessage(
   QAIDParam: string,
   setToParam: boolean,
 ): Promise<{ code:number }> {
-  return request('/api/questionAnswer/mark', {
+  return request('/api/wiki/mark', {
     method: 'POST',
     data: {
-      QAID: QAIDParam,
+      wikiID: QAIDParam,
       setTo: setToParam,
     },
   });
