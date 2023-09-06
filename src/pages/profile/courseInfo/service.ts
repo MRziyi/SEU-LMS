@@ -111,3 +111,35 @@ export async function queryCheckInData(
     },
   });
 }
+
+export async function postPassword(
+  syllabusIDParam:string,
+  passwordParam:string,
+): Promise<{code:number}> {
+  return request('/api/syllabus/password', {
+    method: 'POST',
+    data: {
+      syllabusID: syllabusIDParam,
+      password:passwordParam,
+    },
+  });
+}
+
+export async function postHaveCheckedIn(
+  syllabusIDParam:string,
+  haveCheckedInParam:number,
+): Promise<{code:number}> {
+return request('/api/syllabus/have-checked-in', {
+  method: 'POST',
+  data: {
+    syllabusID: syllabusIDParam,
+    haveCheckedIn:haveCheckedInParam,
+  },
+});
+}
+
+const WS_BASE_URL = 'ws://your-websocket-url'; // 替换成实际的WebSocket URL
+
+export function createWebSocketConnection() {
+  return new WebSocket(WS_BASE_URL);
+}

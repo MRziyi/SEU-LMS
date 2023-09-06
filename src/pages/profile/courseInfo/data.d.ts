@@ -53,4 +53,3 @@ export type CheckInData={
   isCheckedIn:number;
   notCheckedIn:number;
 }
-

@@ -247,90 +247,23 @@ async function postCheckInData(req: Request, res: Response) {
   });
 }
 
-
-
-
-const nickName =[
-  "Joe",
-  "小红",
-  "小平",
-  "小民",
-]
-
-const ID = [
-  '20001234',
-  '20021568',
-  '15648978',
-  '11124445',
-  '55151578',
-]
-
-const access = [
-  "教师",
-  "学生"
-]
-
-const phone = [
-  '13132526464',
-  '20021223568',
-  '15644458978',
-  '11124667445',
-  '55151324578',
-]
-
-const email = [
-  '200012341655@mail.com',
-  '20021568@mail.com',
-  '15648@mail.com',
-  '1112444@mail.com',
-  '551@mail.com',
-]
-
-async function postFakeStudentList(req: Request, res: Response){
-  const { nickName, id, courseID, currentPage, pageSize } = req.body;
-  const list = [];
-  for(let i = 0 ;i<25;i++){
-      list.push({
-          name:nickName[i%4],
-          id:ID[i%5],
-          phone:phone[i%5],
-          email:email[i%5],
-          avatarUrl:imgUrl[i%4],
-          
-      })
-  }
-  console.log('mock处理参数',nickName,id,currentPage,pageSize,courseID)
-
-  let filteredItems = list; // 初始化为整个列表
-
-  // 如果 paramName 不为空，则进行筛选
-  // if (name && id) {
-  //   filteredItems = list.filter((item) => item.name.includes(name) && item.id.includes(id));
-  // }else if(name){
-  //     filteredItems = list.filter((item) => item.name.includes(name)) ;     
-  // }else if(id){
-  //     filteredItems = list.filter((item) => item.id.includes(id));
-  // }
-
-  const startIndex = (currentPage - 1) * pageSize;
-  console.log('Page: ' + startIndex + ' - ' + (startIndex + pageSize));
-  
-
-  let finalList = filteredItems.slice(startIndex, startIndex + pageSize);
-
-
-
+async function receivePassword(req: Request, res: Response) {
+  const { syllabusID,password } = req.body;
+  console.log('check in for: ' + syllabusID +'; password :'+ password);
   return res.json({
-      code: 0,
-      data:{
-        list:finalList,
-        totalNum:25,
-      }
-    });
+    code: 0,
+    data: {},
+  });
 }
 
-
-
+async function receiveHaveCheckedIn(req: Request, res: Response) {
+  const { syllabusID,haveCheckedIn } = req.body;
+  console.log('check in for: ' + syllabusID +'; haveCheckedIn :'+ haveCheckedIn);
+  return res.json({
+    code: 0,
+    data: {},
+  });
+}
 
 export default {
   'POST  /api/syllabus/list': postFakeSyllabusList,
@@ -342,5 +275,6 @@ export default {
   'POST  /api/course/get-name': postFakeName,
   'POST  /api/syllabus/material-list': postFakeFileList,
   'POST  /api/syllabus/check-in-data':postCheckInData,
-  'POST  /api/syllabus/student-list': postFakeStudentList,
+  'POST  /api/syllabus/password':receivePassword,
+  'POST  /api/syllabus/have-checked-in':receiveHaveCheckedIn,
 };

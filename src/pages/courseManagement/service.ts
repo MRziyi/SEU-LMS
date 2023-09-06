@@ -10,6 +10,7 @@ export async function queryCourseList(
   code: number;
   data: { totalNum: number; list: CourseListData[]; teacherList: string[] };
 }> {
+  console.log('CN:' + courseNameParam + ' TN:' + teacherNameParam);
   return request('/api/course/admin-list', {
     method: 'POST',
     data: {

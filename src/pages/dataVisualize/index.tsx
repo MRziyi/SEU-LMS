@@ -58,7 +58,7 @@ const DataVisualize: React.FC<RouteChildrenProps> = () => {
     ]);
     setTabKey('1');
     //获取管理员数据可视化的教师列表
-    const teacherResult = await queryTeacherList();
+    const teacherResult = await queryTeacherList('');
     if (teacherResult.data.teacherList) {
       const newTabList = teacherResult.data.teacherList.map((element) => ({
         value: element.teacherID,
@@ -98,7 +98,7 @@ const DataVisualize: React.FC<RouteChildrenProps> = () => {
       if (value === '1') return <GeneralOverview></GeneralOverview>;
       else if (value === '2')
         return <TeacherStatistics teacherID={currentTeacherValue}></TeacherStatistics>;
-      else return <CourseStatistics courseID={currentCourseValue}></CourseStatistics>;
+      else return <CourseStatistics courseName={currentCourseValue}></CourseStatistics>;
     }
   };
 

@@ -19,10 +19,6 @@ const ModifyCourse: React.FC<CourseInfoProps> = (props) => {
   const [teacherList, setTeacherList] = useState<{ label: string; value: string }[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
-  useEffect(() => {
-    getTeacherList('');
-  }, []);
-
   async function getTeacherList(teacherName: string) {
     setLoading(true);
     const teacherResult = await queryTeacherList(teacherName);
@@ -36,18 +32,8 @@ const ModifyCourse: React.FC<CourseInfoProps> = (props) => {
     setLoading(false);
   }
 
-  const onOk = () => {
-    alert("!!ok");
-    closeModal();
-  };
-
   const closeModal = () => {
     setVisiable(false);
-  };
-
-  const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo);
-    closeModal;
   };
 
   const normFile = (e: any) => {
@@ -63,17 +49,15 @@ const ModifyCourse: React.FC<CourseInfoProps> = (props) => {
 
   return (
     <>
-      <Button type="link" onClick={() => setVisiable(true)}>
+      <Button
+        type="link"
+        onClick={() => {
+          getTeacherList(''), setVisiable(true);
+        }}
+      >
         修改
       </Button>
-      <Modal
-        title="修改课程"
-        open={visiable}
-        onOk={onOk}
-        onCancel={closeModal}
-        afterClose={closeModal}
-        footer={null}
-      >
+      <Modal title="修改课程" open={visiable} onCancel={closeModal} footer={null}>
         <Form
           form={form}
           name="basic"
@@ -83,7 +67,7 @@ const ModifyCourse: React.FC<CourseInfoProps> = (props) => {
           initialValues={{
             courseID: props.courseID,
             courseName: props.courseName,
-            // imgUrl: props.imgUrl,
+            imgUrl: props.imgUrl,
             semester: props.semester,
             teacherName: props.teacherName,
           }}
@@ -96,6 +80,9 @@ const ModifyCourse: React.FC<CourseInfoProps> = (props) => {
               }>('/api/course/modify', {
                 method: 'POST',
                 body: JSON.stringify({ courseID, courseName, teacherName, semester, imgUrl }),
+                headers: {
+                  'Content-Type': 'application/json',
+                },
               });
               if (response.code === 0) {
                 message.success('新增成功');
@@ -139,35 +126,21 @@ const ModifyCourse: React.FC<CourseInfoProps> = (props) => {
           >
             <Input placeholder="例:2023年夏季学期" />
           </Form.Item>
+          <Form.Item label="课程封面" name="imgUrl" hidden></Form.Item>
           <Form.Item
-            name="imgUrl"
+            name="imgUpload"
             label="上传课程图片"
             valuePropName="fileList"
             rules={[{ required: true, message: '请上传课程封面' }]}
             getValueFromEvent={normFile}
           >
             <Upload
-              name="logo"
+              name="file"
               listType="picture"
-              customRequest={async (options: any) => {
-                const data = new FormData();
-                data.append('file', options.file);
-                try {
-                  const response = await request<{
-                    code: number;
-                  }>('/api/upload/image', {
-                    method: 'POST',
-                    body: data,
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
-                  });
-                  if (response.code === 0) {
-                    message.success('图片上传成功！');
-                  } else message.error('图片上传失败！');
-                } catch (error) {
-                  message.error('提交出错');
-                }
+              action={'/api/upload/image'}
+              onChange={(value) => {
+                if (value.file.response && value.file.response.code == 0)
+                  form.setFieldValue('imgUrl', value.file.response.data);
               }}
             >
               <Button icon={<UploadOutlined />}>Click to upload</Button>

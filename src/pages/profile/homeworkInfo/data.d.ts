@@ -6,7 +6,9 @@ export type HomeworkList={
   status:number,
 }
 
-export type HomeworkCorrection={
+export type HomeworkInfo={
+  homeworkName:string,
+  homeworkDescription:string,
   toBeCorrectedNum:number,
   uncommittedNum:number,
 }

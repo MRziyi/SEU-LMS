@@ -50,7 +50,7 @@ function homeworkListData(currentPage: number, pageSize: number) {
   return list.slice(startIndex, startIndex + pageSize);
 }
 
-async function postHomeworkList(req: Request, res: Response) {
+async function postHomeworkData(req: Request, res: Response) {
   const { courseID, currentPage, pageSize } = req.body;
   console.log('CourseID: ' + courseID);
   return res.json({
@@ -58,27 +58,16 @@ async function postHomeworkList(req: Request, res: Response) {
     data: {
       totalNum: 18,
       list: homeworkListData(currentPage, pageSize),
-      homeworkName:'这是一份作业',
-      homeworkDescription:'乱七八糟的描述balabala',
-    },
-  });
-}
-
-async function postHomeworkCorrection(req: Request, res: Response) {
-  const { courseID} = req.body;
-  console.log('CourseID: ' + courseID);
-  return res.json({
-    code: 0,
-    data: {
-      correctionData:{
-        toBeCorrectedNum:30,
-        uncommittedNum:2,
-      },
+      info:{
+        homeworkName:'这是一份作业',
+        homeworkDescription:'乱七八糟的描述balabala',
+        toBeCorrectedNum:31,
+        uncommittedNum:5,
+      }
     },
   });
 }
 
 export default {
-  'POST  /api/syllabus/homework/list': postHomeworkList,
-  'POST  /api/syllabus/homework/correction':postHomeworkCorrection,
+  'POST  /api/syllabus/homework': postHomeworkData,
 };

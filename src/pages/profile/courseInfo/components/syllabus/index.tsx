@@ -7,6 +7,8 @@ import FileModal from './components/fileModal';
 import HomeworkModal from './components/homeworkModal';
 import { Link, useModel } from 'umi';
 import StartCheckInModal from './components/startCheckInModal';
+import ModifyFileModal from './components/modifyFileModal';
+import UploadFileModal from './components/uploadFileModal';
 
 interface CourseIDParam {
   courseID: string;
@@ -24,6 +26,8 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
   const [currentSyllabusID, setCurrentSyllabusID] = useState<string>('');
   const [openStartCheckInModal, setOpenStartCheckInModal] = useState<boolean>(false);
   const [haveCheckedIn,setHaveCheckedIn]=useState<number>(0);
+  const [openModifyFileModal,setOpenModifyFileModal]=useState<boolean>(false);
+  const [openUploadFileModal,setOpenUploadFileModal]=useState<boolean>(false);
 
   const { initialState } = useModel('@@initialState');
   // 获取列表数据
@@ -111,7 +115,7 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
                     onClick={() => {
                       setCurrentSyllabusID(item.syllabusID);
                       setOpenStartCheckInModal(true);
-                      setHaveCheckedIn(0);
+                      setHaveCheckedIn(item.isCheckedIn);
                     }}
                   >
                     发起签到
@@ -125,7 +129,7 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
                     onClick={() => {
                       setCurrentSyllabusID(item.syllabusID);
                       setOpenStartCheckInModal(true);
-                      setHaveCheckedIn(1);
+                      setHaveCheckedIn(item.isCheckedIn);
                     }}
                   >
                     签到管理
@@ -139,7 +143,7 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
                     onClick={() => {
                       setCurrentSyllabusID(item.syllabusID);
                       setOpenStartCheckInModal(true);
-                      setHaveCheckedIn(0);
+                      setHaveCheckedIn(item.isCheckedIn);
                     }}
                   >
                     再次发起签到
@@ -167,7 +171,7 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
                   type="text"
                   onClick={() => {
                     setCurrentSyllabusID(item.syllabusID);
-                    setOpenFileModal(true);
+                    setOpenModifyFileModal(true);
                   }}
                 >
                   修改课件资料
@@ -177,7 +181,7 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
                   type="text"
                   onClick={() => {
                     setCurrentSyllabusID(item.syllabusID);
-                    setOpenFileModal(true);
+                    setOpenUploadFileModal(true);
                   }}
                 >
                   上传课件资料
@@ -314,7 +318,18 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
         setOpen={setOpenStartCheckInModal}
         syllabusID={currentSyllabusID}
         haveCheckedIn={haveCheckedIn}
+        refresh={()=>changePage(currentPage,pageSize)}
       ></StartCheckInModal>
+      <ModifyFileModal
+        open={openModifyFileModal}
+        setOpen={setOpenModifyFileModal}
+        syllabusID={currentSyllabusID}
+      ></ModifyFileModal>
+      <UploadFileModal
+        open={openUploadFileModal}
+        setOpen={setOpenUploadFileModal}
+        syllabusID={currentSyllabusID}
+      ></UploadFileModal>
     </>
   );
 };

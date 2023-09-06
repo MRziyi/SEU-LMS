@@ -8,20 +8,20 @@ import PieCard from '../components/PieCard';
 import LineCard from '../components/LineCard';
 import ColumnCard from '../components/ColumnCard';
 interface CourseStatisticsInterface {
-  courseID: string;
+  courseName: string;
 }
-const CourseStatistics: React.FC<CourseStatisticsInterface> = ({ courseID }) => {
+const CourseStatistics: React.FC<CourseStatisticsInterface> = ({ courseName }) => {
   const [courseStatisticsData, setCourseStatisticsData] = useState<CourseStatisticsData>();
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     queryCourseStatisticsAdaptor();
-  }, [courseID]);
+  }, [courseName]);
 
   async function queryCourseStatisticsAdaptor() {
     setLoading(true);
     try {
-      const result = await queryCourseSiatistics(courseID);
+      const result = await queryCourseSiatistics(courseName);
       if (result.data.chartData) {
         message.success('表单数据拉取成功');
         setCourseStatisticsData(result.data.chartData);

@@ -62,9 +62,6 @@ const SingleInputModal: React.FC<modalCtrl> = ({
                 data: boolean;
               }>(url, {
                 method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
                 data: { field: field.field, id },
               });
               if (response.data) {

@@ -1,4 +1,4 @@
-import { Modal, message, Space, Tag, Button } from 'antd';
+import { Modal, message, Space, Tag, Button, Upload } from 'antd';
 import { useEffect, useState } from 'react';
 import { queryMaterialList } from '../../../service';
 import { ProList } from '@ant-design/pro-components';
@@ -13,6 +13,8 @@ import {
   FileWordOutlined,
   FileZipOutlined,
 } from '@ant-design/icons';
+import type { UploadProps } from 'antd';
+import { InboxOutlined } from '@ant-design/icons';
 
 interface modalCtrl {
   open: boolean;
@@ -20,7 +22,30 @@ interface modalCtrl {
   syllabusID: string;
 }
 
-const FileModal: React.FC<modalCtrl> = ({ open, setOpen, syllabusID }) => {
+const { Dragger } = Upload;
+
+const props: UploadProps = {
+    style: { marginBottom:'20px'},
+    name: 'file',
+    multiple: true,
+    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+    onChange(info) {
+      const { status } = info.file;
+      if (status !== 'uploading') {
+        console.log(info.file, info.fileList);
+      }
+      if (status === 'done') {
+        message.success(`${info.file.name} file uploaded successfully.`);
+      } else if (status === 'error') {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+    onDrop(e) {
+      console.log('Dropped files', e.dataTransfer.files);
+    },
+  };
+
+const ModifyFileModal: React.FC<modalCtrl> = ({ open, setOpen, syllabusID }) => {
   const [show, setShow] = useState(false);
   const [listData, setListData] = useState<any>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -90,6 +115,16 @@ const FileModal: React.FC<modalCtrl> = ({ open, setOpen, syllabusID }) => {
               }}
               type="text"
             >
+              撤回
+            </Button>,
+            <Button
+              disabled={!item.status}
+              style={{ marginLeft: '5px' }}
+              onClick={() => {
+                window.open(item.url, '_blank');
+              }}
+              type="text"
+            >
               下载
             </Button>,
           ],
@@ -131,6 +166,16 @@ const FileModal: React.FC<modalCtrl> = ({ open, setOpen, syllabusID }) => {
         return true;
       }}
     >
+      <Dragger {...props}>
+        <p className="ant-upload-drag-icon">
+          <InboxOutlined />
+        </p>
+        <p className="ant-upload-text" style={{ marginLeft: '20px', marginRight: '20px' }}>
+          点击或拖拽文件到此区域以上传
+        </p>
+        <p className="ant-upload-hint">支持单选和多选文件</p>
+      </Dragger>
+
       <ProList<any>
         grid={{ gutter: 16, xxl: 2, xl: 1, lg: 1, md: 1, sm: 1, xs: 1 }}
         loading={loading}
@@ -166,4 +211,4 @@ const FileModal: React.FC<modalCtrl> = ({ open, setOpen, syllabusID }) => {
     </Modal>
   );
 };
-export default FileModal;
+export default ModifyFileModal;

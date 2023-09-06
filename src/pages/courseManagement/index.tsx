@@ -41,8 +41,8 @@ const CourseManagement: FC<Record<string, any>> = () => {
         },
       ) => {
         const msg = await queryCourseList(
-          params.courseName,
-          params.teacherName,
+          params.courseName ? params.courseName : '',
+          params.teacherName ? params.teacherName : '',
           params.current,
           params.pageSize,
         );
@@ -88,16 +88,28 @@ const CourseManagement: FC<Record<string, any>> = () => {
         },
         subTitle: {
           render: (_, row) => {
-            if (row.semester.includes('夏季')) {
+            if (row.semester.includes('春')) {
               return (
                 <Tag color="green" key="1">
+                  春季学期
+                </Tag>
+              );
+            } else if (row.semester.includes('夏')) {
+              return (
+                <Tag color="blue" key="2">
                   夏季学期
+                </Tag>
+              );
+            } else if (row.semester.includes('秋')) {
+              return (
+                <Tag color="orange" key="3">
+                  秋季学期
                 </Tag>
               );
             } else {
               return (
-                <Tag color="orange" key="1">
-                  秋季学期
+                <Tag color="pink" key="4">
+                  冬季学期
                 </Tag>
               );
             }
