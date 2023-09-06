@@ -1,14 +1,16 @@
-import React, { ReactText, useEffect, useState } from 'react';
-import { Divider, Button, List, Typography, message, Space, Tag } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Button, message, Space, Tag } from 'antd';
 import { querySyllabus, sendCheckIn } from '../../service';
 import { ProList } from '@ant-design/pro-components';
 import { ClockCircleOutlined } from '@ant-design/icons';
 import FileModal from './components/fileModal';
 import HomeworkModal from './components/homeworkModal';
 import { Link, useModel } from 'umi';
-import StartCheckInModal from './components/startCheckInModal';
 import ModifyFileModal from './components/modifyFileModal';
 import UploadFileModal from './components/uploadFileModal';
+import AddSyllabus from './components/addSyllabus';
+import ModifySyllabus from './components/modifySyllabus';
+import CheckInManageModal from './components/checkInManageModal';
 import PublishHomeworkModal from './components/publishHomeworkModal';
 
 interface CourseIDParam {
@@ -29,7 +31,6 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
   const [haveCheckedIn,setHaveCheckedIn]=useState<number>(0);
   const [openModifyFileModal,setOpenModifyFileModal]=useState<boolean>(false);
   const [openUploadFileModal,setOpenUploadFileModal]=useState<boolean>(false);
-  const [openPublishHomeworkModal,setOpenPublishHomeworkModal]=useState<boolean>(false);
 
   const { initialState } = useModel('@@initialState');
   // 获取列表数据
@@ -108,48 +109,11 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
                   >
                     签到
                   </Button>
-                ) : item.isCheckedIn == 0 ? (
-                  <Button
-                    style={{ marginLeft: '5px' }}
-                    type="primary"
-                    size="small"
-                    loading={loadingForCheckIn === item.syllabusID}
-                    onClick={() => {
-                      setCurrentSyllabusID(item.syllabusID);
-                      setOpenStartCheckInModal(true);
-                      setHaveCheckedIn(item.isCheckedIn);
-                    }}
-                  >
-                    发起签到
-                  </Button>
-                ) : item.isCheckedIn == 1 ? (
-                  <Button
-                    style={{ marginLeft: '5px' }}
-                    type="primary"
-                    size="small"
-                    loading={loadingForCheckIn === item.syllabusID}
-                    onClick={() => {
-                      setCurrentSyllabusID(item.syllabusID);
-                      setOpenStartCheckInModal(true);
-                      setHaveCheckedIn(item.isCheckedIn);
-                    }}
-                  >
-                    签到管理
-                  </Button>
                 ) : (
-                  <Button
-                    style={{ marginLeft: '5px' }}
-                    type="primary"
-                    size="small"
-                    loading={loadingForCheckIn === item.syllabusID}
-                    onClick={() => {
-                      setCurrentSyllabusID(item.syllabusID);
-                      setOpenStartCheckInModal(true);
-                      setHaveCheckedIn(item.isCheckedIn);
-                    }}
-                  >
-                    再次发起签到
-                  </Button>
+                  <CheckInManageModal
+                    syllabusID={item.syllabusID}
+                    haveCheckedIn={item.isCheckedIn}
+                  />
                 )}
               </Space>
             ),
@@ -165,7 +129,7 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
                 课程直播
               </Button>
             ) : (
-              ''
+              <ModifySyllabus syllabusID={item.syllabusID}></ModifySyllabus>
             ),
             initialState?.currentUser?.access == 'teacher' ? (
               item.haveHomework ? (
@@ -288,6 +252,9 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
   return (
     <>
       <ProList<any>
+        toolbar={{
+          actions: [<AddSyllabus></AddSyllabus>],
+        }}
         grid={{ gutter: 16, xxl: 3, xl: 3, lg: 2, md: 2, sm: 1, xs: 1 }}
         headerTitle="课程大纲"
         loading={loadingForPagigation}
@@ -316,13 +283,6 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
         setOpen={setOpenHomeworkModal}
         syllabusID={currentSyllabusID}
       ></HomeworkModal>
-      <StartCheckInModal
-        open={openStartCheckInModal}
-        setOpen={setOpenStartCheckInModal}
-        syllabusID={currentSyllabusID}
-        haveCheckedIn={haveCheckedIn}
-        refresh={()=>changePage(currentPage,pageSize)}
-      ></StartCheckInModal>
       <ModifyFileModal
         open={openModifyFileModal}
         setOpen={setOpenModifyFileModal}

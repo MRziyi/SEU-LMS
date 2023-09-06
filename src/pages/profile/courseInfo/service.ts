@@ -121,9 +121,9 @@ export async function queryCheckInData(
 }
 
 export async function postStartCheckedIn(
-  syllabusIDParam:string,
-  passwordParam:string,
-): Promise<{code:number}> {
+  syllabusIDParam: string,
+  passwordParam: string,
+): Promise<{ code: number }> {
   return request('/api/syllabus/checkin/start', {
     method: 'POST',
     data: {
@@ -133,15 +133,30 @@ export async function postStartCheckedIn(
   });
 }
 
-export async function postStopCheckedIn(
-  syllabusIDParam:string,
-): Promise<{code:number}> {
-return request('/api/syllabus/checkin/stop', {
-  method: 'POST',
-  data: {
-    syllabusID: syllabusIDParam,
-  },
-});
+export async function postStopCheckedIn(syllabusIDParam: string): Promise<{ code: number }> {
+  return request('/api/syllabus/checkin/stop', {
+    method: 'POST',
+    data: {
+      syllabusID: syllabusIDParam,
+    },
+  });
+}
+
+export async function queryUserList(
+  nickNameParam: string,
+  courseIDParam: string,
+  currentPageParam?: number,
+  pageSizeParam?: number,
+): Promise<{ code: number; data: { totalNum: number; list: StudentData[] } }> {
+  return request('/api/course/list-student', {
+    method: 'POST',
+    data: {
+      nickName: nickNameParam,
+      courseID: courseIDParam,
+      currentPage: currentPageParam,
+      pageSize: pageSizeParam,
+    },
+  });
 }
 
 const WS_BASE_URL = 'ws://10.203.134.111:8081/api/ws/test'; // 替换成实际的WebSocket URL
@@ -149,7 +164,6 @@ const WS_BASE_URL = 'ws://10.203.134.111:8081/api/ws/test'; // 替换成实际�
 export function createWebSocketConnection() {
   return new WebSocket(WS_BASE_URL);
 }
-
 
 export async function postPublishHomework(
   syllabusIDParam:string,

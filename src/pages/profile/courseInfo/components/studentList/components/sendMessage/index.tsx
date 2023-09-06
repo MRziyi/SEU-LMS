@@ -20,6 +20,8 @@ const SendMessage : React.FC<UserInfoProps> = (props) => {
   const [visiable, setVisiable] = useState(false);
   const [form] = Form.useForm();
   const { TextArea } = Input;
+
+  
   const onOk = () => {
 
     sendPrivateMessage(props.id,answer);
@@ -41,20 +43,20 @@ const SendMessage : React.FC<UserInfoProps> = (props) => {
       onCancel={closeModal}
       afterClose={closeModal}
     >
-<Row gutter={50}>
+    <Row gutter={50}>
 
-<Col span={24} >
-  <p><b>私信对象</b>:&nbsp;&nbsp;&nbsp;{props.nickName}</p>
-  <Divider />
-  <TextArea 
-rows={3}
-placeholder="请输入私信内容"
-maxLength={600} // 你可以根据需要调整最大长度
-value={answer} // 使用状态管理 TextArea 的值
-onChange={(e) => setAnswer(e.target.value)} // 在输入变化时更新状态
-/>
-</Col>
-</Row>
+    <Col span={24} >
+      <p><b>私信对象</b>:&nbsp;&nbsp;&nbsp;{props.nickName}</p>
+    <Divider />
+    <TextArea 
+      rows={3}
+      placeholder="请输入私信内容"
+      maxLength={600} // 你可以根据需要调整最大长度
+      value={answer} // 使用状态管理 TextArea 的值
+      onChange={(e) => setAnswer(e.target.value)} // 在输入变化时更新状态
+    />
+    </Col>
+    </Row>
 
       </Modal>
     </>

@@ -5,8 +5,8 @@ import type { SearchParams, StudentData } from '../../data';
 import { useParams } from 'umi';
 import UserInfo from './components/userInfo';
 import { FC } from 'react';
-import { queryUserList } from '../../service';
 import SendMessage from './components/sendMessage';
+import { queryUserList } from '../../service';
 
 interface CourseIDParam {
   courseID: string;
@@ -85,7 +85,6 @@ const StudentList: FC<CourseIDParam> = (props) => {
       ) => {
         const msg = await queryUserList(
           params.name,
-          params.id,
           props.courseID,
           params.current,
           params.pageSize,

@@ -50,14 +50,13 @@ export type ReplyData = {
   time: string;
 };
 
-export type CheckInData = {
+export type CheckInStatus = {
   isCheckedIn: number;
   notCheckedIn: number;
 };
 
 export type SearchParams = {
   name: string;
-  id: string;
 };
 
 export type StudentData = {
