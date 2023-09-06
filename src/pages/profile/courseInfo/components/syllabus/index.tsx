@@ -27,8 +27,7 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
   const [openHomeworkModal, setOpenHomeworkModal] = useState<boolean>(false);
   const [loadingForCheckIn, setLoadingForCheckIn] = useState<string>('');
   const [currentSyllabusID, setCurrentSyllabusID] = useState<string>('');
-  const [openStartCheckInModal, setOpenStartCheckInModal] = useState<boolean>(false);
-  const [haveCheckedIn,setHaveCheckedIn]=useState<number>(0);
+  const [openPublishHomeworkModal, setOpenPublishHomeworkModal] = useState<boolean>(false);
   const [openModifyFileModal,setOpenModifyFileModal]=useState<boolean>(false);
   const [openUploadFileModal,setOpenUploadFileModal]=useState<boolean>(false);
 

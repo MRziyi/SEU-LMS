@@ -17,7 +17,7 @@ const PublishDiscussionModal: React.FC<modalCtrl> = ({ open, setOpen, courseID})
   const { initialState } = useModel('@@initialState');
 
   useEffect(() => {
-    if (courseID !== ''){
+    if (courseID !== ''&&initialState&&initialState.currentUser){
         setCurrentCourseID(courseID);
         setCurrentUserID(initialState.currentUser.id);
     }

@@ -1,6 +1,6 @@
 import { request } from 'umi';
 import {
-  CheckInData,
+  CheckInStatus,
   CourseData,
   DiscussionData,
   FileData,
@@ -111,7 +111,7 @@ export async function queryMaterialList(
 
 export async function queryCheckInData(
   syllabusIDParam: string,
-): Promise<{ data: { checkInData: CheckInData } }> {
+): Promise<{ data: { checkInData: CheckInStatus } }> {
   return request('/api/syllabus/check-in-data', {
     method: 'POST',
     data: {
