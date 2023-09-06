@@ -68,6 +68,7 @@ const CourseInfo: React.FC<RouteChildrenProps> = () => {
       header={{
         title: data?.courseName,
         ghost: true,
+        breadcrumb: {},
       }}
       tabActiveKey={tabKey}
       onTabChange={(_tabKey: string) => {
