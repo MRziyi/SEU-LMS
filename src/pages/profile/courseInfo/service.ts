@@ -151,15 +151,36 @@ export function createWebSocketConnection() {
 }
 
 
-export async function post(
+export async function postPublishHomework(
   syllabusIDParam:string,
-  haveCheckedInParam:number,
+  homeworkNameParam:string,
+  homeworkDescriptionParam:string,
+  deadlineParam:string,
 ): Promise<{code:number}> {
-return request('/api/syllabus/have-checked-in', {
+return request('/api/syllabus/homework/publish', {
   method: 'POST',
   data: {
     syllabusID: syllabusIDParam,
-    haveCheckedIn:haveCheckedInParam,
+    homeworkName:homeworkNameParam,
+    homeworkDescription:homeworkDescriptionParam,
+    deadline:deadlineParam,
+  },
+});
+}
+
+export async function postPublishDiscussion(
+  courseIDParam:string,
+  userIDParam:string,
+  discussionNameParam:string,
+  discussionContentParam:string,
+): Promise<{code:number}> {
+return request('/api/discussion/publish', {
+  method: 'POST',
+  data: {
+    courseID:courseIDParam,
+    userID:userIDParam,
+    discussionName:discussionNameParam,
+    discussionContent:discussionContentParam,
   },
 });
 }

@@ -7,6 +7,8 @@ import ProCard from '@ant-design/pro-card';
 import ReplyList from './reply';
 import { DiscussionData } from '../../data';
 import './index.less';
+import { FormOutlined } from '@ant-design/icons';
+import PublishDiscussionModal from './components/publishDiscussionModal';
 
 const { Paragraph } = Typography;
 const { Search } = Input;
@@ -23,6 +25,7 @@ const Discussion: React.FC<CourseIDParam> = ({ courseID }) => {
   const [loadingForPagigation, setLoadingForPagigation] = useState<boolean>(false);
   const [loadingForSendingReply, setLoadingForSendingReply] = useState<boolean>(false);
   const [refreshFlag, setRefreshFlag] = useState<boolean>(false);
+  const [openPublishDiscussionModal,setOpenPublishDiscussionModal]= useState<boolean>(false);
 
   // 获取讨论区列表数据
 
@@ -131,10 +134,23 @@ const Discussion: React.FC<CourseIDParam> = ({ courseID }) => {
       />
 
       <div className="floating-button-container">
-        <Button type="primary" shape="round" size='large'>
-          悬浮按钮
+        <Button 
+          type="primary" 
+          shape="round" 
+          size='large'
+          onClick={() => {
+            setOpenPublishDiscussionModal(true);
+          }}
+        >
+          <FormOutlined />发布讨论
         </Button>
       </div>
+
+      <PublishDiscussionModal
+        courseID={courseID}
+        open={openPublishDiscussionModal}
+        setOpen={setOpenPublishDiscussionModal}
+      ></PublishDiscussionModal>
     </>
   );
 };

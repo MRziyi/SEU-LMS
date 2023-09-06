@@ -1,7 +1,7 @@
-import ProForm, { ProFormText } from '@ant-design/pro-form';
+import ProForm, { ProFormDatePicker, ProFormText } from '@ant-design/pro-form';
 import { Modal, Form, message } from 'antd';
 import { useEffect, useState } from 'react';
-import { request } from 'umi';
+import { postPublishHomework } from '../../../service';
 
 interface modalCtrl {
     open: boolean;
@@ -9,7 +9,7 @@ interface modalCtrl {
     syllabusID: string;
 }
 
-const DoubleInputModal: React.FC<modalCtrl> = ({ open, setOpen, syllabusID }) => {
+const PublishHomeworkModal: React.FC<modalCtrl> = ({ open, setOpen, syllabusID }) => {
   const [show, setShow] = useState(false);
   const [currentSyllabusID, setCurrentSyllabusID] = useState<string>('');
 
@@ -25,9 +25,11 @@ const DoubleInputModal: React.FC<modalCtrl> = ({ open, setOpen, syllabusID }) =>
     setOpen(show);
   }, [show]);
 
+
   const [form] = Form.useForm<{
     name: string;
-    content: string;
+    description: string;
+    deadline:string;
   }>();
 
   return (
@@ -44,32 +46,21 @@ const DoubleInputModal: React.FC<modalCtrl> = ({ open, setOpen, syllabusID }) =>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <ProForm<{
           name: string;
-          content: string;
+          description: string;
+          deadline:string;
         }>
           form={form}
           autoFocusFirstInput
-          onFinish={async (field) => {
+          onFinish={async (values) => {
             try {
-              const response = await request<{
-                data: boolean;
-              }>(url, {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                data: { name: field.name, content: field.content, syllabusID: currentSyllabusID },
-              });
-              if (response.data) {
-                message.success('提交成功');
-                setOpen(false);
-                return true;
-              } else {
-                message.error('提交失败，请重试');
-                return false;
-              }
+              const { name, description, deadline } = values;
+              console.log(name+' '+description+' '+deadline);
+              const response = await postPublishHomework(currentSyllabusID,name, description, deadline);
+              if (response.code === 0) {
+                message.success('发布成功');
+              } else message.error('发布失败');
             } catch (error) {
-              message.error('提交失败，请重试');
-              return false;
+              message.error('提交出错');
             }
           }}
         >
@@ -77,21 +68,26 @@ const DoubleInputModal: React.FC<modalCtrl> = ({ open, setOpen, syllabusID }) =>
             style={{ width: '50%' }}
             width="md"
             name="name"
-            label={'名称'}
+            label={'作业标题'}
             placeholder="请输入名称"
             rules={[{ required: true }]}
           />
           <ProFormText
             style={{ width: '50%' }}
             width="md"
-            name="content"
-            label={'内容'}
+            name="description"
+            label={'作业描述'}
             placeholder="请输入内容"
             rules={[{ required: true }]}
+          />
+          <ProFormDatePicker
+            name="deadline"
+            label={'截止日期'}
+            dataFormat='YYYY-MM-DD'
           />
         </ProForm>
       </div>
     </Modal>
   );
 };
-export default DoubleInputModal;
+export default PublishHomeworkModal;

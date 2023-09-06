@@ -9,6 +9,7 @@ import { Link, useModel } from 'umi';
 import StartCheckInModal from './components/startCheckInModal';
 import ModifyFileModal from './components/modifyFileModal';
 import UploadFileModal from './components/uploadFileModal';
+import PublishHomeworkModal from './components/publishHomeworkModal';
 
 interface CourseIDParam {
   courseID: string;
@@ -28,6 +29,7 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
   const [haveCheckedIn,setHaveCheckedIn]=useState<number>(0);
   const [openModifyFileModal,setOpenModifyFileModal]=useState<boolean>(false);
   const [openUploadFileModal,setOpenUploadFileModal]=useState<boolean>(false);
+  const [openPublishHomeworkModal,setOpenPublishHomeworkModal]=useState<boolean>(false);
 
   const { initialState } = useModel('@@initialState');
   // 获取列表数据
@@ -215,6 +217,7 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
                   type="text"
                   onClick={() => {
                     setCurrentSyllabusID(item.syllabusID);
+                    setOpenPublishHomeworkModal(true);
                   }}
                 >
                   发布作业
@@ -330,6 +333,11 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
         setOpen={setOpenUploadFileModal}
         syllabusID={currentSyllabusID}
       ></UploadFileModal>
+      <PublishHomeworkModal
+        open={openPublishHomeworkModal}
+        setOpen={setOpenPublishHomeworkModal}
+        syllabusID={currentSyllabusID}
+      ></PublishHomeworkModal>
     </>
   );
 };
