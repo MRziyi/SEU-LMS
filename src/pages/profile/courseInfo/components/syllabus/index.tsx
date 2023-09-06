@@ -9,6 +9,8 @@ import { Link, useModel } from 'umi';
 import StartCheckInModal from './components/startCheckInModal';
 import ModifyFileModal from './components/modifyFileModal';
 import UploadFileModal from './components/uploadFileModal';
+import AddSyllabus from './components/addSyllabus';
+import ModifySyllabus from './components/modifySyllabus';
 
 interface CourseIDParam {
   courseID: string;
@@ -163,7 +165,9 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
                 课程直播
               </Button>
             ) : (
-              ''
+              <ModifySyllabus
+              syllabusID={item.syllabusID}
+              ></ModifySyllabus>
             ),
             initialState?.currentUser?.access == 'teacher' ? (
               item.haveHomework ? (
@@ -284,7 +288,15 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
 
   return (
     <>
+
       <ProList<any>
+        toolbar={{
+          actions:[
+            <AddSyllabus></AddSyllabus>
+          ]
+        }
+
+        }
         grid={{ gutter: 16, xxl: 3, xl: 3, lg: 2, md: 2, sm: 1, xs: 1 }}
         headerTitle="课程大纲"
         loading={loadingForPagigation}
