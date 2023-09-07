@@ -67,6 +67,9 @@ const AddCourse: FC = () => {
               }>('/api/course/add', {
                 method: 'POST',
                 body: JSON.stringify({ courseName, teacherName, semester, imgUrl }),
+                headers: {
+                  'Content-Type': 'application/json',
+                },
               });
               if (response.code === 0) {
                 message.success('新增成功');

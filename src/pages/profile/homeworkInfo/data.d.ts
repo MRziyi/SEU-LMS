@@ -1,15 +1,16 @@
-export type HomeworkList={
-  studentAvatar:string,
-  studentNickName:string,
-  fileName:string,
-  fileType:string,
-  fileUrl:string,
-  status:number,
-}
+export type HomeworkList = {
+  studentAvatar: string;
+  studentNickName: string;
+  homeworkID: string;
+  fileName: string;
+  fileType: string;
+  fileUrl: string;
+  status: number;
+};
 
-export type HomeworkInfo={
-  homeworkName:string,
-  homeworkDescription:string,
-  toBeCorrectedNum:number,
-  uncommittedNum:number,
-}
+export type HomeworkInfo = {
+  homeworkName: string;
+  homeworkDescription: string;
+  toBeCorrectedNum: number;
+  uncommittedNum: number;
+};

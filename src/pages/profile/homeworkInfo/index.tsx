@@ -5,27 +5,34 @@ import styles from './style.less';
 import { RouteChildrenProps, useHistory, useParams } from 'react-router';
 import { RouteParams } from '../courseInfo/data';
 import { Button, Card, Col, Row, Space, Tag } from 'antd';
-import { FileExcelOutlined, FileImageOutlined, FileOutlined, FilePdfOutlined, FilePptOutlined, FileTextOutlined, FileWordOutlined, FileZipOutlined } from '@ant-design/icons';
+import {
+  FileExcelOutlined,
+  FileImageOutlined,
+  FileOutlined,
+  FilePdfOutlined,
+  FilePptOutlined,
+  FileTextOutlined,
+  FileWordOutlined,
+  FileZipOutlined,
+} from '@ant-design/icons';
 import { ProList } from '@ant-design/pro-components';
-import { HomeworkInfo, } from './data';
+import { HomeworkInfo } from './data';
 import './style.less';
-
+import FeedbackHomeworkModal from './components/feedbackHomeworkModal';
 
 const HomeWorkInfo: React.FC<RouteChildrenProps> = () => {
-  
   const [pageSize, setPageSize] = useState<number>(8);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [listData, setListData] = useState<any[]>([]);
   const [totalNum, setTotalNum] = useState<number>(0);
   const [loadingForPagigation, setLoadingForPagigation] = useState<boolean>(false);
-  const [homeworkInfoData,setHomeworkInfoData]=useState<HomeworkInfo>();
-  
+  const [homeworkInfoData, setHomeworkInfoData] = useState<HomeworkInfo>();
 
   //const { initialState } = useModel('@@initialState');
   //可能是不对的哦莫
-  const syllabusID  = useParams<string>();
+  const syllabusID = useParams<string>();
 
-  function fileIcon(type:string){
+  function fileIcon(type: string) {
     if (type === 'xlsx')
       return <FileExcelOutlined style={{ fontSize: '20pt', marginRight: '10px' }} />;
     else if (type === 'ppt')
@@ -38,8 +45,7 @@ const HomeWorkInfo: React.FC<RouteChildrenProps> = () => {
       return <FileZipOutlined style={{ fontSize: '20pt', marginRight: '10px' }} />;
     else if (type === 'Image')
       return <FileImageOutlined style={{ fontSize: '20pt', marginRight: '10px' }} />;
-    else
-      return <FileTextOutlined style={{ fontSize: '20pt', marginRight: '10px' }} />;
+    else return <FileTextOutlined style={{ fontSize: '20pt', marginRight: '10px' }} />;
   }
 
   // 获取列表数据
@@ -69,19 +75,33 @@ const HomeWorkInfo: React.FC<RouteChildrenProps> = () => {
               )}
             </Space>
           ),
-          actions: 
+          actions:
             item.status === 0 ? (
-              <Button 
-                //onClick={handleScore}
-              >评分</Button>
+              <FeedbackHomeworkModal homeworkID={item.homeworkID} />
             ) : (
-              <Button disabled>已评分</Button>
+              <Button type="text" disabled>
+                已评分
+              </Button>
             ),
           avatar: item.studentAvatar,
           content: (
-            <div style={{ marginTop: '-10px' ,whiteSpace: 'nowrap',overflow: 'hidden',textOverflow: 'ellipsis'}}>
-                  {fileIcon(item.fileType)}
-                  <a href={item.fileUrl} target="_blank" rel="noopener noreferrer" style={{ marginLeft: '8px',fontSize: '16px'}}><span >{item.fileName}</span></a>
+            <div
+              style={{
+                marginTop: '-10px',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}
+            >
+              {fileIcon(item.fileType)}
+              <a
+                href={item.fileUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ marginLeft: '8px', fontSize: '16px' }}
+              >
+                <span>{item.fileName}</span>
+              </a>
             </div>
           ),
         }));
@@ -110,37 +130,56 @@ const HomeWorkInfo: React.FC<RouteChildrenProps> = () => {
 
   return (
     <>
-    <Row gutter={24} className="card-row">
-      <Col xl={16} lg={24} md={24} sm={24} xs={24}>
-        <Card>
-          <div style={{whiteSpace: 'nowrap',overflow: 'hidden',textOverflow: 'ellipsis',fontSize: '18px'}}>
-            <strong>作业名：</strong>{homeworkInfoData?.homeworkName}
-          </div>
-          <div style={{whiteSpace: 'nowrap',overflow: 'hidden',textOverflow: 'ellipsis',fontSize: '18px'}}>
-            <strong>描述：</strong>{homeworkInfoData?.homeworkDescription}
-          </div>
-        </Card>
-      </Col>
-      <Col xl={8} lg={24} md={24} sm={24} xs={24}>
-        <Card>
-          <div style={{fontSize: '18px'}}>
-            <strong>待批改人数：
-            <span style={{color:'orange'}}>{homeworkInfoData?.toBeCorrectedNum}</span>
-            </strong>
-          </div>
-          <div style={{fontSize: '18px'}}>
-            <strong>未提交人数：
-            <span style={{color:'red'}}>{homeworkInfoData?.uncommittedNum}</span>
-            </strong>
-          </div>
-        </Card>
-      </Col>
-    </Row>
+      <Row gutter={24} className="card-row">
+        <Col xl={16} lg={24} md={24} sm={24} xs={24}>
+          <Card>
+            <div
+              style={{
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                fontSize: '18px',
+              }}
+            >
+              <strong>作业名：</strong>
+              {homeworkInfoData?.homeworkName}
+            </div>
+            <div
+              style={{
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                fontSize: '18px',
+              }}
+            >
+              <strong>描述：</strong>
+              {homeworkInfoData?.homeworkDescription}
+            </div>
+          </Card>
+        </Col>
+        <Col xl={8} lg={24} md={24} sm={24} xs={24}>
+          <Card>
+            <div style={{ fontSize: '18px' }}>
+              <strong>
+                待批改人数：
+                <span style={{ color: 'orange' }}>{homeworkInfoData?.toBeCorrectedNum}</span>
+              </strong>
+            </div>
+            <div style={{ fontSize: '18px' }}>
+              <strong>
+                未提交人数：
+                <span style={{ color: 'red' }}>{homeworkInfoData?.uncommittedNum}</span>
+              </strong>
+            </div>
+          </Card>
+        </Col>
+      </Row>
 
       <ProList<any>
         grid={{ gutter: 16, xxl: 4, xl: 4, lg: 3, md: 3, sm: 2, xs: 1 }}
         headerTitle="作业批改"
         loading={loadingForPagigation}
+        key={'homeworkID'}
         dataSource={listData}
         pagination={paginationProps}
         showActions="hover"

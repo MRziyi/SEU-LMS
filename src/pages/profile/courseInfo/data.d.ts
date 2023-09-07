@@ -41,6 +41,12 @@ export type FileData = {
   time: string;
 };
 
+export type HomeworkData = {
+  homeworkName: string;
+  homeworkDescription: string;
+  deadline: string;
+};
+
 export type ReplyData = {
   fromUserName: string;
   fromUserAvatar: string;

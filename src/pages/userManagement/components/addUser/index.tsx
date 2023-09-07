@@ -32,16 +32,19 @@ const AddUser: React.FC = () => {
           initialValues={{ remember: true }}
           onFinish={async (values) => {
             try {
-              const { nickName, ID, access } = values;
+              const { nickName, id, access } = values;
               const response = await request<{
-                data: number;
+                code: number;
               }>('/api/user/add-user', {
                 method: 'POST',
-                body: JSON.stringify({ nickName, ID, access }),
+                body: JSON.stringify({ nickName, id, access }),
+                headers: {
+                  'Content-Type': 'application/json',
+                },
               });
-              if (response.data === 0) {
+              if (response.code === 0) {
                 message.success('添加成功');
-                closeModal;
+                closeModal();
               } else message.error('添加失败');
             } catch (error) {
               message.error('提交出错');
@@ -59,7 +62,7 @@ const AddUser: React.FC = () => {
 
           <Form.Item
             label="一卡通号"
-            name="ID"
+            name="id"
             rules={[{ required: true, message: '请输入一卡通号' }]}
           >
             <Input placeholder="请输入一卡通号" />

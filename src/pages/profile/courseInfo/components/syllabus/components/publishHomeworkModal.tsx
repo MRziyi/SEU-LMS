@@ -1,4 +1,4 @@
-import ProForm, { ProFormDatePicker, ProFormText } from '@ant-design/pro-form';
+import ProForm, { ProFormDatePicker, ProFormText, ProFormTextArea } from '@ant-design/pro-form';
 import { Modal, Form, message, Button } from 'antd';
 import { useEffect, useState } from 'react';
 import { postPublishHomework } from '../../../service';
@@ -69,7 +69,7 @@ const PublishHomeworkModal: React.FC<modalInterface> = ({ syllabusID }) => {
               placeholder="请输入名称"
               rules={[{ required: true }]}
             />
-            <ProFormText
+            <ProFormTextArea
               style={{ width: '50%' }}
               width="md"
               name="description"
@@ -77,7 +77,12 @@ const PublishHomeworkModal: React.FC<modalInterface> = ({ syllabusID }) => {
               placeholder="请输入内容"
               rules={[{ required: true }]}
             />
-            <ProFormDatePicker name="deadline" label={'截止日期'} dataFormat="YYYY-MM-DD" />
+            <ProFormDatePicker
+              name="deadline"
+              label={'截止日期'}
+              dataFormat="YYYY-MM-DD"
+              rules={[{ required: true }]}
+            />
           </ProForm>
         </div>
       </Modal>

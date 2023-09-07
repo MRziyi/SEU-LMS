@@ -35,8 +35,8 @@ const MyCalendar: React.FC = () => {
 
   //类型转化
   const eventType = (type: string) => {
-    if (type === 'exam') return 'error';
-    else if (type === 'assignment') return 'warning';
+    if (type === 'syllabus') return 'warning';
+    else if (type === 'assignment') return 'error';
     else return type;
   };
 

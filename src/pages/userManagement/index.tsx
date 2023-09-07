@@ -41,6 +41,7 @@ const UserManagement: FC = () => {
       width: 60,
       dataIndex: 'id',
       align: 'left',
+      search: false,
     },
     {
       title: '用户身份',

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, Form, Input, message } from 'antd';
 import { request, useModel } from 'umi';
+import { loginOut } from '@/components/RightContent/AvatarDropdown';
 
 const PasswordChange: React.FC = () => {
   const { setInitialState } = useModel('@@initialState');
@@ -28,6 +29,7 @@ const PasswordChange: React.FC = () => {
           if (response.data === 1) {
             message.success('修改成功');
             setInitialState((s) => ({ ...s, currentUser: undefined }));
+            loginOut();
           } else if (response.data === 0) {
             message.error('原密码错误');
           } else message.error('修改失败');

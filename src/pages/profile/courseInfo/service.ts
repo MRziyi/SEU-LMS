@@ -4,6 +4,7 @@ import {
   CourseData,
   DiscussionData,
   FileData,
+  HomeworkData,
   ReplyData,
   StudentData,
   SyllabusData,
@@ -159,7 +160,7 @@ export async function queryUserList(
   });
 }
 
-const WS_BASE_URL = 'ws://10.203.134.111:8081/api/ws/test'; // 替换成实际的WebSocket URL
+const WS_BASE_URL = 'ws://192.168.95.77:8081/api/ws/test'; // 替换成实际的WebSocket URL
 
 export function createWebSocketConnection() {
   return new WebSocket(WS_BASE_URL);
@@ -201,7 +202,6 @@ export async function postPublishDiscussion(
 
 export async function postHomeworkUrl(
   syllabusIDParam: string,
-  userIDParam: string,
   homeworkTitleParam: string,
   homeworkUrlParam: string,
 ): Promise<{ code: number }> {
@@ -209,9 +209,19 @@ export async function postHomeworkUrl(
     method: 'POST',
     data: {
       syllabusID: syllabusIDParam,
-      userID: userIDParam,
       homeworkTitle: homeworkTitleParam,
       homeworkUrl: homeworkUrlParam,
+    },
+  });
+}
+
+export async function getHomeworkIntro(
+  syllabusIDParam: string,
+): Promise<{ data: { homeworkData: HomeworkData } }> {
+  return request('/api/syllabus/homework/post-file', {
+    method: 'POST',
+    data: {
+      syllabusID: syllabusIDParam,
     },
   });
 }

@@ -45,14 +45,17 @@ const StudentCheckInModal: FC<modalInterface> = ({ syllabusID, canCheckIn }) => 
             userID: initialState?.currentUser?.id,
           }}
           onFinish={async (values) => {
-            const { syllabusID, userID, checkInPsw } = values;
+            const { syllabusID, checkInPsw } = values;
             try {
               // 发送表单数据到服务器
               const response = await request<{
                 data: number;
               }>('/api/syllabus/check-in', {
                 method: 'POST',
-                body: JSON.stringify({ syllabusID, userID, checkInPsw }),
+                body: JSON.stringify({ syllabusID, checkInPsw }),
+                headers: {
+                  'Content-Type': 'application/json',
+                },
               });
               if (response.data === 1) {
                 message.success('签到成功');
@@ -72,7 +75,6 @@ const StudentCheckInModal: FC<modalInterface> = ({ syllabusID, canCheckIn }) => 
             rules={[{ required: true }]}
             hidden
           ></Form.Item>
-          <Form.Item label="用户ID" name="userID" rules={[{ required: true }]} hidden></Form.Item>
           <Form.Item
             label="签到密码"
             name="checkInPsw"

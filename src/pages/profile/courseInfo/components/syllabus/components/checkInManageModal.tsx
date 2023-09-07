@@ -22,8 +22,10 @@ const CheckInManageModal: React.FC<modalCtrl> = ({ syllabusID, haveCheckedIn }) 
     if (isStartWebSocket) {
       socket = createWebSocketConnection();
       socket.onmessage = (event) => {
+        console.log(event);
         const data = JSON.parse(event.data);
-        if (data.type === 'checkin_update') {
+        console.log(data);
+        if (data.type === 'checkin-update') {
           // 更新签到情况
           setCheckInStatus(data.checkInData);
           setPassword(data.password);
@@ -31,6 +33,7 @@ const CheckInManageModal: React.FC<modalCtrl> = ({ syllabusID, haveCheckedIn }) 
       };
       socket.onopen = () => {
         message.success('实时更新已开始');
+        socket?.send(syllabusID);
       };
       socket.onclose = (event) => {
         message.error('实时更新已停止:' + event.code + ' ' + event.reason);
