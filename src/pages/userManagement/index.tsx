@@ -26,8 +26,10 @@ const UserManagement: FC = () => {
     setLoadingDelete(true);
     try {
       const result = await deleteUserList(IDList);
-      if (result.code == 0) {
+      if (result.code == 0 && IDList.length != 1) {
         message.success('用户批量删除成功');
+      }else{
+        message.success('用户删除成功');
       }
     } catch {}
     setLoadingDelete(false);
@@ -112,8 +114,10 @@ const UserManagement: FC = () => {
               danger
               loading={loadingDelete}
               onClick={() => {
-                const IDList: string[] = [row.id];
+                if(window.confirm('确定要删除吗')){
+                  const IDList: string[] = [row.id];
                 deleteUserListAdaptor(IDList);
+                }
               }}
             >
               删除
