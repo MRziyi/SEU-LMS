@@ -28,7 +28,7 @@ export async function querySyllabus(
   courseIDParam: string,
   currentPageParam: number,
   pageSizeParam: number,
-): Promise<{ data: { totalNum: number; list: SyllabusData[] } }> {
+): Promise<{ code:number,data: { totalNum: number; list: SyllabusData[] } }> {
   return request('/api/syllabus/list', {
     method: 'POST',
     data: {

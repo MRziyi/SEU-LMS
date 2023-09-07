@@ -6,9 +6,10 @@ import { createWebSocketConnection, postStartCheckedIn, postStopCheckedIn } from
 interface modalCtrl {
   syllabusID: string;
   haveCheckedIn: number;
+  onClose:()=>void;
 }
 
-const CheckInManageModal: React.FC<modalCtrl> = ({ syllabusID, haveCheckedIn }) => {
+const CheckInManageModal: React.FC<modalCtrl> = ({ syllabusID, haveCheckedIn,onClose }) => {
   const [currentSyllabusID, setCurrentSyllabusID] = useState<string>('');
   const [checkInStatus, setCheckInStatus] = useState<CheckInStatus>();
   const [currentHaveCheckedIn, setCurrentHaveCheckedIn] = useState<number>(); //0:未签到；1：正在签到；2：停止签到
@@ -84,6 +85,7 @@ const CheckInManageModal: React.FC<modalCtrl> = ({ syllabusID, haveCheckedIn }) 
     } catch {}
   }
 
+
   return (
     <>
       <Button
@@ -104,8 +106,11 @@ const CheckInManageModal: React.FC<modalCtrl> = ({ syllabusID, haveCheckedIn }) 
         okButtonProps={{ style: { display: 'none' } }}
         onCancel={() => {
           // refresh;
+          console.log('进入onCancel');
+          onClose();
           setIsStartWebSocket(false);
           setVisiable(false);
+          
         }}
       >
         <Row gutter={24} className="card-row">
