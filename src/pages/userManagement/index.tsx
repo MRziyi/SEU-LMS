@@ -13,6 +13,10 @@ import SendMessage from './components/sendMessage';
 const UserManagement: FC = () => {
   const params = useParams<SearchParams>();
   const [loadingDelete, setLoadingDelete] = useState<boolean>(false);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentPageSize, setCurrentPageSize] = useState<number>(8);
+  const [currentNickName,setCurrentNickName]=useState<string>('');
+  const [currentUserID,setCurrentUserID]=useState<string>('');
 
   function showTotal(total: number, range: [number, number]) {
     return `${range[0]}-${range[1]} 共 ${total} 条`;
@@ -27,6 +31,24 @@ const UserManagement: FC = () => {
       }
     } catch {}
     setLoadingDelete(false);
+  }
+
+  async function queryUserListAdaptor(
+    nickName:string,
+    userID:string,
+    current:number,
+    pageSize:number,
+  ) {
+    try{
+      const result=await queryUserList(nickName,userID,current,pageSize);
+      if(result.data){
+        setCurrentNickName(nickName);
+        setCurrentUserID(userID);
+        setCurrentPage(current);
+        setCurrentPageSize(pageSize);
+        return({list:result.data.list,total:result.data.totalNum,code:result.code})
+      }
+    }catch{}
   }
 
   const columns: ProColumns<UserListData>[] = [
@@ -115,16 +137,16 @@ const UserManagement: FC = () => {
           keyword?: string;
         },
       ) => {
-        const msg = await queryUserList(
+        const msg = await queryUserListAdaptor(
           params.nickName,
           params.userID,
-          params.current,
-          params.pageSize,
+          params.current?params.current:1,
+          params.pageSize?params.pageSize:6,
         );
         return {
-          data: msg.data.list,
-          success: msg.code == 0,
-          total: msg.data.totalNum,
+          data: msg?.list,
+          success: msg?.code == 0,
+          total: msg?.total,
         };
       }}
       columns={columns}
@@ -174,7 +196,10 @@ const UserManagement: FC = () => {
       toolBarRender={() => {
         return [
           <Space>
-            <AddUser></AddUser>
+            <AddUser
+            onClose={()=>{
+              queryUserListAdaptor(currentNickName,currentUserID,currentPage,currentPageSize)}}
+            ></AddUser>
           </Space>,
         ];
       }}
