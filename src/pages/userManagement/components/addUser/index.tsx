@@ -5,7 +5,11 @@ import request from 'umi-request';
 
 const { Option } = Select;
 
-const AddUser: React.FC = () => {
+interface modalCtrl {
+  onClose:()=>void;
+}
+
+const AddUser: React.FC<modalCtrl> = ({ onClose }) => {
   const [visiable, setVisiable] = useState(false);
   const [form] = Form.useForm();
 
@@ -15,6 +19,7 @@ const AddUser: React.FC = () => {
 
   const closeModal = () => {
     setVisiable(false);
+    onClose();
   };
 
   return (

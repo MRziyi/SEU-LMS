@@ -5,7 +5,11 @@ import request from 'umi-request';
 import { Select } from 'antd';
 import { queryTeacherList } from '@/pages/dataVisualize/service';
 
-const AddCourse: FC = () => {
+interface modalCtrl {
+  onClose:()=>void;
+}
+
+const AddCourse: React.FC<modalCtrl> = ({ onClose }) => {
   const [visiable, setVisiable] = useState(false);
   const [form] = Form.useForm();
   const [teacherList, setTeacherList] = useState<{ label: string; value: string }[]>([]);
@@ -26,6 +30,7 @@ const AddCourse: FC = () => {
 
   const closeModal = () => {
     setVisiable(false);
+    onClose();
   };
 
   const normFile = (e: any) => {

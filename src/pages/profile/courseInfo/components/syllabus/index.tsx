@@ -18,24 +18,16 @@ interface CourseIDParam {
 }
 
 const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
-  const [pageSize, setPageSize] = useState<number>(6);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [listData, setListData] = useState<any[]>([]);
-  const [totalNum, setTotalNum] = useState<number>(0);
-  const [loadingForPagigation, setLoadingForPagigation] = useState<boolean>(false);
   const [loadingForCheckIn, setLoadingForCheckIn] = useState<string>('');
-  const { initialState } = useModel('@@initialState');
-  // 获取列表数据
-  useEffect(() => {
-    changePage(1, pageSize);
-  }, []);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentPageSize, setCurrentPageSize] = useState<number>(6);
 
-  async function changePage(_page: number, _pageSize: number) {
-    setLoadingForPagigation(true);
+  const { initialState } = useModel('@@initialState');
+
+  async function querySyllabusAdaptor(current: number, pageSize: number) {
     try {
-      const result = await querySyllabus(courseID, _page, _pageSize);
+      const result = await querySyllabus(courseID, current, pageSize);
       if (result.data) {
-        setTotalNum(result.data.totalNum);
         const list = result.data.list.map((item) => ({
           title: item.title,
           subTitle:
@@ -97,6 +89,7 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
                   <CheckInManageModal
                     syllabusID={item.syllabusID}
                     haveCheckedIn={item.isCheckedIn}
+                    onClose={()=>{querySyllabusAdaptor(currentPage,currentPageSize)}}
                   />
                 )}
               </Space>
@@ -163,12 +156,11 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
             </div>
           ),
         }));
-        setListData(list);
-        setCurrentPage(_page);
-        setPageSize(_pageSize);
+        setCurrentPage(current);
+        setCurrentPageSize(pageSize)
+        return({list:list,total:result.data.totalNum,code:result.code})
       }
     } catch {}
-    setLoadingForPagigation(false);
   }
 
   async function checkIn(syllabusID: string) {
@@ -189,16 +181,6 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
   function showTotal(total: number, range: [number, number]) {
     return `${range[0]}-${range[1]} 共 ${total} 条`;
   }
-  const paginationProps = {
-    onChange: changePage,
-    showQuickJumper: true,
-    showSizeChanger: true,
-    pageSizeOptions: [6, 12, 18, 24],
-    current: currentPage,
-    pageSize: pageSize,
-    total: totalNum,
-    showTotal: showTotal,
-  };
 
   return (
     <>
@@ -214,9 +196,28 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
         }}
         grid={{ gutter: 16, xxl: 3, xl: 2, lg: 2, md: 2, sm: 1, xs: 1 }}
         headerTitle="课程大纲"
-        loading={loadingForPagigation}
-        dataSource={listData}
-        pagination={paginationProps}
+        request={async (
+          params:  {
+            pageSize?: number;
+            current?: number;
+            keyword?: string;
+          },
+        ) => {
+          const msg = await querySyllabusAdaptor(
+            params.current?params.current:1,
+            params.pageSize?params.pageSize:6,
+          );
+          return {
+            data: msg?.list,
+            success: msg?.code == 0,
+            total: msg?.total,
+          };
+        }}
+      pagination={{
+        showQuickJumper: true,
+        showSizeChanger: true,
+        pageSizeOptions: [6, 12, 18, 24],
+        showTotal: showTotal,}}
         showActions="hover"
         showExtra="always"
         metas={{
