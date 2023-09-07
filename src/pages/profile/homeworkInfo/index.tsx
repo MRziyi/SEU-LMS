@@ -5,7 +5,7 @@ import styles from './style.less';
 import { RouteChildrenProps, useHistory, useParams } from 'react-router';
 import { RouteParams } from '../courseInfo/data';
 import { Button, Card, Col, Row, Space, Tag } from 'antd';
-import { FileOutlined } from '@ant-design/icons';
+import { FileExcelOutlined, FileImageOutlined, FileOutlined, FilePdfOutlined, FilePptOutlined, FileTextOutlined, FileWordOutlined, FileZipOutlined } from '@ant-design/icons';
 import { ProList } from '@ant-design/pro-components';
 import { HomeworkInfo, } from './data';
 import './style.less';
@@ -24,6 +24,23 @@ const HomeWorkInfo: React.FC<RouteChildrenProps> = () => {
   //const { initialState } = useModel('@@initialState');
   //可能是不对的哦莫
   const syllabusID  = useParams<string>();
+
+  function fileIcon(type:string){
+    if (type === 'xlsx')
+      return <FileExcelOutlined style={{ fontSize: '20pt', marginRight: '10px' }} />;
+    else if (type === 'ppt')
+      return <FilePptOutlined style={{ fontSize: '20pt', marginRight: '10px' }} />;
+    else if (type === 'pdf')
+      return <FilePdfOutlined style={{ fontSize: '20pt', marginRight: '10px' }} />;
+    else if (type === 'doc')
+      return <FileWordOutlined style={{ fontSize: '20pt', marginRight: '10px' }} />;
+    else if (type === 'zip' || type === 'rar')
+      return <FileZipOutlined style={{ fontSize: '20pt', marginRight: '10px' }} />;
+    else if (type === 'Image')
+      return <FileImageOutlined style={{ fontSize: '20pt', marginRight: '10px' }} />;
+    else
+      return <FileTextOutlined style={{ fontSize: '20pt', marginRight: '10px' }} />;
+  }
 
   // 获取列表数据
   useEffect(() => {
@@ -63,10 +80,8 @@ const HomeWorkInfo: React.FC<RouteChildrenProps> = () => {
           avatar: item.studentAvatar,
           content: (
             <div style={{ marginTop: '-10px' ,whiteSpace: 'nowrap',overflow: 'hidden',textOverflow: 'ellipsis'}}>
-                  <FileOutlined 
-                    style={{ fontSize: '16px'}}
-                  />
-                  <a href={item.fileUrl} target="_blank" rel="noopener noreferrer" style={{ marginLeft: '8px'}}><span >{item.fileName}</span></a>
+                  {fileIcon(item.fileType)}
+                  <a href={item.fileUrl} target="_blank" rel="noopener noreferrer" style={{ marginLeft: '8px',fontSize: '16px'}}><span >{item.fileName}</span></a>
             </div>
           ),
         }));
@@ -98,22 +113,22 @@ const HomeWorkInfo: React.FC<RouteChildrenProps> = () => {
     <Row gutter={24} className="card-row">
       <Col xl={16} lg={24} md={24} sm={24} xs={24}>
         <Card>
-          <div style={{whiteSpace: 'nowrap',overflow: 'hidden',textOverflow: 'ellipsis'}}>
+          <div style={{whiteSpace: 'nowrap',overflow: 'hidden',textOverflow: 'ellipsis',fontSize: '18px'}}>
             <strong>作业名：</strong>{homeworkInfoData?.homeworkName}
           </div>
-          <div style={{whiteSpace: 'nowrap',overflow: 'hidden',textOverflow: 'ellipsis'}}>
+          <div style={{whiteSpace: 'nowrap',overflow: 'hidden',textOverflow: 'ellipsis',fontSize: '18px'}}>
             <strong>描述：</strong>{homeworkInfoData?.homeworkDescription}
           </div>
         </Card>
       </Col>
       <Col xl={8} lg={24} md={24} sm={24} xs={24}>
         <Card>
-          <div>
+          <div style={{fontSize: '18px'}}>
             <strong>待批改人数：
             <span style={{color:'orange'}}>{homeworkInfoData?.toBeCorrectedNum}</span>
             </strong>
           </div>
-          <div>
+          <div style={{fontSize: '18px'}}>
             <strong>未提交人数：
             <span style={{color:'red'}}>{homeworkInfoData?.uncommittedNum}</span>
             </strong>

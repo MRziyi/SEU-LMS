@@ -35,6 +35,14 @@ const ownerName = [
   '仲尼',
 ];
 
+const type=[
+  'pdf',
+  'ppt',
+  'xlsx',
+  'zip',
+  'doc',
+]
+
 function homeworkListData(currentPage: number, pageSize: number) {
   const list = [];
   for (let i = 0; i < 18; i += 1) {
@@ -42,6 +50,7 @@ function homeworkListData(currentPage: number, pageSize: number) {
       studentAvatar:'https://gw.alipayobjects.com/zos/antfincdn/UCSiy1j6jx/xingzhuang.svg',
       studentNickName:ownerName[i % 10],
       fileName:itemName[i % 8],
+      fileType:type[i%5],
       fileUrl:ownerUrl[i%8],
       status:i%2,
     });
@@ -69,5 +78,5 @@ async function postHomeworkData(req: Request, res: Response) {
 }
 
 export default {
-  'POST  /api/syllabus/homework': postHomeworkData,
+  'POST  /api/syllabus/homework/list': postHomeworkData,
 };

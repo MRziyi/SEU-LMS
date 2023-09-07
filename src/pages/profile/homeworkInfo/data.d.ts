@@ -2,6 +2,7 @@ export type HomeworkList={
   studentAvatar:string,
   studentNickName:string,
   fileName:string,
+  fileType:string,
   fileUrl:string,
   status:number,
 }

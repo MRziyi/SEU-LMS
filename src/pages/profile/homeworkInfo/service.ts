@@ -10,7 +10,7 @@ export async function queryHomeworkList(
   currentPageParam: number,
   pageSizeParam: number,
 ): Promise<{ data: { totalNum: number; list: HomeworkList[];info:HomeworkInfo } }> {
-  return request('/api/syllabus/homework', {
+  return request('/api/syllabus/homework/list', {
     method: 'POST',
     data: {
       syllabusID:syllabusIDParam,
