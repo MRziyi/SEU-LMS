@@ -7,10 +7,6 @@ import { request, useModel } from 'umi';
 
 const { Item } = Form;
 
-interface IPostCreate {
-  body: string;
-}
-
 interface modalCtrl {
   syllabusID: string;
 }
