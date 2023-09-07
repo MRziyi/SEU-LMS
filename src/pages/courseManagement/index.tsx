@@ -146,7 +146,11 @@ const CourseManagement: FC<Record<string, any>> = () => {
                   key="delete"
                   danger
                   loading={loadingDelete}
-                  onClick={() => deleteCourseAdaptor(row.courseID)}
+                  onClick={() => {
+                    if(window.confirm('确定要删除吗')){
+                      deleteCourseAdaptor(row.courseID);
+                    }
+                  }}
                 >
                   删除
                 </Button>
