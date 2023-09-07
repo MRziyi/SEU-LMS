@@ -14,7 +14,7 @@ export type DiscussionData = {
 
 export type CourseData = {
   courseName: string;
-  description: string;
+  description: DescriptionData;
   imgUrl: string;
   teacherName: string;
   teacherAvatar: string;
@@ -41,10 +41,23 @@ export type FileData = {
   time: string;
 };
 
+export type DescriptionData = {
+  unit: string;
+  credit: string;
+  teachingTime: string;
+  teachingLocation: string;
+  teachingMethod: string;
+  introduction: string;
+};
 export type HomeworkData = {
   homeworkName: string;
   homeworkDescription: string;
   deadline: string;
+  homeworkHistory: {
+    name: string;
+    isText: boolean;
+    body: string;
+  };
 };
 
 export type ReplyData = {

@@ -55,8 +55,8 @@ const ReplyList: React.FC<DiscussionIDParam> = ({ discussionID, refreshFlag }) =
         <List.Item key={messageItem.replyID}>
           <List.Item.Meta
             avatar={<Avatar src={messageItem.fromUserAvatar} />}
-            title={messageItem.fromUserName}
-            description={messageItem.content}
+            title={messageItem.content}
+            description={'来自：' + messageItem.fromUserName}
           />
           <div>{messageItem.time}</div>
         </List.Item>

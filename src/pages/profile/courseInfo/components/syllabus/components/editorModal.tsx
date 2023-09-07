@@ -3,35 +3,58 @@ import React, { useEffect, useState } from 'react';
 import 'react-quill/dist/quill.snow.css';
 import { Button, Form, message } from 'antd';
 import TextEditor from './textEditor';
-import { request, useModel } from 'umi';
+import { request } from 'umi';
 
 const { Item } = Form;
 
 interface modalCtrl {
+  disabled: boolean;
   syllabusID: string;
+  haveHistory: boolean;
+  title: string;
+  body: string;
 }
 
-const EditorModal: React.FC<modalCtrl> = ({ syllabusID }) => {
+const EditorModal: React.FC<modalCtrl> = ({ disabled, syllabusID, haveHistory, title, body }) => {
   const [visiable, setVisiable] = useState(false);
   const [currentSyllabusID, setCurrentSyllabusID] = useState<string>('');
+  const [currentTitle, setCurrentTitle] = useState<string>('');
+  const [currentBody, setCurrentBody] = useState<string>('');
+  const [currentHaveHistory, setCurrentHaveHistory] = useState<boolean>(false);
+  const [currentDisabled, setCurrentDisabled] = useState<boolean>(false);
 
   useEffect(() => {
     if (syllabusID !== '') setCurrentSyllabusID(syllabusID);
   }, [syllabusID]);
 
-  const [form] = Form.useForm();
+  useEffect(() => {
+    if (title !== '') setCurrentTitle(title);
+  }, [title]);
 
-  const { initialState } = useModel('@@initialState');
+  useEffect(() => {
+    if (body !== '') setCurrentBody(body);
+  }, [body]);
+
+  useEffect(() => {
+    setCurrentHaveHistory(haveHistory);
+  }, [haveHistory]);
+
+  useEffect(() => {
+    setCurrentDisabled(disabled);
+  }, [disabled]);
+
+  const [form] = Form.useForm();
   return (
     <>
       <Button
         type="primary"
         size="large"
+        disabled={currentDisabled}
         onClick={() => {
           setVisiable(true);
         }}
       >
-        使用在线富文本编辑器
+        {currentHaveHistory ? '继续使用在线富文本编辑器' : '开始使用在线富文本编辑器'}
       </Button>
       <Modal
         title={'作业提交'}
@@ -49,10 +72,10 @@ const EditorModal: React.FC<modalCtrl> = ({ syllabusID }) => {
             form={form}
             initialValues={{
               syllabusID: currentSyllabusID,
-              userID: initialState?.currentUser?.id,
+              homeworkTitle: haveHistory ? currentTitle : '',
+              body: haveHistory ? currentBody : '',
             }}
             onFinish={async (values) => {
-              // const { courseID, courseName, teacherName, semester, imgUrl } = values;
               try {
                 // 发送表单数据到服务器
                 const response = await request<{
@@ -74,11 +97,10 @@ const EditorModal: React.FC<modalCtrl> = ({ syllabusID }) => {
             }}
           >
             <Form.Item label="大纲ID" name="syllabusID" hidden></Form.Item>
-            <Form.Item label="用户ID" name="userID" hidden></Form.Item>
 
             <Form.Item
               label="作业标题"
-              name="homeworTitle"
+              name="title"
               rules={[{ required: true, message: '请输入作业标题' }]}
             >
               <Input placeholder="请输入作业标题" />

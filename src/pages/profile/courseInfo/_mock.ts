@@ -1,4 +1,5 @@
 import type { Request, Response } from 'express';
+import moment from 'moment';
 
 const courseName = [
   '数据结构',
@@ -291,6 +292,28 @@ async function receiveHaveCheckedIn(req: Request, res: Response) {
   });
 }
 
+async function postFakeHomeworkIntro(req: Request, res: Response) {
+  const { syllabusID } = req.body;
+  console.log('check in for: ' + syllabusID);
+  return res.json({
+    code: 0,
+    data: {
+      homeworkData: {
+        homeworkName: '初识数据库',
+        homeworkDescription: '课后习题册P5 T13-T18',
+        deadline: moment().add(1.5, 'hours').format('YYYY-MM-DD HH:mm:ss'),
+
+        homeworkHistory: {
+          name: '作业一',
+          isText: false,
+          body: '<h1>测试</h1><div>这是<b>一个</b><i>历史</i>记录</div>',
+        },
+      },
+    },
+    description: 'ok',
+  });
+}
+
 export default {
   'POST  /api/syllabus/list': postFakeSyllabusList,
   'POST  /api/discussion/list': postFakeDiscussionList,
@@ -299,9 +322,10 @@ export default {
   'POST  /api/discussion/reply-send': receiveFakeReply,
   'POST  /api/syllabus/check-in': receiveFakeCheckIn,
   'POST  /api/course/get-name': postFakeName,
-  'POST  /api/syllabus/material-list': postFakeFileList,
+  'POST  /api/syllabus/material/list': postFakeFileList,
   'POST  /api/syllabus/check-in-data': postCheckInData,
   'POST  /api/syllabus/checkin/start': receivePassword,
   'POST  /api/syllabus/checkin/stop': receiveHaveCheckedIn,
   'POST  /api/course/list-student': postFakeStudentList,
+  'POST  /api/syllabus/homework/intro': postFakeHomeworkIntro,
 };

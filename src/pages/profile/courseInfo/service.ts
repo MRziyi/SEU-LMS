@@ -90,19 +90,19 @@ export async function sendCheckIn(syllabusIDParam: string): Promise<{ data: numb
   });
 }
 export async function queryCourseName(
-  syllabusIDParam: string,
+  courseIDParam: string,
 ): Promise<{ data: { courseName: string } }> {
   return request('/api/course/get-name', {
     method: 'POST',
     data: {
-      syllabusID: syllabusIDParam,
+      courseID: courseIDParam,
     },
   });
 }
 export async function queryMaterialList(
   syllabusIDParam: string,
 ): Promise<{ data: { fileList: FileData[] } }> {
-  return request('/api/syllabus/material-list', {
+  return request('/api/syllabus/material/list', {
     method: 'POST',
     data: {
       syllabusID: syllabusIDParam,
@@ -218,7 +218,7 @@ export async function postHomeworkUrl(
 export async function getHomeworkIntro(
   syllabusIDParam: string,
 ): Promise<{ data: { homeworkData: HomeworkData } }> {
-  return request('/api/syllabus/homework/post-file', {
+  return request('/api/syllabus/homework/intro', {
     method: 'POST',
     data: {
       syllabusID: syllabusIDParam,

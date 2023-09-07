@@ -97,8 +97,12 @@ const MyMessages: FC<Record<string, any>> = () => {
                     <Tag color="blue" key="1">
                       教师
                     </Tag>
+                  ) : row.fromUserAccess == 'student' ? (
+                    <Tag color="green" key="2">
+                      学生
+                    </Tag>
                   ) : (
-                    <Tag color="orange" key="1">
+                    <Tag color="orange" key="3">
                       管理员
                     </Tag>
                   )}
