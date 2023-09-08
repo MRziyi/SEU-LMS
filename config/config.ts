@@ -161,13 +161,13 @@ export default defineConfig({
   esbuild: {},
   title: false,
   ignoreMomentLocale: true,
-  proxy: {
-    '/api/': {
-      target: 'http://10.203.177.217:8081',
-      changeOrigin: true,
-      secure: false,
-    },
-  },
+  // proxy: {
+  //   '/api/': {
+  //     target: 'http://10.203.177.217:8081',
+  //     changeOrigin: true,
+  //     secure: false,
+  //   },
+  // },
   manifest: {
     basePath: '/',
   },

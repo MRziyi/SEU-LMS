@@ -1,6 +1,5 @@
-import { useState, type FC, useEffect, useRef } from 'react';
-import { PageContainer } from '@ant-design/pro-layout';
-import { message, Button, Divider, Input, List, Modal, Space, Typography, Tag } from 'antd';
+import { useState, type FC } from 'react';
+import { message, Button, Space, Tag } from 'antd';
 import AddCourse from './components/addCourse';
 import { CourseListData, SearchParams } from './data.d';
 import { deleteCourse, queryCourseList } from './service';
@@ -38,12 +37,13 @@ const CourseManagement: FC<Record<string, any>> = () => {
   ) {
     try {
       const result = await queryCourseList(courseName, teacherName, current, pageSize);
+      console.log('New List set2!');
       if (result.data) {
         setCurrentCourseName(courseName);
         setCurrentTeacherName(teacherName);
         setCurrentPage(current);
         setCurrentPageSize(pageSize);
-        console.log('New List set!');
+        console.log('New List set1!');
         return { list: result.data.list, total: result.data.totalNum, code: result.code };
       }
     } catch {}
@@ -80,7 +80,7 @@ const CourseManagement: FC<Record<string, any>> = () => {
         return [
           <Space>
             <AddCourse
-              onClose={() => {
+              refresh={() => {
                 console.log('in onClose');
                 queryCourseListAdaptor(
                   currentCourseName,
@@ -174,6 +174,14 @@ const CourseManagement: FC<Record<string, any>> = () => {
                 ></CourseInfo>
 
                 <ModifyCourse
+                  refresh={() =>
+                    queryCourseListAdaptor(
+                      currentCourseName,
+                      currentTeacherName,
+                      currentPage,
+                      currentPageSize,
+                    )
+                  }
                   courseID={row.courseID}
                   courseName={row.courseName}
                   imgUrl={row.imgUrl}
@@ -189,6 +197,12 @@ const CourseManagement: FC<Record<string, any>> = () => {
                   onClick={() => {
                     if (window.confirm('确定要删除吗')) {
                       deleteCourseAdaptor(row.courseID);
+                      queryCourseListAdaptor(
+                        currentCourseName,
+                        currentTeacherName,
+                        currentPage,
+                        currentPageSize,
+                      );
                     }
                   }}
                 >

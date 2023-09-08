@@ -26,10 +26,13 @@ const UserManagement: FC = () => {
     setLoadingDelete(true);
     try {
       const result = await deleteUserList(IDList);
-      if (result.code == 0 && IDList.length != 1) {
-        message.success('用户批量删除成功');
+      if (result.code == 0) {
+        if (IDList.length != 1) message.success('用户批量删除成功');
+        else message.success('用户删除成功');
+
+        queryUserListAdaptor(currentNickName, currentUserID, currentPage, currentPageSize);
       } else {
-        message.success('用户删除成功');
+        message.error('用户删除失败');
       }
     } catch {}
     setLoadingDelete(false);
@@ -107,7 +110,12 @@ const UserManagement: FC = () => {
               phone={row.phone}
               email={row.phone}
             ></UserInfo>
-            <ModifyUser ID={row.id}></ModifyUser>
+            <ModifyUser
+              refresh={() => {
+                queryUserListAdaptor(currentNickName, currentUserID, currentPage, currentPageSize);
+              }}
+              ID={row.id}
+            ></ModifyUser>
             <Button
               type="link"
               key="delete"

@@ -6,7 +6,7 @@ import request from 'umi-request';
 const { Option } = Select;
 
 interface modalCtrl {
-  onClose:()=>void;
+  onClose: () => void;
 }
 
 const AddUser: React.FC<modalCtrl> = ({ onClose }) => {
@@ -19,7 +19,6 @@ const AddUser: React.FC<modalCtrl> = ({ onClose }) => {
 
   const closeModal = () => {
     setVisiable(false);
-    onClose();
   };
 
   return (
@@ -49,6 +48,8 @@ const AddUser: React.FC<modalCtrl> = ({ onClose }) => {
               });
               if (response.code === 0) {
                 message.success('添加成功');
+                onClose();
+                console.log('add user Refreshed');
                 closeModal();
               } else message.error('添加失败');
             } catch (error) {
