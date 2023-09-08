@@ -129,6 +129,6 @@ async function addCourse(req: Request, res: Response) {
 export default {
   'POST  /api/course/admin-list': postFakeCourseList,
   'POST  /api/course/delete': deleteItem,
-  'POST  /api/course/get-teacher-intro': fakeTeacherInfo,
+  'POST  /api/course/get-teacher-info': fakeTeacherInfo,
   'POST  /api/course/add': addCourse,
 };

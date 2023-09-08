@@ -50,13 +50,16 @@ const ModifySyllabus: React.FC<syllabusParam> = (props) => {
               }>('/api/syllabus/modify', {
                 method: 'POST',
                 body: JSON.stringify({ syllabusID, syllabusTitle, selectedDateTime }),
+                headers: {
+                  'Content-Type': 'application/json',
+                },
               });
               if (response.code === 0) {
-                message.success('新增成功');
+                message.success('修改成功');
                 closeModal();
-              } else message.error('新增失败');
+              } else message.error('修改失败');
             } catch (error) {
-              message.error('提交出错');
+              message.error('修改出错');
             }
           }}
         >

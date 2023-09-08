@@ -3,7 +3,11 @@ import { Button, Modal, Form, Input, message } from 'antd';
 import request from 'umi-request';
 import { useModel } from 'umi';
 
-const QuestionModal: FC = () => {
+interface modalCtrl {
+  refresh: () => void;
+}
+
+const QuestionModal: FC<modalCtrl> = ({ refresh }) => {
   const [visiable, setVisiable] = useState(false);
   const [form] = Form.useForm();
   const { initialState } = useModel('@@initialState');
@@ -53,6 +57,7 @@ const QuestionModal: FC = () => {
               });
               if (response.code === 0) {
                 message.success('提问成功');
+                refresh();
                 closeModal();
               } else message.error('提问异常');
             } catch (error) {

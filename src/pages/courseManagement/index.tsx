@@ -15,6 +15,7 @@ const CourseManagement: FC<Record<string, any>> = () => {
   const [currentPageSize, setCurrentPageSize] = useState<number>(8);
   const [currentCourseName, setCurrentCourseName] = useState<string>('');
   const [currentTeacherName, setCurrentTeacherName] = useState<string>('');
+  const [refreshKey, setRefreshKey] = useState<number>(0);
 
   const params = useParams<SearchParams>();
 
@@ -85,11 +86,14 @@ const CourseManagement: FC<Record<string, any>> = () => {
                   currentPage,
                   currentPageSize,
                 );
+
+                setRefreshKey((prevKey) => prevKey + 1);
               }}
             ></AddCourse>
           </Space>,
         ];
       }}
+      key={refreshKey} // 刷新列表的 key
       rowKey="courseID"
       search={{}}
       headerTitle="全部课程"
@@ -171,14 +175,15 @@ const CourseManagement: FC<Record<string, any>> = () => {
                 ></CourseInfo>
 
                 <ModifyCourse
-                  refresh={() =>
+                  refresh={() => {
                     queryCourseListAdaptor(
                       currentCourseName,
                       currentTeacherName,
                       currentPage,
                       currentPageSize,
-                    )
-                  }
+                    );
+                    setRefreshKey((prevKey) => prevKey + 1);
+                  }}
                   courseID={row.courseID}
                   courseName={row.courseName}
                   imgUrl={row.imgUrl}
@@ -200,6 +205,7 @@ const CourseManagement: FC<Record<string, any>> = () => {
                         currentPage,
                         currentPageSize,
                       );
+                      setRefreshKey((prevKey) => prevKey + 1);
                     }
                   }}
                 >

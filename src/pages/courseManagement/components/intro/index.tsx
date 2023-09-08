@@ -17,13 +17,14 @@ interface CourseInfoProps {
 const CourseInfo: FC<CourseInfoProps> = (props) => {
   const [visiable, setVisiable] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [teacherData, setTeacherData] = useState<TeacherData | null>(null);
-
+  const [teacherEmailData, setTeacherEmailData] = useState<string>('');
+  const [teacherPhoneData, setTeacherPhoneData] = useState<string>('');
   async function getTeacherIntro() {
     setLoading(true);
     try {
       const response = await queryTeacherInfo(props.courseID);
-      setTeacherData(response.data.teacherData);
+      setTeacherEmailData(response.data.teacherEmail);
+      setTeacherPhoneData(response.data.teacherPhone);
     } catch (error) {}
     setLoading(false);
   }
@@ -101,11 +102,11 @@ const CourseInfo: FC<CourseInfoProps> = (props) => {
 
                 <p>
                   <ContactsOutlined></ContactsOutlined>
-                  <span style={{ marginLeft: '10px' }}>邮箱: {teacherData?.teacherEmail}</span>
+                  <span style={{ marginLeft: '10px' }}>邮箱: {teacherEmailData}</span>
                 </p>
                 <p>
                   <PhoneOutlined></PhoneOutlined>
-                  <span style={{ marginLeft: '10px' }}>电话: {teacherData?.teacherPhone}</span>
+                  <span style={{ marginLeft: '10px' }}>电话: {teacherPhoneData}</span>
                 </p>
               </div>
             </Col>

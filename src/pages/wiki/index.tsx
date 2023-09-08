@@ -12,6 +12,7 @@ const Wiki: FC<Record<string, any>> = () => {
   const [listData, setListData] = useState<WikiData[]>([]);
   const [totalNum, setTotalNum] = useState<number>(0);
   const [loadingForPagigation, setLoading] = useState<boolean>(false);
+  const [refreshKey, setRefreshKey] = useState<number>(0);
 
   useEffect(() => {
     changePage(1, pageSize);
@@ -50,6 +51,7 @@ const Wiki: FC<Record<string, any>> = () => {
 
   return (
     <ProList<WikiData>
+      key={refreshKey} // 刷新列表的 key
       loading={loadingForPagigation}
       dataSource={listData}
       rowKey="wikiID"
@@ -74,7 +76,14 @@ const Wiki: FC<Record<string, any>> = () => {
         },
       })}
       toolBarRender={() => {
-        return [<QuestionModal />];
+        return [
+          <QuestionModal
+            refresh={() => {
+              changePage(currentPage, pageSize);
+              setRefreshKey((prevKey) => prevKey + 1);
+            }}
+          />,
+        ];
       }}
       metas={{
         avatar: {
@@ -107,7 +116,7 @@ const Wiki: FC<Record<string, any>> = () => {
           render: (_, row) => {
             return (
               <Space size={0}>
-                {row.answer !== '' ? (
+                {row.answer ? (
                   <Tag color="green" key="1">
                     已解答
                   </Tag>

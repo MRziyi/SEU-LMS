@@ -128,12 +128,16 @@ const ModifyCourse: React.FC<CourseInfoProps> = (props) => {
           >
             <Input placeholder="例:2023年夏季学期" />
           </Form.Item>
-          <Form.Item label="课程封面" name="imgUrl" hidden></Form.Item>
+          <Form.Item
+            label="课程封面"
+            name="imgUrl"
+            rules={[{ required: true, message: '请上传课程封面' }]}
+            hidden
+          ></Form.Item>
           <Form.Item
             name="imgUpload"
-            label="上传课程图片"
+            label="修改课程封面"
             valuePropName="fileList"
-            rules={[{ required: true, message: '请上传课程封面' }]}
             getValueFromEvent={normFile}
           >
             <Upload

@@ -35,7 +35,10 @@ const BaseView: React.FC = () => {
   };
 
   useEffect(() => {
-    if (initialState?.currentUser?.imgUrl) setAvatarToShow(initialState.currentUser.imgUrl);
+    console.log(initialState?.currentUser);
+    if (initialState?.currentUser?.avatarUrl) {
+      setAvatarToShow(initialState.currentUser.avatarUrl);
+    }
   }, []);
 
   return (
@@ -82,7 +85,7 @@ const BaseView: React.FC = () => {
               initialValues={{
                 name: initialState?.currentUser?.nickName,
                 phone: initialState?.currentUser?.phone,
-                avatar: initialState?.currentUser?.imgUrl,
+                avatar: initialState?.currentUser?.avatarUrl,
                 email: initialState?.currentUser?.email,
               }}
             >

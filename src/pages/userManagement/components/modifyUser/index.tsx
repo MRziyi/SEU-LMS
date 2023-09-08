@@ -103,19 +103,11 @@ const ModifyUser: React.FC<UserInfoProps> = (props) => {
             </Select>
           </Form.Item>
 
-          <Form.Item
-            label="电子邮箱"
-            name="email"
-            rules={[{ required: true, message: '请输入电子邮箱' }]}
-          >
+          <Form.Item label="电子邮箱" name="email" rules={[{ message: '请输入电子邮箱' }]}>
             <Input placeholder="请输入电子邮箱" />
           </Form.Item>
 
-          <Form.Item
-            label="手机号"
-            name="phone"
-            rules={[{ required: true, message: '请输入手机号' }]}
-          >
+          <Form.Item label="手机号" name="phone" rules={[{ message: '请输入手机号' }]}>
             <Input placeholder="请输入手机号" />
           </Form.Item>
           <Form.Item
@@ -128,7 +120,6 @@ const ModifyUser: React.FC<UserInfoProps> = (props) => {
             name="imgUpload"
             label="上传用户头像"
             valuePropName="fileList"
-            rules={[{ message: '请上传用户头像' }]}
             getValueFromEvent={normFile}
           >
             <Upload

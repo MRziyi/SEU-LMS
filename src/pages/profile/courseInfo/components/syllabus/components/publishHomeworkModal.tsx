@@ -5,9 +5,10 @@ import { postPublishHomework } from '../../../service';
 
 interface modalInterface {
   syllabusID: string;
+  refresh: () => void;
 }
 
-const PublishHomeworkModal: React.FC<modalInterface> = ({ syllabusID }) => {
+const PublishHomeworkModal: React.FC<modalInterface> = ({ syllabusID, refresh }) => {
   const [currentSyllabusID, setCurrentSyllabusID] = useState<string>('');
   const [visiable, setVisiable] = useState(false);
 
@@ -55,6 +56,8 @@ const PublishHomeworkModal: React.FC<modalInterface> = ({ syllabusID }) => {
                 );
                 if (response.code === 0) {
                   message.success('发布成功');
+                  setVisiable(false);
+                  refresh();
                 } else message.error('发布失败');
               } catch (error) {
                 message.error('提交出错');

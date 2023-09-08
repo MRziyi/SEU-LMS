@@ -58,14 +58,14 @@ const UploadFileModal: React.FC<modalInterface> = ({ syllabusID, isLarge }) => {
             syllabusID: syllabusID,
           }}
           onFinish={async (values) => {
-            const { courseID, courseName, teacherName, semester, imgUrl } = values;
+            const { name, content, fileUrl, syllabusID } = values;
             try {
               // 发送表单数据到服务器
               const response = await request<{
                 code: number;
-              }>('/api/syllabus/modify', {
+              }>('/api/syllabus/material/upload', {
                 method: 'POST',
-                body: JSON.stringify({ courseID, courseName, teacherName, semester, imgUrl }),
+                body: JSON.stringify({ name, content, fileUrl, syllabusID }),
                 headers: {
                   'Content-Type': 'application/json',
                 },

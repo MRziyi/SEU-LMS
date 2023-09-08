@@ -9,6 +9,7 @@ import { DiscussionData } from '../../data';
 import './index.less';
 import { FormOutlined } from '@ant-design/icons';
 import PublishDiscussionModal from './components/publishDiscussionModal';
+import { useModel } from 'umi';
 
 const { Paragraph } = Typography;
 const { Search } = Input;
@@ -26,8 +27,11 @@ const Discussion: React.FC<CourseIDParam> = ({ courseID }) => {
   const [loadingForSendingReply, setLoadingForSendingReply] = useState<boolean>(false);
   const [refreshFlag, setRefreshFlag] = useState<boolean>(false);
   const [openPublishDiscussionModal, setOpenPublishDiscussionModal] = useState<boolean>(false);
-
+  const [searchText, setSearchText] = useState<string>('');
+  const [refreshKey, setRefreshKey] = useState<number>(0);
   // 获取讨论区列表数据
+
+  const { initialState } = useModel('@@initialState');
 
   useEffect(() => {
     changeDiscussionPage(currentPage, pageSize);
@@ -53,6 +57,7 @@ const Discussion: React.FC<CourseIDParam> = ({ courseID }) => {
       let result = await sendReply(value, courseID, discussionID);
       if (result.code === 0) {
         message.success('回复成功！');
+
         if (refreshFlag) setRefreshFlag(false);
         else setRefreshFlag(true);
       }
@@ -87,9 +92,15 @@ const Discussion: React.FC<CourseIDParam> = ({ courseID }) => {
     showTotal: showPageFooter,
   };
 
+  const [value, setValue] = useState('');
+  const changeValue = (e: any) => {
+    setValue(e.target.value);
+  };
+
   return (
     <>
       <List<DiscussionData>
+        key={refreshKey} // 刷新列表的 key
         className={styles.coverCardList}
         rowKey="discussionID"
         loading={loadingForPagigation}
@@ -103,16 +114,21 @@ const Discussion: React.FC<CourseIDParam> = ({ courseID }) => {
               className={styles.card}
               hoverable
               extra={
-                <Button
-                  size="large"
-                  type="primary"
-                  onClick={() => {
-                    if (window.confirm('确定要删除吗'))
-                      deleteDiscussionAdaptor(discussion.discussionID);
-                  }}
-                >
-                  删除讨论
-                </Button>
+                initialState?.currentUser?.access === 'student' ? (
+                  ''
+                ) : (
+                  <Button
+                    size="large"
+                    type="primary"
+                    onClick={() => {
+                      if (window.confirm('确定要删除吗')) {
+                        deleteDiscussionAdaptor(discussion.discussionID);
+                      }
+                    }}
+                  >
+                    删除讨论
+                  </Button>
+                )
               }
             >
               <Paragraph style={{ fontSize: '12pt' }} className={styles.item}>
@@ -140,8 +156,11 @@ const Discussion: React.FC<CourseIDParam> = ({ courseID }) => {
                 placeholder="请友善发言～"
                 enterButton="提交回复"
                 size="large"
-                onSearch={(value) => {
-                  sendReplyAdaptor(value, discussion.discussionID);
+                value={value}
+                onChange={changeValue}
+                onSearch={(content) => {
+                  sendReplyAdaptor(content, discussion.discussionID);
+                  setValue('');
                 }}
               />
               <div className={styles.cardItemContent}>
@@ -162,24 +181,14 @@ const Discussion: React.FC<CourseIDParam> = ({ courseID }) => {
       />
 
       <div className="floating-button-container">
-        <Button
-          type="primary"
-          shape="round"
-          size="large"
-          onClick={() => {
-            setOpenPublishDiscussionModal(true);
+        <PublishDiscussionModal
+          courseID={courseID}
+          refresh={() => {
+            changeDiscussionPage(currentPage, pageSize);
+            setRefreshKey((prevKey) => prevKey + 1);
           }}
-        >
-          <FormOutlined />
-          发布讨论
-        </Button>
+        ></PublishDiscussionModal>
       </div>
-
-      <PublishDiscussionModal
-        courseID={courseID}
-        open={openPublishDiscussionModal}
-        setOpen={setOpenPublishDiscussionModal}
-      ></PublishDiscussionModal>
     </>
   );
 };

@@ -13,10 +13,7 @@ import SendAdminPM from './components/sendAdminPM';
 const UserManagement: FC = () => {
   const params = useParams<SearchParams>();
   const [loadingDelete, setLoadingDelete] = useState<boolean>(false);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [currentPageSize, setCurrentPageSize] = useState<number>(8);
-  const [currentNickName, setCurrentNickName] = useState<string>('');
-  const [currentUserID, setCurrentUserID] = useState<string>('');
+  const [refreshKey, setRefreshKey] = useState<number>(0);
 
   function showTotal(total: number, range: [number, number]) {
     return `${range[0]}-${range[1]} 共 ${total} 条`;
@@ -30,30 +27,12 @@ const UserManagement: FC = () => {
         if (IDList.length != 1) message.success('用户批量删除成功');
         else message.success('用户删除成功');
 
-        queryUserListAdaptor(currentNickName, currentUserID, currentPage, currentPageSize);
+        setRefreshKey((prevKey) => prevKey + 1);
       } else {
         message.error('用户删除失败');
       }
     } catch {}
     setLoadingDelete(false);
-  }
-
-  async function queryUserListAdaptor(
-    nickName: string,
-    userID: string,
-    current: number,
-    pageSize: number,
-  ) {
-    try {
-      const result = await queryUserList(nickName, userID, current, pageSize);
-      if (result.data) {
-        setCurrentNickName(nickName);
-        setCurrentUserID(userID);
-        setCurrentPage(current);
-        setCurrentPageSize(pageSize);
-        return { list: result.data.list, total: result.data.totalNum, code: result.code };
-      }
-    } catch {}
   }
 
   const columns: ProColumns<UserListData>[] = [
@@ -76,6 +55,17 @@ const UserManagement: FC = () => {
       align: 'center',
       dataIndex: 'access',
       search: false,
+      render: (_, row) => {
+        if (row.access == 'student') {
+          return '学生';
+        }
+        if (row.access == 'teacher') {
+          return '教师';
+        }
+        if (row.access == 'admin') {
+          return '管理员';
+        }
+      },
     },
     {
       title: '手机',
@@ -112,7 +102,7 @@ const UserManagement: FC = () => {
             ></UserInfo>
             <ModifyUser
               refresh={() => {
-                queryUserListAdaptor(currentNickName, currentUserID, currentPage, currentPageSize);
+                setRefreshKey((prevKey) => prevKey + 1);
               }}
               id={row.id}
               nickName={row.nickName}
@@ -146,6 +136,7 @@ const UserManagement: FC = () => {
       search={{
         labelWidth: 'auto',
       }}
+      key={refreshKey} // 刷新列表的 key
       params={params}
       request={async (
         params: SearchParams & {
@@ -154,16 +145,16 @@ const UserManagement: FC = () => {
           keyword?: string;
         },
       ) => {
-        const msg = await queryUserListAdaptor(
+        const msg = await queryUserList(
           params.nickName,
           params.userID,
           params.current ? params.current : 1,
           params.pageSize ? params.pageSize : 6,
         );
         return {
-          data: msg?.list,
+          data: msg?.data.list,
           success: msg?.code == 0,
-          total: msg?.total,
+          total: msg?.data.totalNum,
         };
       }}
       columns={columns}
@@ -216,7 +207,7 @@ const UserManagement: FC = () => {
           <Space>
             <AddUser
               onClose={() => {
-                queryUserListAdaptor(currentNickName, currentUserID, currentPage, currentPageSize);
+                setRefreshKey((prevKey) => prevKey + 1);
               }}
             ></AddUser>
           </Space>,

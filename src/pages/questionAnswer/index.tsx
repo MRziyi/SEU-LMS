@@ -1,5 +1,5 @@
 import { Avatar, Badge, Button, Col, Divider, Modal, Row, Space, Tag, message } from 'antd';
-import { useState, type FC } from 'react';
+import { useState, type FC, useEffect } from 'react';
 import { postAnswer, queryMessageList } from './service';
 import { wikiData } from './data';
 import moment from 'moment';
@@ -15,6 +15,8 @@ const QuestionAnswer: FC<Record<string, any>> = () => {
   const [fromUserName, setFromUserName] = useState<string>('');
   const [question, setQuestion] = useState<string>('');
   const [answer, setAnswer] = useState(''); // 使用状态管理 TextArea 的值
+
+  const [refreshKey, setRefreshKey] = useState<number>(0);
 
   const { TextArea } = Input;
 
@@ -44,9 +46,11 @@ const QuestionAnswer: FC<Record<string, any>> = () => {
       if (result.code == 0) {
         message.success('回答成功');
         queryMessageListAdaptor(currentPage, pageSize);
+        closeModal();
+        setRefreshKey((prevKey) => prevKey + 1);
       }
     } catch {}
-    setLoadingForAnswer(currentWikiID);
+    setLoadingForAnswer('');
   }
 
   const onOk = () => {
@@ -107,6 +111,7 @@ const QuestionAnswer: FC<Record<string, any>> = () => {
             total: msg?.total,
           };
         }}
+        key={refreshKey} // 刷新列表的 key
         rowKey="wikiID"
         headerTitle="答疑列表"
         pagination={{
@@ -157,7 +162,7 @@ const QuestionAnswer: FC<Record<string, any>> = () => {
                         学生
                       </Tag>
                     )}
-                    {row.answer !== '' ? (
+                    {row.answer ? (
                       <Tag color="green" key="1">
                         已解决
                       </Tag>
@@ -175,7 +180,7 @@ const QuestionAnswer: FC<Record<string, any>> = () => {
           },
           actions: {
             render: (_, row) => {
-              if (row.answer !== '')
+              if (row.answer)
                 return (
                   <Button
                     loading={loadingForAnswer == row.wikiID}

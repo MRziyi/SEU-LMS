@@ -160,12 +160,6 @@ export async function queryUserList(
   });
 }
 
-const WS_BASE_URL = 'ws://10.203.177.217:8081/api/ws/test'; // 替换成实际的WebSocket URL
-
-export function createWebSocketConnection() {
-  return new WebSocket(WS_BASE_URL);
-}
-
 export async function postPublishHomework(
   syllabusIDParam: string,
   homeworkNameParam: string,
@@ -185,7 +179,6 @@ export async function postPublishHomework(
 
 export async function postPublishDiscussion(
   courseIDParam: string,
-  userIDParam: string,
   discussionNameParam: string,
   discussionContentParam: string,
 ): Promise<{ code: number }> {
@@ -193,7 +186,6 @@ export async function postPublishDiscussion(
     method: 'POST',
     data: {
       courseID: courseIDParam,
-      userID: userIDParam,
       discussionName: discussionNameParam,
       discussionContent: discussionContentParam,
     },

@@ -1,14 +1,10 @@
-import React, { Fragment, useEffect, useState } from 'react';
-import { Link, useModel, useRequest } from 'umi';
-import { queryAdvancedProfile, queryHomeworkList } from './service';
-import styles from './style.less';
-import { RouteChildrenProps, useHistory, useParams } from 'react-router';
-import { RouteParams } from '../courseInfo/data';
+import React, { useEffect, useState } from 'react';
+import { queryHomeworkList } from './service';
+import { RouteChildrenProps, useParams } from 'react-router';
 import { Button, Card, Col, Row, Space, Tag } from 'antd';
 import {
   FileExcelOutlined,
   FileImageOutlined,
-  FileOutlined,
   FilePdfOutlined,
   FilePptOutlined,
   FileTextOutlined,
@@ -28,9 +24,14 @@ const HomeWorkInfo: React.FC<RouteChildrenProps> = () => {
   const [loadingForPagigation, setLoadingForPagigation] = useState<boolean>(false);
   const [homeworkInfoData, setHomeworkInfoData] = useState<HomeworkInfo>();
 
+  interface RouteParams {
+    syllabusID: string;
+  }
+
   //const { initialState } = useModel('@@initialState');
   //可能是不对的哦莫
-  const syllabusID = useParams<string>();
+  //嘿嘿修好啦！需要传类型
+  const { syllabusID } = useParams<RouteParams>();
 
   function fileIcon(type: string) {
     if (type === 'xlsx')
@@ -43,7 +44,7 @@ const HomeWorkInfo: React.FC<RouteChildrenProps> = () => {
       return <FileWordOutlined style={{ fontSize: '20pt', marginRight: '10px' }} />;
     else if (type === 'zip' || type === 'rar')
       return <FileZipOutlined style={{ fontSize: '20pt', marginRight: '10px' }} />;
-    else if (type === 'Image')
+    else if (type === 'png' || type === 'jpg')
       return <FileImageOutlined style={{ fontSize: '20pt', marginRight: '10px' }} />;
     else return <FileTextOutlined style={{ fontSize: '20pt', marginRight: '10px' }} />;
   }
@@ -56,6 +57,7 @@ const HomeWorkInfo: React.FC<RouteChildrenProps> = () => {
   async function changePage(_page: number, _pageSize: number) {
     setLoadingForPagigation(true);
     try {
+      console.log(syllabusID);
       const result = await queryHomeworkList(syllabusID, _page, _pageSize);
       if (result.data) {
         setTotalNum(result.data.totalNum);

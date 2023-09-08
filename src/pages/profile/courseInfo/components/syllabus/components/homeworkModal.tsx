@@ -49,13 +49,13 @@ const HomeworkModal: React.FC<modalCtrl> = ({ syllabusID }) => {
     try {
       const result = await getHomeworkIntro(currentSyllabusID);
       if (result.data) {
-        setHomeworkData(result.data.homeworkData);
-        if (result.data.homeworkData.homeworkHistory.name !== '') {
-          setHistoryHWStatus(0);
-          if (result.data.homeworkData.homeworkHistory.isText) {
-            setHistoryHWStatus(1);
-          }
-        }
+        // setHomeworkData(result.data.homeworkData);
+        // if (result.data.homeworkData.homeworkHistory.name !== '') {
+        //   setHistoryHWStatus(0);
+        //   if (result.data.homeworkData.homeworkHistory.isText) {
+        //     setHistoryHWStatus(1);
+        //   }
+        // }
         message.success('作业信息获取成功');
       }
     } catch {}

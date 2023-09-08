@@ -21,8 +21,39 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
   const [loadingForCheckIn, setLoadingForCheckIn] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [currentPageSize, setCurrentPageSize] = useState<number>(6);
+  const [refreshKey, setRefreshKey] = useState<number>(0);
 
   const { initialState } = useModel('@@initialState');
+
+  useEffect(() => {
+    let socket: WebSocket | null = null;
+
+    socket = new WebSocket('ws://10.203.177.217:8081/api/ws/refreshCheckIn');
+
+    socket.onopen = () => {
+      message.success('实时签到更新已开始');
+      socket?.send(courseID);
+    };
+
+    socket.onmessage = (event) => {
+      console.log(event);
+      const data = JSON.parse(event.data);
+      if (data == 1) {
+        querySyllabusAdaptor(currentPage, currentPageSize);
+        setRefreshKey((prevKey) => prevKey + 1);
+      }
+    };
+
+    socket.onclose = (event) => {
+      message.error('实时签到更新已停止:' + event.code + ' ' + event.reason);
+    };
+
+    return () => {
+      if (socket && socket.readyState === WebSocket.OPEN) {
+        socket.close();
+      }
+    };
+  }, []);
 
   async function querySyllabusAdaptor(current: number, pageSize: number) {
     try {
@@ -89,7 +120,9 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
                   <CheckInManageModal
                     syllabusID={item.syllabusID}
                     haveCheckedIn={item.isCheckedIn}
-                    onClose={()=>{querySyllabusAdaptor(currentPage,currentPageSize)}}
+                    onClose={() => {
+                      querySyllabusAdaptor(currentPage, currentPageSize);
+                    }}
                   />
                 )}
               </Space>
@@ -137,7 +170,13 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
                     </Button>
                   </Link>
                 ) : (
-                  <PublishHomeworkModal syllabusID={item.syllabusID} />
+                  <PublishHomeworkModal
+                    syllabusID={item.syllabusID}
+                    refresh={() => {
+                      querySyllabusAdaptor(currentPage, currentPageSize);
+                      setRefreshKey((prevKey) => prevKey + 1);
+                    }}
+                  />
                 )
               ) : item.haveHomework ? (
                 <HomeworkModal syllabusID={item.syllabusID} />
@@ -157,8 +196,8 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
           ),
         }));
         setCurrentPage(current);
-        setCurrentPageSize(pageSize)
-        return({list:list,total:result.data.totalNum,code:result.code})
+        setCurrentPageSize(pageSize);
+        return { list: list, total: result.data.totalNum, code: result.code };
       }
     } catch {}
   }
@@ -194,18 +233,13 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
             ),
           ],
         }}
+        key={refreshKey} // 刷新列表的 key
         grid={{ gutter: 16, xxl: 3, xl: 2, lg: 2, md: 2, sm: 1, xs: 1 }}
         headerTitle="课程大纲"
-        request={async (
-          params:  {
-            pageSize?: number;
-            current?: number;
-            keyword?: string;
-          },
-        ) => {
+        request={async (params: { pageSize?: number; current?: number; keyword?: string }) => {
           const msg = await querySyllabusAdaptor(
-            params.current?params.current:1,
-            params.pageSize?params.pageSize:6,
+            params.current ? params.current : 1,
+            params.pageSize ? params.pageSize : 6,
           );
           return {
             data: msg?.list,
@@ -213,11 +247,12 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
             total: msg?.total,
           };
         }}
-      pagination={{
-        showQuickJumper: true,
-        showSizeChanger: true,
-        pageSizeOptions: [6, 12, 18, 24],
-        showTotal: showTotal,}}
+        pagination={{
+          showQuickJumper: true,
+          showSizeChanger: true,
+          pageSizeOptions: [6, 12, 18, 24],
+          showTotal: showTotal,
+        }}
         showActions="hover"
         showExtra="always"
         metas={{

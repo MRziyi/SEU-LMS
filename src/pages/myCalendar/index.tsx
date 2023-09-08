@@ -47,7 +47,13 @@ const MyCalendar: React.FC = () => {
         {events.map((event, index) => (
           <li key={index}>
             <Tooltip title={event.content}>
-              <Badge status={eventType(event.type) as BadgeProps['status']} text={event.content} />
+              <Badge
+                style={{ marginLeft: '-40px' }}
+                status={eventType(event.type) as BadgeProps['status']}
+                text={
+                  event.type == 'syllabus' ? '课程: ' + event.content : '作业: ' + event.content
+                }
+              />
             </Tooltip>
           </li>
         ))}

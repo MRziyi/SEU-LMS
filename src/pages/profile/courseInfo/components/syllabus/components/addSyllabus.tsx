@@ -49,7 +49,10 @@ const AddSyllabus: React.FC<modalInterface> = ({ courseID }) => {
                 code: number;
               }>('/api/syllabus/add', {
                 method: 'POST',
-                body: JSON.stringify({ syllabusTitle, selectedDateTime }),
+                body: JSON.stringify({ courseID, syllabusTitle, selectedDateTime }),
+                headers: {
+                  'Content-Type': 'application/json',
+                },
               });
               if (response.code === 0) {
                 message.success('新增成功');

@@ -1,15 +1,15 @@
 import { Modal, Button, Card, Row, Col, Input, Space, message } from 'antd';
 import { useEffect, useState } from 'react';
 import { CheckInStatus } from '../../../data';
-import { createWebSocketConnection, postStartCheckedIn, postStopCheckedIn } from '../../../service';
+import { postStartCheckedIn, postStopCheckedIn } from '../../../service';
 
 interface modalCtrl {
   syllabusID: string;
   haveCheckedIn: number;
-  onClose:()=>void;
+  onClose: () => void;
 }
 
-const CheckInManageModal: React.FC<modalCtrl> = ({ syllabusID, haveCheckedIn,onClose }) => {
+const CheckInManageModal: React.FC<modalCtrl> = ({ syllabusID, haveCheckedIn, onClose }) => {
   const [currentSyllabusID, setCurrentSyllabusID] = useState<string>('');
   const [checkInStatus, setCheckInStatus] = useState<CheckInStatus>();
   const [currentHaveCheckedIn, setCurrentHaveCheckedIn] = useState<number>(); //0:未签到；1：正在签到；2：停止签到
@@ -21,7 +21,7 @@ const CheckInManageModal: React.FC<modalCtrl> = ({ syllabusID, haveCheckedIn,onC
     let socket: WebSocket | null = null;
 
     if (isStartWebSocket) {
-      socket = createWebSocketConnection();
+      socket = new WebSocket('ws://10.203.177.217:8081/api/ws/test'); //改为updateCheckIn
       socket.onmessage = (event) => {
         console.log(event);
         const data = JSON.parse(event.data);
@@ -88,7 +88,6 @@ const CheckInManageModal: React.FC<modalCtrl> = ({ syllabusID, haveCheckedIn,onC
     } catch {}
   }
 
-
   return (
     <>
       <Button
@@ -113,7 +112,6 @@ const CheckInManageModal: React.FC<modalCtrl> = ({ syllabusID, haveCheckedIn,onC
           onClose();
           setIsStartWebSocket(false);
           setVisiable(false);
-          
         }}
       >
         <Row gutter={24} className="card-row">
