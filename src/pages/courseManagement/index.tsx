@@ -13,8 +13,8 @@ const CourseManagement: FC<Record<string, any>> = () => {
   const [loadingDelete, setLoadingDelete] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [currentPageSize, setCurrentPageSize] = useState<number>(8);
-  const [currentCourseName,setCurrentCourseName]=useState<string>('');
-  const [currentTeacherName,setCurrentTeacherName]=useState<string>('');
+  const [currentCourseName, setCurrentCourseName] = useState<string>('');
+  const [currentTeacherName, setCurrentTeacherName] = useState<string>('');
 
   const params = useParams<SearchParams>();
 
@@ -30,21 +30,22 @@ const CourseManagement: FC<Record<string, any>> = () => {
   }
 
   async function queryCourseListAdaptor(
-    courseName:string,
-    teacherName:string,
-    current:number,
-    pageSize:number,
+    courseName: string,
+    teacherName: string,
+    current: number,
+    pageSize: number,
   ) {
-    try{
-      const result=await queryCourseList(courseName,teacherName,current,pageSize);
-      if(result.data){
+    try {
+      const result = await queryCourseList(courseName, teacherName, current, pageSize);
+      if (result.data) {
         setCurrentCourseName(courseName);
         setCurrentTeacherName(teacherName);
         setCurrentPage(current);
         setCurrentPageSize(pageSize);
-        return({list:result.data.list,total:result.data.totalNum,code:result.code})
+        console.log('New List set!');
+        return { list: result.data.list, total: result.data.totalNum, code: result.code };
       }
-    }catch{}
+    } catch {}
   }
 
   function showTotal(total: number, range: [number, number]) {
@@ -64,8 +65,8 @@ const CourseManagement: FC<Record<string, any>> = () => {
         const msg = await queryCourseListAdaptor(
           params.courseName ? params.courseName : '',
           params.teacherName ? params.teacherName : '',
-          params.current?params.current:1,
-          params.pageSize?params.pageSize:6,
+          params.current ? params.current : 1,
+          params.pageSize ? params.pageSize : 6,
         );
 
         return {
@@ -78,9 +79,15 @@ const CourseManagement: FC<Record<string, any>> = () => {
         return [
           <Space>
             <AddCourse
-            onClose={()=>{
-              console.log('in onClose');
-              queryCourseListAdaptor(currentCourseName,currentTeacherName,currentPage,currentPageSize)}}
+              onClose={() => {
+                console.log('in onClose');
+                queryCourseListAdaptor(
+                  currentCourseName,
+                  currentTeacherName,
+                  currentPage,
+                  currentPageSize,
+                );
+              }}
             ></AddCourse>
           </Space>,
         ];
@@ -174,7 +181,7 @@ const CourseManagement: FC<Record<string, any>> = () => {
                   danger
                   loading={loadingDelete}
                   onClick={() => {
-                    if(window.confirm('确定要删除吗')){
+                    if (window.confirm('确定要删除吗')) {
                       deleteCourseAdaptor(row.courseID);
                     }
                   }}

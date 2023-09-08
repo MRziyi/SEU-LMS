@@ -163,7 +163,7 @@ export default defineConfig({
   ignoreMomentLocale: true,
   proxy: {
     '/api/': {
-      target: 'http://192.168.95.77:8081',
+      target: 'http://10.203.177.217:8081',
       changeOrigin: true,
       secure: false,
     },

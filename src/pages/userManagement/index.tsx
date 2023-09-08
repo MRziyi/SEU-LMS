@@ -15,8 +15,8 @@ const UserManagement: FC = () => {
   const [loadingDelete, setLoadingDelete] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [currentPageSize, setCurrentPageSize] = useState<number>(8);
-  const [currentNickName,setCurrentNickName]=useState<string>('');
-  const [currentUserID,setCurrentUserID]=useState<string>('');
+  const [currentNickName, setCurrentNickName] = useState<string>('');
+  const [currentUserID, setCurrentUserID] = useState<string>('');
 
   function showTotal(total: number, range: [number, number]) {
     return `${range[0]}-${range[1]} 共 ${total} 条`;
@@ -28,7 +28,7 @@ const UserManagement: FC = () => {
       const result = await deleteUserList(IDList);
       if (result.code == 0 && IDList.length != 1) {
         message.success('用户批量删除成功');
-      }else{
+      } else {
         message.success('用户删除成功');
       }
     } catch {}
@@ -36,21 +36,21 @@ const UserManagement: FC = () => {
   }
 
   async function queryUserListAdaptor(
-    nickName:string,
-    userID:string,
-    current:number,
-    pageSize:number,
+    nickName: string,
+    userID: string,
+    current: number,
+    pageSize: number,
   ) {
-    try{
-      const result=await queryUserList(nickName,userID,current,pageSize);
-      if(result.data){
+    try {
+      const result = await queryUserList(nickName, userID, current, pageSize);
+      if (result.data) {
         setCurrentNickName(nickName);
         setCurrentUserID(userID);
         setCurrentPage(current);
         setCurrentPageSize(pageSize);
-        return({list:result.data.list,total:result.data.totalNum,code:result.code})
+        return { list: result.data.list, total: result.data.totalNum, code: result.code };
       }
-    }catch{}
+    } catch {}
   }
 
   const columns: ProColumns<UserListData>[] = [
@@ -114,9 +114,9 @@ const UserManagement: FC = () => {
               danger
               loading={loadingDelete}
               onClick={() => {
-                if(window.confirm('确定要删除吗')){
+                if (window.confirm('确定要删除吗')) {
                   const IDList: string[] = [row.id];
-                deleteUserListAdaptor(IDList);
+                  deleteUserListAdaptor(IDList);
                 }
               }}
             >
@@ -144,8 +144,8 @@ const UserManagement: FC = () => {
         const msg = await queryUserListAdaptor(
           params.nickName,
           params.userID,
-          params.current?params.current:1,
-          params.pageSize?params.pageSize:6,
+          params.current ? params.current : 1,
+          params.pageSize ? params.pageSize : 6,
         );
         return {
           data: msg?.list,
@@ -158,7 +158,6 @@ const UserManagement: FC = () => {
         selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
       }}
       tableAlertRender={({ selectedRowKeys, selectedRows, onCleanSelected }) => {
-        console.log(selectedRowKeys, selectedRows);
         return (
           <Space size={24}>
             <span>
@@ -201,8 +200,9 @@ const UserManagement: FC = () => {
         return [
           <Space>
             <AddUser
-            onClose={()=>{
-              queryUserListAdaptor(currentNickName,currentUserID,currentPage,currentPageSize)}}
+              onClose={() => {
+                queryUserListAdaptor(currentNickName, currentUserID, currentPage, currentPageSize);
+              }}
             ></AddUser>
           </Space>,
         ];

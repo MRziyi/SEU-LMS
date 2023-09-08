@@ -65,8 +65,10 @@ const DataVisualize: React.FC<RouteChildrenProps> = () => {
         label: element.teacherName,
       }));
       setTeacherSelectList(newTabList);
-      setDefaultTeacherValue(teacherResult.data.teacherList[0].teacherID);
-      setCurrentTeacherValue(teacherResult.data.teacherList[0].teacherID);
+      if (teacherResult.data.teacherList[0]) {
+        setDefaultTeacherValue(teacherResult.data.teacherList[0].teacherID);
+        setCurrentTeacherValue(teacherResult.data.teacherList[0].teacherID);
+      }
     }
 
     //获取管理员数据可视化的课程列表
@@ -77,8 +79,10 @@ const DataVisualize: React.FC<RouteChildrenProps> = () => {
         label: element.courseName,
       }));
       setCourseSelectList(newTabList);
-      setDefaultCourseValue(courseResult.data.descriptionList[0].courseName);
-      setCurrentCourseValue(courseResult.data.descriptionList[0].courseName);
+      if (courseResult.data.descriptionList[0]) {
+        setDefaultCourseValue(courseResult.data.descriptionList[0].courseName);
+        setCurrentCourseValue(courseResult.data.descriptionList[0].courseName);
+      }
     }
 
     setLoadingForTab(false);

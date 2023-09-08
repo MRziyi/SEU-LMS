@@ -29,7 +29,7 @@ export async function querySyllabus(
   courseIDParam: string,
   currentPageParam: number,
   pageSizeParam: number,
-): Promise<{ code:number,data: { totalNum: number; list: SyllabusData[] } }> {
+): Promise<{ code: number; data: { totalNum: number; list: SyllabusData[] } }> {
   return request('/api/syllabus/list', {
     method: 'POST',
     data: {
@@ -160,7 +160,7 @@ export async function queryUserList(
   });
 }
 
-const WS_BASE_URL = 'ws://192.168.95.77:8081/api/ws/test'; // 替换成实际的WebSocket URL
+const WS_BASE_URL = 'ws://10.203.177.217:8081/api/ws/test'; // 替换成实际的WebSocket URL
 
 export function createWebSocketConnection() {
   return new WebSocket(WS_BASE_URL);
