@@ -6,4 +6,5 @@ export type MessageData = {
   content: string;
   isRead: boolean;
   time: string;
+  sourceName: string;
 };

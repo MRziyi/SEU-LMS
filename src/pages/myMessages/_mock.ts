@@ -40,6 +40,7 @@ function fakeMessageList(currentPage: number, pageSize: number) {
       content: description[i % 5],
       time: new Date(new Date().getTime() - 1000 * 60 * 60 * 2 * i).toLocaleString(),
       isRead: i > 3,
+      sourceName: '离散数学私信',
     });
   }
   const startIndex = (currentPage - 1) * pageSize;

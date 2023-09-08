@@ -4,16 +4,22 @@ import { Space } from 'antd';
 import type { SearchParams, StudentData } from '../../data';
 import { useParams } from 'umi';
 import UserInfo from './components/userInfo';
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import SendMessage from './components/sendMessage';
 import { queryUserList } from '../../service';
 
 interface CourseIDParam {
   courseID: string;
+  courseName: string;
 }
 
 const StudentList: FC<CourseIDParam> = (props) => {
   const params = useParams<SearchParams>();
+  const [currentCourseName, setCurrentCourseName] = useState<string>('');
+
+  useEffect(() => {
+    setCurrentCourseName(props.courseName);
+  }, [props.courseName]);
 
   function showTotal(total: number, range: [number, number]) {
     return `${range[0]}-${range[1]} 共 ${total} 条`;
@@ -56,7 +62,11 @@ const StudentList: FC<CourseIDParam> = (props) => {
       render: (_, row) => {
         return (
           <Space>
-            <SendMessage id={row.id} nickName={row.name}></SendMessage>
+            <SendMessage
+              id={row.id}
+              nickName={row.name}
+              courseName={currentCourseName}
+            ></SendMessage>
             <UserInfo
               id={row.id}
               nickName={row.name}

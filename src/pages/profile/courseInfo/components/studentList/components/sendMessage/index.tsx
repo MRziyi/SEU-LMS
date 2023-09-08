@@ -5,9 +5,10 @@ import { sendPrivateMessage } from './service';
 interface UserInfoProps {
   id: string;
   nickName: string;
+  courseName: string;
 }
 
-const SendMessage: React.FC<UserInfoProps> = ({ id, nickName }) => {
+const SendMessage: React.FC<UserInfoProps> = ({ id, nickName, courseName }) => {
   const [answer, setAnswer] = useState<string>(''); // 使用状态管理 TextArea 的值
   const [visiable, setVisiable] = useState(false);
   const [currentID, setCurrentID] = useState<string>('');
@@ -24,7 +25,7 @@ const SendMessage: React.FC<UserInfoProps> = ({ id, nickName }) => {
   async function sendPrivateMessageAdaptor() {
     setLoading(true);
     try {
-      const result = await sendPrivateMessage(currentID, answer);
+      const result = await sendPrivateMessage(currentID, answer, courseName + ' 私信');
       if (result.code == 0) {
         message.success('私信发送成功');
         closeModal();

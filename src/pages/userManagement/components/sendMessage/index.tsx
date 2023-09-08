@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Button, Modal, Input, message, Row, Col, Divider } from 'antd';
 import React from 'react';
-import { sendPrivateMessage } from './service';
+import { sendPrivateMessage } from '@/pages/profile/courseInfo/components/studentList/components/sendMessage/service';
 interface UserInfoProps {
   id: string;
   nickName: string;
@@ -24,7 +24,7 @@ const SendMessage: React.FC<UserInfoProps> = ({ id, nickName }) => {
   async function sendPrivateMessageAdaptor() {
     setLoading(true);
     try {
-      const result = await sendPrivateMessage(currentID, answer);
+      const result = await sendPrivateMessage(currentID, answer, '私信');
       if (result.code == 0) {
         message.success('私信发送成功');
         closeModal();

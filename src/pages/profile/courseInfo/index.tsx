@@ -39,7 +39,13 @@ const CourseInfo: React.FC<RouteChildrenProps> = () => {
       return <Discussion courseID={courseID} key="3" />;
     }
     if (tabValue === '4') {
-      return <StudentList courseID={courseID} key="4" />;
+      return (
+        <StudentList
+          courseName={data?.courseName ? data.courseName : ''}
+          courseID={courseID}
+          key="4"
+        />
+      );
     }
     return null;
   };
