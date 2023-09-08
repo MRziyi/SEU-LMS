@@ -138,6 +138,7 @@ const UserManagement: FC = () => {
 
   return (
     <ProTable<UserListData, SearchParams>
+      
       search={{
         labelWidth: 'auto',
       }}

@@ -7,6 +7,7 @@ import { ProList } from '@ant-design/pro-components';
 import CourseInfo from './components/intro';
 import ModifyCourse from './components/modifyCourse';
 import { useParams } from 'umi';
+import SendMessages from './components/sendMessages';
 
 const CourseManagement: FC<Record<string, any>> = () => {
   const [loadingDelete, setLoadingDelete] = useState<boolean>(false);
@@ -157,6 +158,11 @@ const CourseManagement: FC<Record<string, any>> = () => {
           render: (_, row) => {
             return (
               <Space>
+                
+                <SendMessages
+                CourseID={row.courseID}
+                ></SendMessages>
+                
                 <CourseInfo
                   courseID={row.courseID}
                   courseName={row.courseName}
