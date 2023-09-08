@@ -25,7 +25,7 @@ export async function queryCourseList(
 export async function deleteCourse(courseIDParam: string): Promise<{
   code: number;
 }> {
-  return request('/api/course/admin-list', {
+  return request('/api/course/delete', {
     method: 'POST',
     data: {
       courseID: courseIDParam,

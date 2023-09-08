@@ -2,22 +2,19 @@ import { useState, useEffect } from 'react';
 import { Button, Modal, Input, message, Row, Col, Divider } from 'antd';
 import React from 'react';
 import { sendPrivateMessage } from './service';
-interface UserInfoProps {
-  id: string;
-  nickName: string;
+interface CourseInfoProps {
+  CourseID: string
 }
 
-const SendMessage: React.FC<UserInfoProps> = ({ id, nickName }) => {
+const SendMessages: React.FC<CourseInfoProps> = ({ CourseID }) => {
   const [answer, setAnswer] = useState<string>(''); // 使用状态管理 TextArea 的值
   const [visiable, setVisiable] = useState(false);
   const [currentID, setCurrentID] = useState<string>('');
-  const [currentNickName, setCurrentNickName] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    if (id && id !== '') setCurrentID(id);
-    if (nickName && nickName !== '') setCurrentNickName(nickName);
-  }, [id, nickName]);
+    if (CourseID && CourseID !== '') setCurrentID(CourseID);
+  }, [CourseID]);
 
   const { TextArea } = Input;
 
@@ -44,10 +41,10 @@ const SendMessage: React.FC<UserInfoProps> = ({ id, nickName }) => {
   return (
     <>
       <Button loading={loading} type="link" onClick={() => setVisiable(true)}>
-        私信
+        发送通知
       </Button>
       <Modal
-        title="私信用户"
+        title="发送全体通知"
         open={visiable}
         onOk={onOk}
         onCancel={closeModal}
@@ -56,7 +53,7 @@ const SendMessage: React.FC<UserInfoProps> = ({ id, nickName }) => {
         <Row gutter={50}>
           <Col span={24}>
             <p>
-              <b>私信对象</b>: {currentNickName}
+              <b>发布通知:</b>
             </p>
             <Divider />
             <TextArea
@@ -73,4 +70,4 @@ const SendMessage: React.FC<UserInfoProps> = ({ id, nickName }) => {
   );
 };
 
-export default SendMessage;
+export default SendMessages;
