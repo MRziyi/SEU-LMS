@@ -2,7 +2,7 @@ import { Avatar, Button, Card, Input, List, Typography, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import styles from './index.less';
 
-import { queryDiscussionList, sendReply } from '../../service';
+import { deleteDiscussion, queryDiscussionList, sendReply } from '../../service';
 import ProCard from '@ant-design/pro-card';
 import ReplyList from './reply';
 import { DiscussionData } from '../../data';
@@ -25,7 +25,7 @@ const Discussion: React.FC<CourseIDParam> = ({ courseID }) => {
   const [loadingForPagigation, setLoadingForPagigation] = useState<boolean>(false);
   const [loadingForSendingReply, setLoadingForSendingReply] = useState<boolean>(false);
   const [refreshFlag, setRefreshFlag] = useState<boolean>(false);
-  const [openPublishDiscussionModal,setOpenPublishDiscussionModal]= useState<boolean>(false);
+  const [openPublishDiscussionModal, setOpenPublishDiscussionModal] = useState<boolean>(false);
 
   // 获取讨论区列表数据
 
@@ -60,6 +60,19 @@ const Discussion: React.FC<CourseIDParam> = ({ courseID }) => {
     setLoadingForSendingReply(false);
   }
 
+  async function deleteDiscussionAdaptor(discussionID: string) {
+    setLoadingForSendingReply(true);
+    try {
+      let result = await deleteDiscussion(discussionID);
+      if (result.code === 0) {
+        message.success('删除成功！');
+        if (refreshFlag) setRefreshFlag(false);
+        else setRefreshFlag(true);
+      }
+    } catch {}
+    setLoadingForSendingReply(false);
+  }
+
   function showPageFooter(total: number, range: [number, number]) {
     return `${range[0]}-${range[1]} 共 ${total} 条`;
   }
@@ -85,9 +98,24 @@ const Discussion: React.FC<CourseIDParam> = ({ courseID }) => {
         dataSource={discussionList}
         renderItem={(discussion) => (
           <List.Item>
-            <Card className={styles.card} hoverable onClick={() => {}}>
-              <Card.Meta title={discussion.title} />
-              <Paragraph style={{ marginTop: '10px', fontSize: '10pt' }} className={styles.item}>
+            <Card
+              title={discussion.title}
+              className={styles.card}
+              hoverable
+              extra={
+                <Button
+                  size="large"
+                  type="primary"
+                  onClick={() => {
+                    if (window.confirm('确定要删除吗'))
+                      deleteDiscussionAdaptor(discussion.discussionID);
+                  }}
+                >
+                  删除讨论
+                </Button>
+              }
+            >
+              <Paragraph style={{ fontSize: '12pt' }} className={styles.item}>
                 {discussion.content}
               </Paragraph>
               <ProCard
@@ -134,15 +162,16 @@ const Discussion: React.FC<CourseIDParam> = ({ courseID }) => {
       />
 
       <div className="floating-button-container">
-        <Button 
-          type="primary" 
-          shape="round" 
-          size='large'
+        <Button
+          type="primary"
+          shape="round"
+          size="large"
           onClick={() => {
             setOpenPublishDiscussionModal(true);
           }}
         >
-          <FormOutlined />发布讨论
+          <FormOutlined />
+          发布讨论
         </Button>
       </div>
 

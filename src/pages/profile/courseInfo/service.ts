@@ -255,3 +255,12 @@ export async function sendNotice(
     },
   });
 }
+
+export async function deleteDiscussion(discussionIDParam: string): Promise<{ code: number }> {
+  return request('/api/discussion/delete', {
+    method: 'POST',
+    data: {
+      discussionID: discussionIDParam,
+    },
+  });
+}

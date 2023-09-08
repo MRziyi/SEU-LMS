@@ -43,7 +43,7 @@ const SendCourseNotice: React.FC<UserInfoProps> = ({ courseID, courseName }) => 
 
   return (
     <>
-      <Button loading={loading} type="link" onClick={() => setVisiable(true)}>
+      <Button loading={loading} onClick={() => setVisiable(true)}>
         发布通知
       </Button>
       <Modal

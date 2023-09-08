@@ -56,7 +56,7 @@ const ModifyUser: React.FC<UserInfoProps> = (props) => {
               const { nickName, id, access, email, phone, avatarUrl } = values;
               const response = await request<{
                 code: number;
-              }>('/api/user/add-user', {
+              }>('/api/user/modify-user', {
                 method: 'POST',
                 body: JSON.stringify({ nickName, id, access, email, phone, avatarUrl }),
                 headers: {
@@ -82,13 +82,7 @@ const ModifyUser: React.FC<UserInfoProps> = (props) => {
             <Input placeholder="请输入用户名称" />
           </Form.Item>
 
-          <Form.Item
-            label="一卡通号"
-            name="ID"
-            rules={[{ required: true, message: '请输入一卡通号' }]}
-          >
-            <Input placeholder="请输入一卡通号" />
-          </Form.Item>
+          <Form.Item label="一卡通号" name="id" rules={[{ required: true }]} hidden></Form.Item>
 
           <Form.Item name="access" label="身份" rules={[{ required: true }]}>
             <Select placeholder="Select a option" allowClear>
@@ -137,6 +131,13 @@ const ModifyUser: React.FC<UserInfoProps> = (props) => {
             >
               <Button icon={<UploadOutlined />}>Click to upload</Button>
             </Upload>
+          </Form.Item>
+
+          <Form.Item wrapperCol={{ span: 16, offset: 6 }}>
+            <Button htmlType="submit" type="primary" style={{ marginRight: '10px' }}>
+              提交
+            </Button>
+            <Button htmlType="reset">重置</Button>
           </Form.Item>
         </Form>
       </Modal>

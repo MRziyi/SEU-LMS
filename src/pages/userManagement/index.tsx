@@ -183,9 +183,11 @@ const UserManagement: FC = () => {
             <Button
               danger
               loading={loadingDelete}
-              onClick={() =>
-                deleteUserListAdaptor(values.selectedRows.map((element) => element.id))
-              }
+              onClick={() => {
+                if (window.confirm('确定要删除吗')) {
+                  deleteUserListAdaptor(values.selectedRows.map((element) => element.id));
+                }
+              }}
             >
               批量删除
             </Button>
