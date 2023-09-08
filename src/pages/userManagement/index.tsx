@@ -114,7 +114,12 @@ const UserManagement: FC = () => {
               refresh={() => {
                 queryUserListAdaptor(currentNickName, currentUserID, currentPage, currentPageSize);
               }}
-              ID={row.id}
+              id={row.id}
+              nickName={row.nickName}
+              access={row.access}
+              email={row.email}
+              phone={row.phone}
+              avatarUrl={row.avatarUrl}
             ></ModifyUser>
             <Button
               type="link"

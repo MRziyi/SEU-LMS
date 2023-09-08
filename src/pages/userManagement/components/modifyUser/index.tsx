@@ -1,13 +1,17 @@
-import { useState, type FC } from 'react';
-import { Button, Modal, Checkbox, Form, Input, Upload, Select, message } from 'antd';
+import { useState } from 'react';
+import { Button, Modal, Form, Input, Upload, Select, message } from 'antd';
 import React from 'react';
 import { UploadOutlined } from '@ant-design/icons';
 import request from 'umi-request';
 
 const { Option } = Select;
-
 interface UserInfoProps {
-  ID: string;
+  nickName: string;
+  id: string;
+  access: string;
+  avatarUrl: string;
+  phone: string;
+  email: string;
   refresh: () => void;
 }
 
@@ -37,7 +41,7 @@ const ModifyUser: React.FC<UserInfoProps> = (props) => {
         修改
       </Button>
       <Modal
-        title="新增用户"
+        title="修改用户"
         open={visiable}
         onOk={onOk}
         onCancel={closeModal}
@@ -50,7 +54,14 @@ const ModifyUser: React.FC<UserInfoProps> = (props) => {
           labelCol={{ span: 6 }}
           wrapperCol={{ span: 16 }}
           style={{ maxWidth: 600 }}
-          initialValues={{ remember: true }}
+          initialValues={{
+            nickName: props.nickName,
+            id: props.id,
+            access: props.access,
+            email: props.email,
+            phone: props.phone,
+            avatarUrl: props.avatarUrl,
+          }}
           onFinish={async (values) => {
             try {
               const { nickName, id, access, email, phone, avatarUrl } = values;
@@ -64,10 +75,10 @@ const ModifyUser: React.FC<UserInfoProps> = (props) => {
                 },
               });
               if (response.code === 0) {
-                message.success('添加成功');
+                message.success('修改成功');
                 props.refresh();
                 closeModal();
-              } else message.error('添加失败');
+              } else message.error('修改失败');
             } catch (error) {
               message.error('提交出错');
             }
@@ -107,12 +118,17 @@ const ModifyUser: React.FC<UserInfoProps> = (props) => {
           >
             <Input placeholder="请输入手机号" />
           </Form.Item>
-          <Form.Item label="头像" name="avatarUrl" hidden></Form.Item>
+          <Form.Item
+            label="头像"
+            name="avatarUrl"
+            hidden
+            rules={[{ required: true, message: '请上传用户头像' }]}
+          ></Form.Item>
           <Form.Item
             name="imgUpload"
             label="上传用户头像"
             valuePropName="fileList"
-            rules={[{ required: true, message: '请上传课程头像' }]}
+            rules={[{ message: '请上传用户头像' }]}
             getValueFromEvent={normFile}
           >
             <Upload
