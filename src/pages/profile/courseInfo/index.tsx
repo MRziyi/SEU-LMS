@@ -8,8 +8,8 @@ import Syllabus from './components/syllabus';
 import Discussion from './components/discussion';
 import { queryCourseName } from './service';
 import Description from './components/description';
-import SingleInputModal from '@/components/Modal/singleInput';
 import StudentList from './components/studentList';
+import SendCourseNotice from './components/sendCourseNotice';
 
 const CourseInfo: React.FC<RouteChildrenProps> = () => {
   const { initialState } = useModel('@@initialState');
@@ -25,7 +25,6 @@ const CourseInfo: React.FC<RouteChildrenProps> = () => {
   });
 
   const [tabKey, setTabKey] = useState<tabKeyType>('1');
-  const [openSendAnnouncement, setOpenSendAnnouncement] = useState<boolean>(false);
 
   // 渲染tab切换
   const renderChildrenByTabKey = (tabValue: tabKeyType) => {
@@ -85,17 +84,10 @@ const CourseInfo: React.FC<RouteChildrenProps> = () => {
           返回我的课程
         </Button>,
         initialState?.currentUser?.access == 'teacher' ? (
-          <Button key="2" onClick={() => setOpenSendAnnouncement(true)}>
-            发布通知
-            <SingleInputModal
-              open={openSendAnnouncement}
-              setOpen={setOpenSendAnnouncement}
-              displayMessage="通知内容"
-              title="发布通知"
-              url="/api/message/send-to-class"
-              idParam={courseID}
-            />
-          </Button>
+          <SendCourseNotice
+            courseID={courseID}
+            courseName={data?.courseName ? data.courseName : ''}
+          />
         ) : (
           ''
         ),

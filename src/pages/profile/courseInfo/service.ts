@@ -225,3 +225,33 @@ export async function getHomeworkIntro(
     },
   });
 }
+
+export async function sendPM(
+  userIDParam: string,
+  contentParam: string,
+  sourceParam: string,
+): Promise<{ code: number }> {
+  return request('/api/message/sendPM', {
+    method: 'POST',
+    data: {
+      userID: userIDParam,
+      content: contentParam,
+      source: sourceParam,
+    },
+  });
+}
+
+export async function sendNotice(
+  courseIDParam: string,
+  contentParam: string,
+  sourceParam: string,
+): Promise<{ code: number }> {
+  return request('/api/message/sendNotice', {
+    method: 'POST',
+    data: {
+      courseID: courseIDParam,
+      content: contentParam,
+      source: sourceParam,
+    },
+  });
+}

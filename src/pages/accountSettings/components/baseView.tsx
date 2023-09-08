@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { UploadOutlined } from '@ant-design/icons';
-import { Button, Form, Upload, message } from 'antd';
+import { Button, Form, Upload, UploadFile, message } from 'antd';
 import ProForm, { ProFormText } from '@ant-design/pro-form';
 import { request, useModel } from 'umi';
-
+import ImgCrop from 'antd-img-crop';
 import styles from './baseView.less';
+import { RcFile } from 'antd/lib/upload';
 
 const BaseView: React.FC = () => {
   const [avatarToShow, setAvatarToShow] = useState('');
@@ -17,6 +18,21 @@ const BaseView: React.FC = () => {
 
   //  获取用户信息
   const { initialState, loading } = useModel('@@initialState');
+
+  const onPreview = async (file: UploadFile) => {
+    let src = file.url as string;
+    if (!src) {
+      src = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file.originFileObj as RcFile);
+        reader.onload = () => resolve(reader.result as string);
+      });
+    }
+    const image = new Image();
+    image.src = src;
+    const imgWindow = window.open(src);
+    imgWindow?.document.write(image.outerHTML);
+  };
 
   useEffect(() => {
     if (initialState?.currentUser?.imgUrl) setAvatarToShow(initialState.currentUser.imgUrl);
@@ -109,46 +125,50 @@ const BaseView: React.FC = () => {
             <div className={styles.avatar} style={{ width: '150px' }}>
               <img src={avatarToShow} />
             </div>
-            <Upload
-              showUploadList={false}
-              accept="image/*"
-              customRequest={async (options: any) => {
-                const data = new FormData();
-                data.append('file', options.file);
-                try {
-                  const response = await fetch('/api/upload/image', {
-                    method: 'POST',
-                    body: data,
-                  });
-                  if (response.ok) {
-                    response.json().then((res: any) => {
-                      options.onSuccess({ url: res.data }, new Response());
-                      form.setFieldsValue({ avatar: res.data });
-                      setAvatarToShow(res.data);
+
+            <ImgCrop rotationSlider>
+              <Upload
+                showUploadList={false}
+                accept="image/*"
+                customRequest={async (options: any) => {
+                  const data = new FormData();
+                  data.append('file', options.file);
+                  try {
+                    const response = await fetch('/api/upload/image', {
+                      method: 'POST',
+                      body: data,
                     });
-                  } else {
-                    options.onError(new Error('上传失败'));
+                    if (response.ok) {
+                      response.json().then((res: any) => {
+                        options.onSuccess({ url: res.data }, new Response());
+                        form.setFieldsValue({ avatar: res.data });
+                        setAvatarToShow(res.data);
+                      });
+                    } else {
+                      options.onError(new Error('上传失败'));
+                    }
+                  } catch (error) {
+                    console.error('上传图片出错:', error);
+                    options.onError(error);
                   }
-                } catch (error) {
-                  console.error('上传图片出错:', error);
-                  options.onError(error);
-                }
-              }}
-              onChange={async (info) => {
-                if (info.file.status === 'done') {
-                  message.success(`${info.file.name} 上传成功`);
-                } else if (info.file.status === 'error') {
-                  message.error(`${info.file.name} 上传失败`);
-                }
-              }}
-            >
-              <div className={styles.button_view}>
-                <Button>
-                  <UploadOutlined />
-                  更换头像
-                </Button>
-              </div>
-            </Upload>
+                }}
+                onPreview={onPreview}
+                onChange={async (info) => {
+                  if (info.file.status === 'done') {
+                    message.success(`${info.file.name} 上传成功`);
+                  } else if (info.file.status === 'error') {
+                    message.error(`${info.file.name} 上传失败`);
+                  }
+                }}
+              >
+                <div className={styles.button_view}>
+                  <Button>
+                    <UploadOutlined />
+                    更换头像
+                  </Button>
+                </div>
+              </Upload>
+            </ImgCrop>
           </div>
         </>
       )}

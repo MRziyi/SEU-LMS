@@ -8,7 +8,7 @@ import ModifyUser from './components/modifyUser';
 import UserInfo from './components/userInfo';
 import { FC, useState } from 'react';
 import { deleteUserList, queryUserList } from './service';
-import SendMessage from './components/sendMessage';
+import SendAdminPM from './components/sendAdminPM';
 
 const UserManagement: FC = () => {
   const params = useParams<SearchParams>();
@@ -101,7 +101,7 @@ const UserManagement: FC = () => {
       render: (_, row) => {
         return (
           <Space>
-            <SendMessage id={row.id} nickName={row.nickName}></SendMessage>
+            <SendAdminPM id={row.id} nickName={row.nickName}></SendAdminPM>
             <UserInfo
               id={row.id}
               nickName={row.nickName}
@@ -138,7 +138,6 @@ const UserManagement: FC = () => {
 
   return (
     <ProTable<UserListData, SearchParams>
-      
       search={{
         labelWidth: 'auto',
       }}

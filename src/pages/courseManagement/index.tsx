@@ -7,7 +7,7 @@ import { ProList } from '@ant-design/pro-components';
 import CourseInfo from './components/intro';
 import ModifyCourse from './components/modifyCourse';
 import { useParams } from 'umi';
-import SendMessages from './components/sendMessages';
+import SendCourseNotice from './components/sendCourseNotice';
 
 const CourseManagement: FC<Record<string, any>> = () => {
   const [loadingDelete, setLoadingDelete] = useState<boolean>(false);
@@ -37,13 +37,11 @@ const CourseManagement: FC<Record<string, any>> = () => {
   ) {
     try {
       const result = await queryCourseList(courseName, teacherName, current, pageSize);
-      console.log('New List set2!');
       if (result.data) {
         setCurrentCourseName(courseName);
         setCurrentTeacherName(teacherName);
         setCurrentPage(current);
         setCurrentPageSize(pageSize);
-        console.log('New List set1!');
         return { list: result.data.list, total: result.data.totalNum, code: result.code };
       }
     } catch {}
@@ -81,7 +79,6 @@ const CourseManagement: FC<Record<string, any>> = () => {
           <Space>
             <AddCourse
               refresh={() => {
-                console.log('in onClose');
                 queryCourseListAdaptor(
                   currentCourseName,
                   currentTeacherName,
@@ -158,11 +155,11 @@ const CourseManagement: FC<Record<string, any>> = () => {
           render: (_, row) => {
             return (
               <Space>
-                
-                <SendMessages
-                CourseID={row.courseID}
-                ></SendMessages>
-                
+                <SendCourseNotice
+                  courseID={row.courseID}
+                  courseName={row.courseName}
+                ></SendCourseNotice>
+
                 <CourseInfo
                   courseID={row.courseID}
                   courseName={row.courseName}

@@ -1,33 +1,32 @@
 import { useState, useEffect } from 'react';
 import { Button, Modal, Input, message, Row, Col, Divider } from 'antd';
 import React from 'react';
-import { sendPrivateMessage } from './service';
+import { sendNotice } from '../../service';
 interface UserInfoProps {
-  id: string;
-  nickName: string;
+  courseID: string;
   courseName: string;
 }
 
-const SendMessage: React.FC<UserInfoProps> = ({ id, nickName, courseName }) => {
+const SendCourseNotice: React.FC<UserInfoProps> = ({ courseID, courseName }) => {
   const [answer, setAnswer] = useState<string>(''); // 使用状态管理 TextArea 的值
   const [visiable, setVisiable] = useState(false);
   const [currentID, setCurrentID] = useState<string>('');
-  const [currentNickName, setCurrentNickName] = useState<string>('');
+  const [currentCourseName, setCurrentCourseName] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    if (id && id !== '') setCurrentID(id);
-    if (nickName && nickName !== '') setCurrentNickName(nickName);
-  }, [id, nickName]);
+    if (courseID && courseID !== '') setCurrentID(courseID);
+    if (courseName && courseName !== '') setCurrentCourseName(courseName);
+  }, [courseID, courseName]);
 
   const { TextArea } = Input;
 
   async function sendPrivateMessageAdaptor() {
     setLoading(true);
     try {
-      const result = await sendPrivateMessage(currentID, answer, courseName + ' 私信');
+      const result = await sendNotice(currentID, answer, courseName + ' 通知');
       if (result.code == 0) {
-        message.success('私信发送成功');
+        message.success('通知发送成功');
         closeModal();
       }
     } catch {}
@@ -45,10 +44,10 @@ const SendMessage: React.FC<UserInfoProps> = ({ id, nickName, courseName }) => {
   return (
     <>
       <Button loading={loading} type="link" onClick={() => setVisiable(true)}>
-        私信
+        发布通知
       </Button>
       <Modal
-        title="新增用户"
+        title="发布通知"
         open={visiable}
         onOk={onOk}
         onCancel={closeModal}
@@ -57,12 +56,12 @@ const SendMessage: React.FC<UserInfoProps> = ({ id, nickName, courseName }) => {
         <Row gutter={50}>
           <Col span={24}>
             <p>
-              <b>私信对象</b>: {currentNickName}
+              <b>通知课程</b>: {currentCourseName}
             </p>
             <Divider />
             <TextArea
               rows={3}
-              placeholder="请输入私信内容"
+              placeholder="请输入通知内容"
               maxLength={600} // 你可以根据需要调整最大长度
               value={answer} // 使用状态管理 TextArea 的值
               onChange={(e) => setAnswer(e.target.value)} // 在输入变化时更新状态
@@ -74,4 +73,4 @@ const SendMessage: React.FC<UserInfoProps> = ({ id, nickName, courseName }) => {
   );
 };
 
-export default SendMessage;
+export default SendCourseNotice;

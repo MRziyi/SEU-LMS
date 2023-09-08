@@ -5,8 +5,8 @@ import type { SearchParams, StudentData } from '../../data';
 import { useParams } from 'umi';
 import UserInfo from './components/userInfo';
 import { FC, useEffect, useState } from 'react';
-import SendMessage from './components/sendMessage';
 import { queryUserList } from '../../service';
+import SendCoursePM from './components/sendCoursePM';
 
 interface CourseIDParam {
   courseID: string;
@@ -62,11 +62,11 @@ const StudentList: FC<CourseIDParam> = (props) => {
       render: (_, row) => {
         return (
           <Space>
-            <SendMessage
+            <SendCoursePM
               id={row.id}
               nickName={row.name}
               courseName={currentCourseName}
-            ></SendMessage>
+            ></SendCoursePM>
             <UserInfo
               id={row.id}
               nickName={row.name}

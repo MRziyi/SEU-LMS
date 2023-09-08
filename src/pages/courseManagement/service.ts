@@ -32,3 +32,18 @@ export async function deleteCourse(courseIDParam: string): Promise<{
     },
   });
 }
+
+export async function sendNotice(
+  courseIDParam: string,
+  contentParam: string,
+  sourceParam: string,
+): Promise<{ code: number }> {
+  return request('/api/message/sendNotice', {
+    method: 'POST',
+    data: {
+      courseID: courseIDParam,
+      content: contentParam,
+      source: sourceParam,
+    },
+  });
+}
