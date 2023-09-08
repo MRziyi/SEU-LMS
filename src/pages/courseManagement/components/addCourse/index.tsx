@@ -6,10 +6,10 @@ import { Select } from 'antd';
 import { queryTeacherList } from '@/pages/dataVisualize/service';
 
 interface modalCtrl {
-  onClose:()=>void;
+  refresh: () => void;
 }
 
-const AddCourse: React.FC<modalCtrl> = ({ onClose }) => {
+const AddCourse: React.FC<modalCtrl> = ({ refresh }) => {
   const [visiable, setVisiable] = useState(false);
   const [form] = Form.useForm();
   const [teacherList, setTeacherList] = useState<{ label: string; value: string }[]>([]);
@@ -30,7 +30,6 @@ const AddCourse: React.FC<modalCtrl> = ({ onClose }) => {
 
   const closeModal = () => {
     setVisiable(false);
-    onClose();
   };
 
   const normFile = (e: any) => {
@@ -78,6 +77,8 @@ const AddCourse: React.FC<modalCtrl> = ({ onClose }) => {
               });
               if (response.code === 0) {
                 message.success('新增成功');
+                refresh();
+                console.log('add course refreshed');
                 closeModal();
               } else message.error('新增失败');
             } catch (error) {

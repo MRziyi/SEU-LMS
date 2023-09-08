@@ -1,5 +1,5 @@
 import { Avatar, Badge, Button, Col, Divider, Modal, Row, Space, Tag, message } from 'antd';
-import { useState, type FC, useEffect } from 'react';
+import { useState, type FC } from 'react';
 import { postAnswer, queryMessageList } from './service';
 import { wikiData } from './data';
 import moment from 'moment';
@@ -9,9 +9,6 @@ import { Input } from 'antd';
 const QuestionAnswer: FC<Record<string, any>> = () => {
   const [pageSize, setPageSize] = useState<number>(8);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [listData, setListData] = useState<wikiData[]>([]);
-  const [totalNum, setTotalNum] = useState<number>(0);
-  const [loadingForPagigation, setLoadingForPagigation] = useState<boolean>(false);
   const [loadingForAnswer, setLoadingForAnswer] = useState<string>('');
 
   const [currentWikiID, setCurrentWikiID] = useState<string>('');
@@ -21,22 +18,15 @@ const QuestionAnswer: FC<Record<string, any>> = () => {
 
   const { TextArea } = Input;
 
-  useEffect(() => {
-    changePage(1, pageSize);
-  }, []);
-
-  async function changePage(_page: number, _pageSize: number) {
-    setLoadingForPagigation(true);
+  async function queryMessageListAdaptor(current: number, pageSize: number) {
     try {
-      const result = await queryMessageList(_page, _pageSize);
+      const result = await queryMessageList(current, pageSize);
       if (result.data) {
-        setTotalNum(result.data.totalNum);
-        setListData(result.data.list);
-        setCurrentPage(_page);
-        setPageSize(_pageSize);
+        setCurrentPage(current);
+        setPageSize(pageSize);
+        return { list: result.data.list, total: result.data.totalNum, code: result.code };
       }
     } catch {}
-    setLoadingForPagigation(false);
   }
 
   //标记已读用的
@@ -44,16 +34,6 @@ const QuestionAnswer: FC<Record<string, any>> = () => {
   function showTotal(total: number, range: [number, number]) {
     return `${range[0]}-${range[1]} 共 ${total} 条`;
   }
-  const paginationProps = {
-    onChange: changePage,
-    showQuickJumper: true,
-    showSizeChanger: true,
-    pageSizeOptions: [8, 12, 16, 20],
-    current: currentPage,
-    pageSize: pageSize,
-    total: totalNum,
-    showTotal: showTotal,
-  };
 
   const [visiable, setVisiable] = useState(false);
 
@@ -62,7 +42,8 @@ const QuestionAnswer: FC<Record<string, any>> = () => {
     try {
       const result = await postAnswer(currentWikiID, answer);
       if (result.code == 0) {
-        message.success('课程删除成功');
+        message.success('回答成功');
+        queryMessageListAdaptor(currentPage, pageSize);
       }
     } catch {}
     setLoadingForAnswer(currentWikiID);
@@ -115,11 +96,26 @@ const QuestionAnswer: FC<Record<string, any>> = () => {
       </Modal>
 
       <ProList<wikiData>
-        loading={loadingForPagigation}
-        dataSource={listData}
+        request={async (params: { pageSize?: number; current?: number; keyword?: string }) => {
+          const msg = await queryMessageListAdaptor(
+            params.current ? params.current : 1,
+            params.pageSize ? params.pageSize : 6,
+          );
+          return {
+            data: msg?.list,
+            success: msg?.code == 0,
+            total: msg?.total,
+          };
+        }}
         rowKey="wikiID"
         headerTitle="答疑列表"
-        pagination={paginationProps}
+        pagination={{
+          showQuickJumper: true,
+          showSizeChanger: true,
+          pageSizeOptions: [8, 12, 16, 20],
+          defaultPageSize: 8,
+          showTotal: showTotal,
+        }}
         showActions="hover"
         metas={{
           title: {

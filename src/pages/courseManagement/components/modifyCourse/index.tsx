@@ -11,6 +11,7 @@ interface CourseInfoProps {
   imgUrl: string;
   semester: string;
   teacherName: string;
+  refresh: () => void;
 }
 
 const ModifyCourse: React.FC<CourseInfoProps> = (props) => {
@@ -86,6 +87,7 @@ const ModifyCourse: React.FC<CourseInfoProps> = (props) => {
               });
               if (response.code === 0) {
                 message.success('新增成功');
+                props.refresh();
                 closeModal();
               } else message.error('新增失败');
             } catch (error) {

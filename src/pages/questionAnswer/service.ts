@@ -4,7 +4,7 @@ import { wikiData } from './data';
 export async function queryMessageList(
   currentPageParam: number,
   pageSizeParam: number,
-): Promise<{ data: { totalNum: number; list: wikiData[] } }> {
+): Promise<{ code: number; data: { totalNum: number; list: wikiData[] } }> {
   return request('/api/wiki/admin-list', {
     method: 'POST',
     data: {

@@ -47,6 +47,9 @@ const QuestionModal: FC = () => {
               }>('/api/wiki/question', {
                 method: 'POST',
                 body: JSON.stringify({ ...values }),
+                headers: {
+                  'Content-Type': 'application/json',
+                },
               });
               if (response.code === 0) {
                 message.success('提问成功');

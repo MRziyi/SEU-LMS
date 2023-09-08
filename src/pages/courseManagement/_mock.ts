@@ -47,12 +47,10 @@ const ownerName = [
   '仲尼',
 ];
 
-
 async function postFakeCourseList(req: Request, res: Response) {
-
   const { keyword, currentPage, pageSize } = req.body;
 
-  console.log('mock处理参数',keyword,currentPage,pageSize)
+  console.log('mock处理参数', keyword, currentPage, pageSize);
   const list = [];
   for (let i = 0; i < 100; i += 1) {
     if (i % 2) {
@@ -63,7 +61,7 @@ async function postFakeCourseList(req: Request, res: Response) {
         teacherName: ownerName[i % 10],
         teacherAvatar: ownerUrl[i % 8],
         semester: '2023秋季学期',
-        description: "俺是描述俺是描述",
+        description: '俺是描述俺是描述',
       });
     } else {
       list.push({
@@ -73,7 +71,7 @@ async function postFakeCourseList(req: Request, res: Response) {
         teacherName: ownerName[i % 10],
         teacherAvatar: ownerUrl[i % 8],
         semester: '2023夏季学期',
-        description: "俺是描述俺是描述",
+        description: '俺是描述俺是描述',
       });
     }
   }
@@ -85,31 +83,26 @@ async function postFakeCourseList(req: Request, res: Response) {
     filteredItems = list.filter((item) => item.courseName.includes(keyword));
   }
 
-
-
   const startIndex = (currentPage - 1) * pageSize;
   console.log('Page: ' + startIndex + ' - ' + (startIndex + pageSize));
-  
 
   let finalList = filteredItems.slice(startIndex, startIndex + pageSize);
 
-
   return res.json({
     code: 0,
-    data:{
-      list:finalList,
-      totalNum:1000,
-      teacherList:ownerName,
-    }
+    data: {
+      list: finalList,
+      totalNum: 1000,
+      teacherList: ownerName,
+    },
   });
-
 }
 
 async function deleteItem(req: Request, res: Response) {
   const deleteItem = req.body;
   return res.json({
     code: 0,
-    data:{deleteItem},
+    data: { deleteItem },
   });
 }
 
@@ -120,15 +113,22 @@ async function fakeTeacherInfo(req: Request, res: Response) {
     teacherEmail: 'teacher@example.com',
   };
   return res.json({
-    code:0,
+    code: 0,
     data: {
       teacherData,
     },
-  })
+  });
+}
+
+async function addCourse(req: Request, res: Response) {
+  return res.json({
+    code: 0,
+  });
 }
 
 export default {
   'POST  /api/course/admin-list': postFakeCourseList,
   'POST  /api/course/delete': deleteItem,
   'POST  /api/course/get-teacher-intro': fakeTeacherInfo,
+  'POST  /api/course/add': addCourse,
 };
