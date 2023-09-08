@@ -86,10 +86,10 @@ const ModifyCourse: React.FC<CourseInfoProps> = (props) => {
                 },
               });
               if (response.code === 0) {
-                message.success('新增成功');
+                message.success('修改成功');
                 props.refresh();
                 closeModal();
-              } else message.error('新增失败');
+              } else message.error('修改失败');
             } catch (error) {
               message.error('提交出错');
             }
