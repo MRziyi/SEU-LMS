@@ -7,10 +7,11 @@ const GaugeCard = ({ data, loading }: { data: GaugeChartData | null; loading: bo
     <Gauge
       value={data?.value}
       height={250}
-      width={280}
+      //width={280}
       min={0}
       max={100}
       padding="auto"
+      forceFit={true}
       range={[0, data?.value ? data?.value : 85]}
       format={(v) => {
         return v + '%';

@@ -2,6 +2,7 @@ import ProForm, { ProFormText, ProFormTextArea } from '@ant-design/pro-form';
 import { Modal, Form, message, Button } from 'antd';
 import { useEffect, useState } from 'react';
 import { postPublishDiscussion } from '../../../service';
+import { FormOutlined } from '@ant-design/icons';
 
 interface modalInterface {
   courseID: string;
@@ -23,14 +24,16 @@ const PublishDiscussionModal: React.FC<modalInterface> = ({ courseID, refresh })
 
   return (
     <>
-      <Button
-        onClick={() => {
-          setVisiable(true);
-        }}
-        type="primary"
-      >
-        发布讨论
-      </Button>
+        <Button 
+           type="primary" 
+           shape="round" 
+           size='large'
+           onClick={() => {
+            setVisiable(true);
+           }}
+         >
+           <FormOutlined />发布讨论
+         </Button>
       <Modal
         title="发布讨论"
         width={500}
