@@ -1,5 +1,5 @@
 import { request } from 'umi';
-import { UserListData } from './data';
+import { CourseListData, UserListData } from './data';
 
 export async function queryUserList(
   nickNameParam: string,
@@ -27,4 +27,31 @@ export async function deleteUserList(IDListParam: string[]): Promise<{ code: num
       id: IDListParam,
     },
   });
+}
+
+
+export async function queryCourseList(
+): Promise<{
+  code: number;
+  data: { list: CourseListData[]};
+}> {
+  return request('/api/course/all-course', {
+    method: 'GET',
+  });
+}
+
+export async function importToCourse(
+  idParam: string[],
+  courseIDParam: string
+)
+: Promise<{
+  code: number;
+}> {
+  return request('/api/user/importToCourse',{
+    method: 'POST',
+    data:{
+      id:idParam,
+      courseID:courseIDParam
+    }
+  })
 }

@@ -8,7 +8,7 @@ export async function queryCourseList(
   pageSizeParam?: number,
 ): Promise<{
   code: number;
-  data: { totalNum: number; list: CourseListData[]; teacherList: string[] };
+  data: { totalNum: number; list: CourseListData[]};
 }> {
   console.log('CN:' + courseNameParam + ' TN:' + teacherNameParam);
   return request('/api/course/admin-list', {

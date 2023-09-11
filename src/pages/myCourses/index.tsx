@@ -7,10 +7,12 @@ import { Input } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import { CourseListData } from './data';
 import {
+  queryAdminCourseList,
   queryStudentCourseList,
   queryTeacherCourseList,
   searchStudentCourse,
   searchTeacherCourse,
+  searchAdminCourse
 } from './service';
 
 const { Paragraph } = Typography;
@@ -42,11 +44,13 @@ const MyCourses: FC = () => {
         if (searchContent.current == '') {
           if (initialState.currentUser.access == 'student')
             result = await queryStudentCourseList(_page, _pageSize);
-          else result = await queryTeacherCourseList(_page, _pageSize);
+          else if (initialState.currentUser.access == 'teacher') result = await queryTeacherCourseList(_page, _pageSize);
+          else result = await queryAdminCourseList(_page, _pageSize);
         } else {
           if (initialState.currentUser.access == 'student')
             result = await searchStudentCourse(searchContent.current, _page, _pageSize);
-          else result = await searchTeacherCourse(searchContent.current, _page, _pageSize);
+          else if (initialState.currentUser.access == 'teacher') result = await searchTeacherCourse(searchContent.current, _page, _pageSize);
+          else result = await searchAdminCourse(searchContent.current, _page, _pageSize);
         }
         preSearchContent.current = searchContent.current;
         if (result.data) {
@@ -149,7 +153,7 @@ const MyCourses: FC = () => {
     <div>
       <PageContainer
         header={{
-          title: '我的课程',
+          title: '课程中心',
           ghost: true,
           extra: [
             <Button

@@ -75,6 +75,12 @@ export default defineConfig({
     },
 
     {
+      name: '课程中心',
+      icon: 'read',
+      path: '/myCourses',
+      component: './myCourses',
+    },
+    {
       path: '/data-visualize',
       name: '数据可视化',
       icon: 'areaChart',
@@ -96,13 +102,6 @@ export default defineConfig({
       component: './userManagement',
     },
     {
-      name: '我的课程',
-      icon: 'read',
-      path: '/myCourses',
-      access: 'canST',
-      component: './myCourses',
-    },
-    {
       name: '我的日历',
       icon: 'calendar',
       path: '/my-calendar',
@@ -120,7 +119,6 @@ export default defineConfig({
       name: '我的消息',
       icon: 'message',
       path: '/myMessages',
-      access: 'canST',
       component: './myMessages',
     },
     {
@@ -163,7 +161,7 @@ export default defineConfig({
   ignoreMomentLocale: true,
   proxy: {
     '/api/': {
-      target: 'http://10.203.177.217:8081',
+      target: 'http://192.168.193.193:8081',
       changeOrigin: true,
       secure: false,
     },

@@ -6,9 +6,10 @@ import request from 'umi-request';
 
 interface modalInterface {
   courseID: string;
+  parentRefresh:()=>void;
 }
 
-const AddSyllabus: React.FC<modalInterface> = ({ courseID }) => {
+const AddSyllabus: React.FC<modalInterface> = ({ courseID ,parentRefresh }) => {
   const [visiable, setVisiable] = useState(false);
   const [form] = Form.useForm();
 
@@ -61,6 +62,7 @@ const AddSyllabus: React.FC<modalInterface> = ({ courseID }) => {
             } catch (error) {
               message.error('提交出错');
             }
+            parentRefresh()
           }}
         >
           <Form.Item label="课程ID" name="courseID" hidden></Form.Item>

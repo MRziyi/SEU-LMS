@@ -6,15 +6,17 @@ import { useModel } from 'umi';
 interface modalInterface {
   syllabusID: string;
   canCheckIn: boolean;
+  parentRefresh:()=>void;
 }
 
-const StudentCheckInModal: FC<modalInterface> = ({ syllabusID, canCheckIn }) => {
+const StudentCheckInModal: FC<modalInterface> = ({ syllabusID, canCheckIn ,parentRefresh }) => {
   const [visiable, setVisiable] = useState(false);
   const [form] = Form.useForm();
   const { initialState } = useModel('@@initialState');
 
   const onOk = () => {
     closeModal();
+    parentRefresh();
   };
 
   const closeModal = () => {

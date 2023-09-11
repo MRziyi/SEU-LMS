@@ -1,5 +1,5 @@
 import { useState, type FC } from 'react';
-import { Button, Modal, Form, Input, Upload, message } from 'antd';
+import { Button, Modal, Form, Input, Upload, message, Row, Col } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import request from 'umi-request';
 import { Select } from 'antd';
@@ -54,23 +54,25 @@ const AddCourse: React.FC<modalCtrl> = ({ refresh }) => {
       >
         新增课程
       </Button>
-      <Modal title="新增课程" open={visiable} onCancel={closeModal} footer={null}>
+      <Modal title="新增课程" open={visiable} onCancel={closeModal} footer={null} width={1000}>
+
         <Form
           form={form}
           name="basic"
           labelCol={{ span: 6 }}
           wrapperCol={{ span: 16 }}
-          style={{ maxWidth: 600 }}
+          style={{ maxWidth: 1000 }}
           initialValues={{ remember: true }}
           onFinish={async (values) => {
-            const { courseName, teacherName, semester, imgUrl } = values;
+            const { courseName, teacherName, semester, imgUrl, unit, credit, teachingTime, teachingLocation, teachingMethod, introduction } = values;
             try {
               // 发送表单数据到服务器
               const response = await request<{
                 code: number;
               }>('/api/course/add', {
                 method: 'POST',
-                body: JSON.stringify({ courseName, teacherName, semester, imgUrl }),
+                body: JSON.stringify({ courseName, teacherName, semester, imgUrl,
+                  unit, credit, teachingTime, teachingLocation, teachingMethod, introduction }),
                 headers: {
                   'Content-Type': 'application/json',
                 },
@@ -87,6 +89,8 @@ const AddCourse: React.FC<modalCtrl> = ({ refresh }) => {
           }}
           autoComplete="off"
         >
+      <Row gutter={100}>
+            <Col lg={12}>      
           <Form.Item
             label="课程名称"
             name="courseName"
@@ -118,6 +122,16 @@ const AddCourse: React.FC<modalCtrl> = ({ refresh }) => {
           >
             <Input placeholder="例:2023年夏季学期" />
           </Form.Item>
+
+          <Form.Item
+            label="开课单位"
+            name="unit"
+            rules={[{ required: true, message: '请输入开课单位' }]}
+          >
+            <Input placeholder="请输入开课单位名称" />
+          </Form.Item>
+
+
           <Form.Item label="课程封面" name="imgUrl" hidden></Form.Item>
           <Form.Item
             name="imgUpload"
@@ -142,13 +156,74 @@ const AddCourse: React.FC<modalCtrl> = ({ refresh }) => {
             >
               <Button icon={<UploadOutlined />}>Click to upload</Button>
             </Upload>
+          </Form.Item>    
+              {/* 左半部分结束 */}
+          </Col>
+
+          <Col lg={12}>
+          {/* 右半部分开始 */}
+          <Form.Item
+            label="学分"
+            name="credit"
+            rules={[{ required: true, message: '请输入学分数' }]}
+          >
+            <Input placeholder="请输入学分数" />
           </Form.Item>
+          
+          <Form.Item
+            label="开课时间"
+            name="teachingTime"
+            rules={[{ required: true, message: '请输入开课时间' }]}
+          >
+            <Input placeholder="请输入开课时间" />
+          </Form.Item>
+          
+          <Form.Item
+            label="上课地点"
+            name="teachingLocation"
+            rules={[{ required: true, message: '请输入上课地点' }]}
+          >
+            <Input placeholder="请输入上课地点" />
+          </Form.Item>
+
+          <Form.Item
+            label="授课方式"
+            name="teachingMethod"
+            rules={[{ required: true, message: '请输入授课方式' }]}
+          >
+          <Select
+            style={{ width: 120 }}
+            options={[
+              { value: '线上', label: '线上' },
+              { value: '线下', label: '线下' },
+            ]}
+          />
+          </Form.Item>
+
+          <Form.Item
+            label="课程简介"
+            name="introduction"
+            rules={[{ required: true, message: '请输入课程简介' }]}
+          >
+            <Input placeholder="请输入课程简介" />
+          </Form.Item>
+
+          </Col>
+          </Row>
+
           <Form.Item wrapperCol={{ span: 16, offset: 6 }}>
             <Button type="primary" htmlType="submit">
               提交
             </Button>
-          </Form.Item>
+      </Form.Item>
         </Form>
+
+
+
+
+
+
+
       </Modal>
     </>
   );

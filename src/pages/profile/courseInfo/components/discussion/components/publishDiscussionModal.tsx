@@ -29,7 +29,7 @@ const PublishDiscussionModal: React.FC<modalInterface> = ({ courseID, refresh })
         }}
         type="primary"
       >
-        发布不了一点
+        发布讨论
       </Button>
       <Modal
         title="发布讨论"

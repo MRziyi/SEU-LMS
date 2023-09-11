@@ -256,3 +256,14 @@ export async function deleteDiscussion(discussionIDParam: string): Promise<{ cod
     },
   });
 }
+
+export async function deleteSyllabus(syllabusIDParam: string): Promise<{
+  code: number;
+}> {
+  return request('/api/syllabus/delete', {
+    method: 'POST',
+    data: {
+      syllabusID: syllabusIDParam,
+    },
+  });
+}

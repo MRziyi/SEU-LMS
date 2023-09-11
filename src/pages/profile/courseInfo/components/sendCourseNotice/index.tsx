@@ -27,6 +27,7 @@ const SendCourseNotice: React.FC<UserInfoProps> = ({ courseID, courseName }) => 
       const result = await sendNotice(currentID, answer, courseName + ' 通知');
       if (result.code == 0) {
         message.success('通知发送成功');
+        setAnswer('');
         closeModal();
       }
     } catch {}

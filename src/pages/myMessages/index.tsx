@@ -1,9 +1,10 @@
-import { Avatar, Badge, Button, Space, Tag, message } from 'antd';
+import { Avatar, Badge, Button, Col, Divider, Modal, Row, Space, Tag, message ,Input } from 'antd';
 import { useState, type FC, useEffect } from 'react';
 import { markMessage, queryMessageList } from './service';
 import { MessageData } from './data';
 import moment from 'moment';
 import { ProList } from '@ant-design/pro-components';
+import { sendPM } from '../profile/courseInfo/service';
 
 const MyMessages: FC<Record<string, any>> = () => {
   const [pageSize, setPageSize] = useState<number>(8);
@@ -12,6 +13,7 @@ const MyMessages: FC<Record<string, any>> = () => {
   const [totalNum, setTotalNum] = useState<number>(0);
   const [loadingForPagigation, setLoadingForPagigation] = useState<boolean>(false);
   const [loadingForMark, setLoadingForMark] = useState<string>('');
+  const [visiable,setVisiable] = useState<boolean>(false);
 
   useEffect(() => {
     changePage(1, pageSize);
@@ -57,12 +59,89 @@ const MyMessages: FC<Record<string, any>> = () => {
     total: totalNum,
     showTotal: showTotal,
   };
+  //------------------------------下边是回复的弹窗----------------------------------
+
+  const { TextArea } = Input;
+  const [value, setValue] = useState('');
+  const [targetUserName, setTargetUserName] = useState<string>('')//我要给谁发
+  const [targetUserID, setTargetUserID] = useState<string>('')//目标用户的id
+  const [content,setContent] = useState<string>('')
+
+  const changeValue = (e: any) => {
+    setValue(e.target.value);
+  };
+  async function sendPrivateMessageAdaptor() {
+    try {
+      const result = await sendPM(targetUserID, value, '私信');
+      if (result.code == 0) {
+        message.success('私信发送成功');
+        setValue('');
+        closeModal();
+      }
+    } catch {}
+  }
+
+  const onOk = () => {
+    if(value!=''){
+      sendPrivateMessageAdaptor();
+    }else{
+      closeModal();
+    }
+  };
+
+  const handleRowClick = (item: MessageData) => {
+    // 在这里触发回调函数，处理点击列表行的逻辑
+    setTargetUserName(item.fromUserName);
+    setTargetUserID(item.fromUserID)
+    setContent(item.content);
+    setVisiable(true);
+  };
+
+  const closeModal = () => {
+    setVisiable(false);
+  };
 
   return (
+    <>
+      <Modal
+        title="回复用户"
+        open={visiable}
+        onOk={onOk}
+        onCancel={closeModal}
+        afterClose={closeModal}
+      >
+        <Row gutter={50}>
+          <Col span={24}>
+            <p>
+              <div><b>回复对象</b>: {targetUserName}</div>
+           
+              <b>私信详情</b>: 
+              <div>{content}</div>
+            </p>
+            <Divider />
+            <TextArea
+              rows={3}
+              placeholder="请输入回复内容"
+              maxLength={600} // 你可以根据需要调整最大长度
+              value={value}
+              onChange={changeValue}
+            />
+          </Col>
+        </Row>
+      </Modal>
     <ProList<MessageData>
       loading={loadingForPagigation}
       dataSource={listData}
       rowKey="messageID"
+      onRow={(record) => ({
+        onClick: () => {
+          console.log('Clicked on row:', record.fromUserName);
+          handleRowClick(record)
+          if(!record.isRead){
+            markMessageAdaptor(record.messageID, true);
+          }
+        } // 定义行点击事件处理程序
+      })}
       headerTitle="消息列表"
       pagination={paginationProps}
       showActions="hover"
@@ -150,6 +229,8 @@ const MyMessages: FC<Record<string, any>> = () => {
         },
       }}
     />
+    </>
+    
   );
 };
 

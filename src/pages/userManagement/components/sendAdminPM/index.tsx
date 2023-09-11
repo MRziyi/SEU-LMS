@@ -13,7 +13,11 @@ const SendAdminPM: React.FC<UserInfoProps> = ({ id, nickName }) => {
   const [currentID, setCurrentID] = useState<string>('');
   const [currentNickName, setCurrentNickName] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+  const [value, setValue] = useState('');
 
+  const changeValue = (e: any) => {
+    setValue(e.target.value);
+  };
   useEffect(() => {
     if (id && id !== '') setCurrentID(id);
     if (nickName && nickName !== '') setCurrentNickName(nickName);
@@ -24,9 +28,10 @@ const SendAdminPM: React.FC<UserInfoProps> = ({ id, nickName }) => {
   async function sendPrivateMessageAdaptor() {
     setLoading(true);
     try {
-      const result = await sendPM(currentID, answer, '私信');
+      const result = await sendPM(currentID, value, '私信');
       if (result.code == 0) {
         message.success('私信发送成功');
+        setValue('');
         closeModal();
       }
     } catch {}
@@ -63,8 +68,8 @@ const SendAdminPM: React.FC<UserInfoProps> = ({ id, nickName }) => {
               rows={3}
               placeholder="请输入私信内容"
               maxLength={600} // 你可以根据需要调整最大长度
-              value={answer} // 使用状态管理 TextArea 的值
-              onChange={(e) => setAnswer(e.target.value)} // 在输入变化时更新状态
+              value={value}
+              onChange={changeValue}
             />
           </Col>
         </Row>

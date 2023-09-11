@@ -2,14 +2,16 @@ import { Modal, Button, Card, Row, Col, Input, Space, message } from 'antd';
 import { useEffect, useState } from 'react';
 import { CheckInStatus } from '../../../data';
 import { postStartCheckedIn, postStopCheckedIn } from '../../../service';
+import { useModel } from 'umi';
 
 interface modalCtrl {
   syllabusID: string;
   haveCheckedIn: number;
   onClose: () => void;
+  parentRefresh: ()=> void;
 }
 
-const CheckInManageModal: React.FC<modalCtrl> = ({ syllabusID, haveCheckedIn, onClose }) => {
+const CheckInManageModal: React.FC<modalCtrl> = ({ syllabusID, haveCheckedIn, onClose, parentRefresh }) => {
   const [currentSyllabusID, setCurrentSyllabusID] = useState<string>('');
   const [checkInStatus, setCheckInStatus] = useState<CheckInStatus>();
   const [currentHaveCheckedIn, setCurrentHaveCheckedIn] = useState<number>(); //0:未签到；1：正在签到；2：停止签到
@@ -17,11 +19,13 @@ const CheckInManageModal: React.FC<modalCtrl> = ({ syllabusID, haveCheckedIn, on
   const [isStartWebSocket, setIsStartWebSocket] = useState<boolean>(false);
   const [visiable, setVisiable] = useState(false);
 
+  const { initialState } = useModel('@@initialState');
+
   useEffect(() => {
     let socket: WebSocket | null = null;
 
     if (isStartWebSocket) {
-      socket = new WebSocket('ws://10.203.177.217:8081/api/ws/test'); //改为updateCheckIn
+      socket = new WebSocket(`ws://192.168.193.193:8081/api/ws/realTimeCheckIn`);
       socket.onmessage = (event) => {
         console.log(event);
         const data = JSON.parse(event.data);
@@ -33,8 +37,12 @@ const CheckInManageModal: React.FC<modalCtrl> = ({ syllabusID, haveCheckedIn, on
         }
       };
       socket.onopen = () => {
+        if(socket){
         message.success('实时更新已开始');
-        socket?.send(syllabusID);
+        socket.send(syllabusID);
+        }
+        else
+        message.warning('实时更新Socket待加载');
       };
       socket.onclose = (event) => {
         message.error('实时更新已停止:' + event.code + ' ' + event.reason);
@@ -64,6 +72,7 @@ const CheckInManageModal: React.FC<modalCtrl> = ({ syllabusID, haveCheckedIn, on
       setCurrentHaveCheckedIn(1);
       postStartCheckedInAdaptor();
     }
+    //parentRefresh();
   };
 
   async function postStartCheckedInAdaptor() {

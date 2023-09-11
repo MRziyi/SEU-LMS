@@ -15,6 +15,7 @@ import { ProList } from '@ant-design/pro-components';
 import { HomeworkInfo } from './data';
 import './style.less';
 import FeedbackHomeworkModal from './components/feedbackHomeworkModal';
+import HomeworkPreviewModal from './components/homeworkPreviewModal';
 
 const HomeWorkInfo: React.FC<RouteChildrenProps> = () => {
   const [pageSize, setPageSize] = useState<number>(8);
@@ -23,6 +24,7 @@ const HomeWorkInfo: React.FC<RouteChildrenProps> = () => {
   const [totalNum, setTotalNum] = useState<number>(0);
   const [loadingForPagigation, setLoadingForPagigation] = useState<boolean>(false);
   const [homeworkInfoData, setHomeworkInfoData] = useState<HomeworkInfo>();
+  const [refreshKey, setRefreshKey] = useState<number>(0);
 
   interface RouteParams {
     syllabusID: string;
@@ -66,7 +68,7 @@ const HomeWorkInfo: React.FC<RouteChildrenProps> = () => {
           title: item.studentNickName,
           subTitle: (
             <Space size={0}>
-              {item.status ? (
+              {item.status === 2 ? (
                 <Tag color="green" key="1">
                   已批改
                 </Tag>
@@ -78,13 +80,39 @@ const HomeWorkInfo: React.FC<RouteChildrenProps> = () => {
             </Space>
           ),
           actions:
-            item.status === 0 ? (
-              <FeedbackHomeworkModal homeworkID={item.homeworkID} />
+          <Space
+              direction="horizontal"
+              size="large"
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+              }}
+            >
+
+{
+            item.fileType === 'multi-text' ? (
+              <HomeworkPreviewModal title={item.fileName} body={item.fileUrl} />
+            ) : (
+              <Button
+                disabled={!item.status}
+                style={{ marginLeft: '5px' }}
+                onClick={() => {
+                  window.open(item.fileUrl, '_blank');
+                }}
+                type="text"
+              >
+                下载
+              </Button>
+            )}
+              {
+            item.status === 1 ? (
+              <FeedbackHomeworkModal homeworkID={item.homeworkID} parentRefresh={refresh}/>
             ) : (
               <Button type="text" disabled>
                 已评分
               </Button>
-            ),
+            )}
+            </Space>,
           avatar: item.studentAvatar,
           content: (
             <div
@@ -113,6 +141,10 @@ const HomeWorkInfo: React.FC<RouteChildrenProps> = () => {
       }
     } catch {}
     setLoadingForPagigation(false);
+  }
+
+  function refresh(){
+    setRefreshKey((prevKey) => prevKey + 1);
   }
 
   const cardActionProps = 'actions';
@@ -181,7 +213,7 @@ const HomeWorkInfo: React.FC<RouteChildrenProps> = () => {
         grid={{ gutter: 16, xxl: 4, xl: 4, lg: 3, md: 3, sm: 2, xs: 1 }}
         headerTitle="作业批改"
         loading={loadingForPagigation}
-        key={'homeworkID'}
+        key={refreshKey}
         dataSource={listData}
         pagination={paginationProps}
         showActions="hover"

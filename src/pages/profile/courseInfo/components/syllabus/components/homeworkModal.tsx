@@ -9,9 +9,10 @@ import moment from 'moment';
 const { Countdown } = Statistic;
 interface modalCtrl {
   syllabusID: string;
+  parentRefresh:()=>void;
 }
 
-const HomeworkModal: React.FC<modalCtrl> = ({ syllabusID }) => {
+const HomeworkModal: React.FC<modalCtrl> = ({ syllabusID, parentRefresh }) => {
   const [visiable, setVisiable] = useState(false);
   const [currentSyllabusID, setCurrentSyllabusID] = useState<string>('');
   const [fileUrl, setFileUrl] = useState<string>('');
@@ -20,7 +21,7 @@ const HomeworkModal: React.FC<modalCtrl> = ({ syllabusID }) => {
   const [loadingUpload, setLoadingUpload] = useState(false);
   const [loadingIntro, setLoadingIntro] = useState(false);
 
-  const [historyHWStatus, setHistoryHWStatus] = useState<number>(-1);
+  const [historyHWStatus, setHistoryHWStatus] = useState<number>(0);//默认提交状态是0，未提交
 
   useEffect(() => {
     if (syllabusID !== '') {
@@ -42,6 +43,10 @@ const HomeworkModal: React.FC<modalCtrl> = ({ syllabusID }) => {
       }
     } catch {}
     setLoadingUpload(false);
+    parentRefresh();
+
+
+
   }
 
   async function getHomeworkIntroAdaptor() {
@@ -49,13 +54,13 @@ const HomeworkModal: React.FC<modalCtrl> = ({ syllabusID }) => {
     try {
       const result = await getHomeworkIntro(currentSyllabusID);
       if (result.data) {
-        // setHomeworkData(result.data.homeworkData);
-        // if (result.data.homeworkData.homeworkHistory.name !== '') {
-        //   setHistoryHWStatus(0);
-        //   if (result.data.homeworkData.homeworkHistory.isText) {
-        //     setHistoryHWStatus(1);
-        //   }
-        // }
+        setHomeworkData(result.data.homeworkData);
+        if (result.data.homeworkData.homeworkHistory.name !== '') {
+          setHistoryHWStatus(1);
+          if (result.data.homeworkData.homeworkHistory.isText) {
+            setHistoryHWStatus(1);
+          }
+        }
         message.success('作业信息获取成功');
       }
     } catch {}
@@ -124,8 +129,8 @@ const HomeworkModal: React.FC<modalCtrl> = ({ syllabusID }) => {
                     fontSize: '18px',
                   }}
                 >
-                  <strong style={{ color: historyHWStatus == -1 ? 'red' : 'green' }}>
-                    {historyHWStatus == -1 ? '提交状态：未提交' : '提交状态：已提交'}
+                  <strong style={{ color: historyHWStatus == 0 ? 'red' : 'green' }}>
+                    {historyHWStatus == 0 ? '提交状态：未提交' : '提交状态：已提交'}
                   </strong>
                 </div>
               </div>
@@ -169,12 +174,14 @@ const HomeworkModal: React.FC<modalCtrl> = ({ syllabusID }) => {
               <>
                 <Upload
                   multiple={false}
+                  maxCount={1}
                   action="/api/upload/file"
                   onChange={(info) => {
                     const { status } = info.file;
                     if (status === 'done') {
                       if (info.file.response && info.file.response.code == 0) {
-                        setFileName(info.file.fileName ? info.file.fileName : '');
+                        console.log("作业url",info.file.name)
+                        setFileName(info.file.name ? info.file.name : '');
                         setFileUrl(info.file.response.data);
                       }
                     } else if (status === 'error') {
@@ -188,7 +195,7 @@ const HomeworkModal: React.FC<modalCtrl> = ({ syllabusID }) => {
                     size="large"
                     style={{ marginRight: '-10px' }}
                   >
-                    {historyHWStatus == 0 ? '重新上传作业' : '上传作业'}
+                    {historyHWStatus == 0 ? '上传作业' : '重新上传作业'}
                   </Button>
                 </Upload>
                 <Button

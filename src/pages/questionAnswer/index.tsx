@@ -1,6 +1,6 @@
 import { Avatar, Badge, Button, Col, Divider, Modal, Row, Space, Tag, message } from 'antd';
 import { useState, type FC, useEffect } from 'react';
-import { postAnswer, queryMessageList } from './service';
+import { deleteWiki, postAnswer, queryMessageList } from './service';
 import { wikiData } from './data';
 import moment from 'moment';
 import { ProList } from '@ant-design/pro-components';
@@ -69,6 +69,12 @@ const QuestionAnswer: FC<Record<string, any>> = () => {
     setQuestion(item.question);
     setAnswer(item.answer);
   };
+
+  const handleDelete = (item:wikiData) => {
+    deleteWiki(item.wikiID)
+    setRefreshKey((prevKey) => prevKey + 1);
+  }
+
   return (
     <>
       <Modal
@@ -182,6 +188,7 @@ const QuestionAnswer: FC<Record<string, any>> = () => {
             render: (_, row) => {
               if (row.answer)
                 return (
+                <>
                   <Button
                     loading={loadingForAnswer == row.wikiID}
                     style={{ marginRight: '10px' }}
@@ -189,9 +196,16 @@ const QuestionAnswer: FC<Record<string, any>> = () => {
                   >
                     修改回答
                   </Button>
+                  <Button
+                  type='link'
+                  danger
+                  onClick={()=>handleDelete(row)}
+                  >删除</Button>
+                </>
                 );
               else {
                 return (
+                <>
                   <Button
                     loading={loadingForAnswer == row.wikiID}
                     style={{ marginRight: '10px' }}
@@ -200,8 +214,15 @@ const QuestionAnswer: FC<Record<string, any>> = () => {
                   >
                     进行回答
                   </Button>
+                  <Button
+                  type='link'
+                  danger
+                  onClick={()=>handleDelete(row)}
+                  >删除</Button>
+                </>
                 );
               }
+
             },
           },
         }}

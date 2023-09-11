@@ -26,3 +26,14 @@ export async function postAnswer(
     },
   });
 }
+
+export async function deleteWiki(
+  wikiIDParam: string,
+): Promise<{ code: number }> {
+  return request('/api/wiki/delete', {
+    method: 'POST',
+    data: {
+      wikiID: wikiIDParam,
+    },
+  });
+}

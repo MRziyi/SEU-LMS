@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, message, Space, Tag } from 'antd';
-import { querySyllabus, sendCheckIn } from '../../service';
+import { deleteSyllabus, querySyllabus, sendCheckIn } from '../../service';
 import { ProList } from '@ant-design/pro-components';
 import { ClockCircleOutlined } from '@ant-design/icons';
 import FileModal from './components/fileModal';
@@ -17,28 +17,30 @@ interface CourseIDParam {
   courseID: string;
 }
 
+
+
 const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
   const [loadingForCheckIn, setLoadingForCheckIn] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [currentPageSize, setCurrentPageSize] = useState<number>(6);
   const [refreshKey, setRefreshKey] = useState<number>(0);
-
+  const [loadingDelete, setLoadingDelete] = useState<boolean>(false);
   const { initialState } = useModel('@@initialState');
 
   useEffect(() => {
     let socket: WebSocket | null = null;
 
-    socket = new WebSocket('ws://10.203.177.217:8081/api/ws/refreshCheckIn');
+    socket = new WebSocket(`ws://192.168.193.193:8081/api/ws/refreshCheckIn/${initialState?.currentUser?.id}`);
 
     socket.onopen = () => {
       message.success('实时签到更新已开始');
-      socket?.send(courseID);
+      //socket?.send(courseID);
     };
 
     socket.onmessage = (event) => {
       console.log(event);
-      const data = JSON.parse(event.data);
-      if (data == 1) {
+      const signal = event.data;
+      if (signal == 1) {
         querySyllabusAdaptor(currentPage, currentPageSize);
         setRefreshKey((prevKey) => prevKey + 1);
       }
@@ -55,6 +57,21 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
     };
   }, []);
 
+  async function deleteSyllabusAdaptor(syllabusID: string) {
+    setLoadingDelete(true);
+    try {
+      const result = await deleteSyllabus(syllabusID);
+      if (result.code == 0) {
+        message.success('大纲删除成功');
+      }
+    } catch {}
+    setLoadingDelete(false);
+  }
+
+  function refresh(){
+    setRefreshKey((prevKey) => prevKey + 1);
+  }
+
   async function querySyllabusAdaptor(current: number, pageSize: number) {
     try {
       const result = await querySyllabus(courseID, current, pageSize);
@@ -62,6 +79,8 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
         const list = result.data.list.map((item) => ({
           title: item.title,
           subTitle:
+          
+          initialState?.currentUser?.access == 'admin'?'':
             initialState?.currentUser?.access == 'student' ? (
               <Space size={0}>
                 {item.isCheckedIn == 0 ? (
@@ -82,6 +101,7 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
                   </Tag>
                 )}
                 <StudentCheckInModal
+                  parentRefresh={refresh}
                   canCheckIn={item.isCheckedIn == 2}
                   syllabusID={item.syllabusID}
                 />
@@ -117,7 +137,9 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
                     签到
                   </Button>
                 ) : (
+                  initialState?.currentUser?.access == 'admin'?'':
                   <CheckInManageModal
+                    parentRefresh={refresh}
                     syllabusID={item.syllabusID}
                     haveCheckedIn={item.isCheckedIn}
                     onClose={() => {
@@ -155,14 +177,15 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
                 ) : (
                   <UploadFileModal syllabusID={item.syllabusID} isLarge={false} />
                 )
-              ) : item.haveHomework ? (
+              ) : item.haveMaterial ? (
                 <FileModal syllabusID={item.syllabusID} isTeacher={false} />
               ) : (
                 <Button type="text" disabled>
                   课程资料待上传
                 </Button>
               )}
-              {initialState?.currentUser?.access === 'teacher' ? (
+              {
+          initialState?.currentUser?.access == 'admin'?'':initialState?.currentUser?.access === 'teacher' ? (
                 item.haveHomework ? (
                   <Link to={`/profile/homework-info/${item.syllabusID}`}>
                     <Button type="text" style={{ marginRight: '5px' }}>
@@ -179,12 +202,30 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
                   />
                 )
               ) : item.haveHomework ? (
-                <HomeworkModal syllabusID={item.syllabusID} />
+                <HomeworkModal syllabusID={item.syllabusID} parentRefresh={refresh}/>
               ) : (
                 <Button style={{ marginRight: '5px' }} type="text" disabled onClick={() => {}}>
                   作业待发布
                 </Button>
               )}
+              {
+                initialState?.currentUser?.access == 'student' ? (
+                  null
+                ) : (
+                  <Button
+                  type='link'
+                  danger
+                  onClick={() => {
+                    if (window.confirm('确定要删除吗')) {
+                      deleteSyllabusAdaptor(item.syllabusID);
+                      setRefreshKey((prevKey) => prevKey + 1);
+                    }
+                  }}
+                  >
+                    删除
+                  </Button>
+                )
+              }
             </Space>
           ),
           avatar: 'https://gw.alipayobjects.com/zos/antfincdn/UCSiy1j6jx/xingzhuang.svg',
@@ -227,7 +268,7 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
         toolbar={{
           actions: [
             initialState?.currentUser?.access == 'teacher' ? (
-              <AddSyllabus courseID={courseID} />
+              <AddSyllabus courseID={courseID} parentRefresh={refresh} />
             ) : (
               ''
             ),

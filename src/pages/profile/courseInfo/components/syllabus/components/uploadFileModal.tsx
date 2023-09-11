@@ -108,6 +108,7 @@ const UploadFileModal: React.FC<modalInterface> = ({ syllabusID, isLarge }) => {
               name="file"
               multiple={false}
               action="/api/upload/file"
+              maxCount={1}
               onChange={(info) => {
                 const { status } = info.file;
                 if (status === 'done') {

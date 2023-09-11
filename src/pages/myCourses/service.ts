@@ -56,3 +56,32 @@ export async function searchStudentCourse(
     },
   });
 }
+
+
+export async function queryAdminCourseList(
+  currentPageParam: number,
+  pageSizeParam: number,
+): Promise<{ data: { totalNum: number; list: CourseListData[] } }> {
+  return request('/api/course/admin-list', {
+    method: 'POST',
+    data: {
+      currentPage: currentPageParam,
+      pageSize: pageSizeParam,
+    },
+  });
+}
+
+export async function searchAdminCourse(
+  keywordParam: string,
+  currentPageParam: number,
+  pageSizeParam: number,
+): Promise<{ data: { totalNum: number; list: CourseListData[] } }> {
+  return request('/api/course/admin-search', {
+    method: 'POST',
+    data: {
+      keyword: keywordParam,
+      currentPage: currentPageParam,
+      pageSize: pageSizeParam,
+    },
+  });
+}

@@ -5,6 +5,7 @@ import { request } from 'umi';
 
 interface modalInterface {
   homeworkID: string;
+  parentRefresh: ()=>void;
 }
 
 const FeedbackHomeworkModal: React.FC<modalInterface> = ({ homeworkID }) => {

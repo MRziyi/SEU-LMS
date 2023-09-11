@@ -13,6 +13,11 @@ const SendCourseNotice: React.FC<UserInfoProps> = ({ courseID, courseName }) => 
   const [currentID, setCurrentID] = useState<string>('');
   const [currentCourseName, setCurrentCourseName] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+  const [value, setValue] = useState('');
+
+  const changeValue = (e: any) => {
+    setValue(e.target.value);
+  };
 
   useEffect(() => {
     if (courseID && courseID !== '') setCurrentID(courseID);
@@ -24,9 +29,10 @@ const SendCourseNotice: React.FC<UserInfoProps> = ({ courseID, courseName }) => 
   async function sendPrivateMessageAdaptor() {
     setLoading(true);
     try {
-      const result = await sendNotice(currentID, answer, courseName + ' 通知');
+      const result = await sendNotice(currentID, value, courseName + ' 通知');
       if (result.code == 0) {
         message.success('通知发送成功');
+        setValue('');
         closeModal();
       }
     } catch {}
@@ -63,8 +69,8 @@ const SendCourseNotice: React.FC<UserInfoProps> = ({ courseID, courseName }) => 
               rows={3}
               placeholder="请输入通知内容"
               maxLength={600} // 你可以根据需要调整最大长度
-              value={answer} // 使用状态管理 TextArea 的值
-              onChange={(e) => setAnswer(e.target.value)} // 在输入变化时更新状态
+              value={value}
+              onChange={changeValue}
             />
           </Col>
         </Row>

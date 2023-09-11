@@ -1,19 +1,24 @@
 import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
-import { Button, message, Space, Table } from 'antd';
+import { Button, message, Modal, Select, Space, Table } from 'antd';
 import type { SearchParams, UserListData } from './data';
 import { useParams } from 'umi';
 import AddUser from './components/addUser';
 import ModifyUser from './components/modifyUser';
 import UserInfo from './components/userInfo';
 import { FC, useState } from 'react';
-import { deleteUserList, queryUserList } from './service';
+import { deleteUserList, importToCourse, queryCourseList, queryUserList } from './service';
 import SendAdminPM from './components/sendAdminPM';
 
 const UserManagement: FC = () => {
   const params = useParams<SearchParams>();
   const [loadingDelete, setLoadingDelete] = useState<boolean>(false);
   const [refreshKey, setRefreshKey] = useState<number>(0);
+  const [courseList, setCourseList] = useState<{ label: string; value: string }[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [visiable,setVisiable] = useState<boolean>(false);
+  const [selectedOption, setSelectedOption] = useState<string>('');
+  const [importIDlist,setImportIDlist] = useState<string[]>([]);
 
   function showTotal(total: number, range: [number, number]) {
     return `${range[0]}-${range[1]} 共 ${total} 条`;
@@ -33,6 +38,34 @@ const UserManagement: FC = () => {
       }
     } catch {}
     setLoadingDelete(false);
+  }
+
+  async function getCourseList() {
+    setLoading(true);
+    const courseResult = await queryCourseList();
+    if (courseResult.data.list) {
+      const newTabList = courseResult.data.list.map((element) => ({
+        value: element.courseID,
+        label: element.courseName + '----------' +'任课教师：'+ element.teacherName,
+      }));
+      setCourseList(newTabList);
+    }
+    setLoading(false);
+  }
+
+  function closeModal(){
+    setVisiable(false);
+  }
+
+  
+  const filterOption = (input: string, option?: { label: string; value: string }) =>
+    (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
+
+  function handleOK(){
+    console.log('处理的项目为',selectedOption)
+    importToCourse(importIDlist,selectedOption)
+    message.success('添加成功')
+    closeModal();
   }
 
   const columns: ProColumns<UserListData>[] = [
@@ -132,7 +165,34 @@ const UserManagement: FC = () => {
   ];
 
   return (
-    <ProTable<UserListData, SearchParams>
+    <><Modal
+    title="请选择课程" 
+    open={visiable} 
+    onCancel={closeModal}
+    onOk={handleOK}
+    width={500}
+    >
+
+  <Select
+  style={{ width: '400px' }}
+  showSearch
+  placeholder="选择或搜索课程"
+  optionFilterProp="children"
+  onSearch={(value) => {
+    console.log(value);
+  }}
+  onChange={(value)=>{
+    setSelectedOption(value);
+  }}
+  loading={loading}
+  filterOption={filterOption}
+  options={courseList}
+  />                         
+ 
+
+      
+    </Modal>
+        <ProTable<UserListData, SearchParams>
       search={{
         labelWidth: 'auto',
       }}
@@ -180,6 +240,19 @@ const UserManagement: FC = () => {
               danger
               loading={loadingDelete}
               onClick={() => {
+                getCourseList();//点击按钮，此时请求到所有课程。
+                setVisiable(true);
+                setImportIDlist(values.selectedRows.map((element) => element.id));
+                console.log(importIDlist);
+              }}
+            >
+              导入课程
+            </Button>
+
+            <Button
+              danger
+              loading={loadingDelete}
+              onClick={() => {
                 if (window.confirm('确定要删除吗')) {
                   deleteUserListAdaptor(values.selectedRows.map((element) => element.id));
                 }
@@ -187,6 +260,8 @@ const UserManagement: FC = () => {
             >
               批量删除
             </Button>
+
+            
           </Space>
         );
       }}
@@ -214,6 +289,7 @@ const UserManagement: FC = () => {
         ];
       }}
     />
+    </>
   );
 };
 export default UserManagement;

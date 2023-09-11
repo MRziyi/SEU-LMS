@@ -46,7 +46,7 @@ function homeworkListData(currentPage: number, pageSize: number) {
       fileType: type[i % 5],
       fileUrl: ownerUrl[i % 8],
       homeworkID: 'Homework - ' + i,
-      status: i % 2,
+      status: i % 2 + 1,
     });
   }
   const startIndex = (currentPage - 1) * pageSize;
