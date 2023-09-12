@@ -33,7 +33,7 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
     socket = new WebSocket(`ws://192.168.193.193:8081/api/ws/refreshCheckIn/${initialState?.currentUser?.id}`);
 
     socket.onopen = () => {
-      message.success('实时签到更新已开始');
+      // message.success('实时签到更新已开始');
       //socket?.send(courseID);
     };
 
@@ -47,7 +47,7 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
     };
 
     socket.onclose = (event) => {
-      message.error('实时签到更新已停止:' + event.code + ' ' + event.reason);
+      //message.error('实时签到更新已停止:' + event.code + ' ' + event.reason);
     };
 
     return () => {

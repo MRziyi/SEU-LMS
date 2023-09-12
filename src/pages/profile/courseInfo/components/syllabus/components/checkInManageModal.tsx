@@ -38,14 +38,14 @@ const CheckInManageModal: React.FC<modalCtrl> = ({ syllabusID, haveCheckedIn, on
       };
       socket.onopen = () => {
         if(socket){
-        message.success('实时更新已开始');
+        // message.success('实时更新已开始');
         socket.send(syllabusID);
         }
         else
         message.warning('实时更新Socket待加载');
       };
       socket.onclose = (event) => {
-        message.error('实时更新已停止:' + event.code + ' ' + event.reason);
+        //message.error('实时更新已停止:' + event.code + ' ' + event.reason);
       };
     }
 
