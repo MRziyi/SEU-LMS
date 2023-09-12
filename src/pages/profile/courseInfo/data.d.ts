@@ -69,11 +69,6 @@ export type ReplyData = {
   time: string;
 };
 
-export type CheckInStatus = {
-  isCheckedIn: number;
-  notCheckedIn: number;
-};
-
 export type SearchParams = {
   name: string;
 };
@@ -85,3 +80,5 @@ export type StudentData = {
   email: string;
   avatarUrl: string;
 };
+
+export const WEBSOCKET_URL = 'ws://192.168.193.193:8081';

@@ -67,6 +67,7 @@ function fakeSyllabusList(currentPage: number, pageSize: number) {
       title: 'Lesson ' + (i + 1) + ': ' + itemName[i % 8],
       haveHomework: i % 2 == 0,
       isCheckedIn: i < 4 ? i : 0,
+      haveMaterial: i < 3,
       time: new Date(new Date().getTime() - 1000 * 60 * 60 * 2 * i).toLocaleString(),
     });
   }

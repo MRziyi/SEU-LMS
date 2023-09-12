@@ -4,6 +4,11 @@ import { join } from 'path';
 import defaultSettings from './studentSettings';
 export default defineConfig({
   hash: true,
+  history: {
+    type: 'hash',
+  },
+  base: './',
+  publicPath: './',
   antd: {},
   dva: {
     hmr: true,
@@ -124,7 +129,7 @@ export default defineConfig({
     {
       path: '/question-answer',
       name: '问题解答',
-      icon: 'crown',
+      icon: 'edit',
       access: 'canAdmin',
       component: './questionAnswer',
     },
@@ -161,7 +166,7 @@ export default defineConfig({
   ignoreMomentLocale: true,
   proxy: {
     '/api/': {
-      target: 'http://192.168.193.193:8081',
+      target: 'http://10.203.249.127:8081',
       changeOrigin: true,
       secure: false,
     },

@@ -16,9 +16,9 @@ const UserManagement: FC = () => {
   const [refreshKey, setRefreshKey] = useState<number>(0);
   const [courseList, setCourseList] = useState<{ label: string; value: string }[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [visiable,setVisiable] = useState<boolean>(false);
+  const [visiable, setVisiable] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<string>('');
-  const [importIDlist,setImportIDlist] = useState<string[]>([]);
+  const [importIDlist, setImportIDlist] = useState<string[]>([]);
 
   function showTotal(total: number, range: [number, number]) {
     return `${range[0]}-${range[1]} 共 ${total} 条`;
@@ -46,25 +46,24 @@ const UserManagement: FC = () => {
     if (courseResult.data.list) {
       const newTabList = courseResult.data.list.map((element) => ({
         value: element.courseID,
-        label: element.courseName + '----------' +'任课教师：'+ element.teacherName,
+        label: `${element.courseName} ···\t任课教师：${element.teacherName}`,
       }));
       setCourseList(newTabList);
     }
     setLoading(false);
   }
 
-  function closeModal(){
+  function closeModal() {
     setVisiable(false);
   }
 
-  
   const filterOption = (input: string, option?: { label: string; value: string }) =>
     (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
 
-  function handleOK(){
-    console.log('处理的项目为',selectedOption)
-    importToCourse(importIDlist,selectedOption)
-    message.success('添加成功')
+  function handleOK() {
+    console.log('处理的项目为', selectedOption);
+    importToCourse(importIDlist, selectedOption);
+    message.success('添加成功');
     closeModal();
   }
 
@@ -91,11 +90,9 @@ const UserManagement: FC = () => {
       render: (_, row) => {
         if (row.access == 'student') {
           return '学生';
-        }
-        if (row.access == 'teacher') {
+        } else if (row.access == 'teacher') {
           return '教师';
-        }
-        if (row.access == 'admin') {
+        } else {
           return '管理员';
         }
       },
@@ -165,130 +162,119 @@ const UserManagement: FC = () => {
   ];
 
   return (
-    <><Modal
-    title="请选择课程" 
-    open={visiable} 
-    onCancel={closeModal}
-    onOk={handleOK}
-    width={500}
-    >
+    <>
+      <Modal title="请选择课程" open={visiable} onCancel={closeModal} onOk={handleOK} width={500}>
+        <Select
+          style={{ width: '400px' }}
+          showSearch
+          placeholder="选择或搜索课程"
+          optionFilterProp="children"
+          onSearch={(value) => {
+            console.log(value);
+          }}
+          onChange={(value) => {
+            setSelectedOption(value);
+          }}
+          loading={loading}
+          filterOption={filterOption}
+          options={courseList}
+        />
+      </Modal>
+      <ProTable<UserListData, SearchParams>
+        search={{
+          labelWidth: 'auto',
+        }}
+        key={refreshKey} // 刷新列表的 key
+        params={params}
+        request={async (
+          params: SearchParams & {
+            pageSize?: number;
+            current?: number;
+            keyword?: string;
+          },
+        ) => {
+          const msg = await queryUserList(
+            params.nickName,
+            params.userID,
+            params.current ? params.current : 1,
+            params.pageSize ? params.pageSize : 6,
+          );
+          return {
+            data: msg?.data.list,
+            success: msg?.code == 0,
+            total: msg?.data.totalNum,
+          };
+        }}
+        columns={columns}
+        rowSelection={{
+          selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
+        }}
+        tableAlertRender={({ selectedRowKeys, selectedRows, onCleanSelected }) => {
+          return (
+            <Space size={24}>
+              <span>
+                已选 {selectedRowKeys.length} 项
+                <a style={{ marginInlineStart: 8 }} onClick={onCleanSelected}>
+                  取消选择
+                </a>
+              </span>
+            </Space>
+          );
+        }}
+        tableAlertOptionRender={(values) => {
+          return (
+            <Space size={16}>
+              <Button
+                type="primary"
+                loading={loadingDelete}
+                onClick={() => {
+                  getCourseList(); //点击按钮，此时请求到所有课程。
+                  setVisiable(true);
+                  setImportIDlist(values.selectedRows.map((element) => element.id));
+                  console.log(importIDlist);
+                }}
+              >
+                导入课程
+              </Button>
 
-  <Select
-  style={{ width: '400px' }}
-  showSearch
-  placeholder="选择或搜索课程"
-  optionFilterProp="children"
-  onSearch={(value) => {
-    console.log(value);
-  }}
-  onChange={(value)=>{
-    setSelectedOption(value);
-  }}
-  loading={loading}
-  filterOption={filterOption}
-  options={courseList}
-  />                         
- 
-
-      
-    </Modal>
-        <ProTable<UserListData, SearchParams>
-      search={{
-        labelWidth: 'auto',
-      }}
-      key={refreshKey} // 刷新列表的 key
-      params={params}
-      request={async (
-        params: SearchParams & {
-          pageSize?: number;
-          current?: number;
-          keyword?: string;
-        },
-      ) => {
-        const msg = await queryUserList(
-          params.nickName,
-          params.userID,
-          params.current ? params.current : 1,
-          params.pageSize ? params.pageSize : 6,
-        );
-        return {
-          data: msg?.data.list,
-          success: msg?.code == 0,
-          total: msg?.data.totalNum,
-        };
-      }}
-      columns={columns}
-      rowSelection={{
-        selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
-      }}
-      tableAlertRender={({ selectedRowKeys, selectedRows, onCleanSelected }) => {
-        return (
-          <Space size={24}>
-            <span>
-              已选 {selectedRowKeys.length} 项
-              <a style={{ marginInlineStart: 8 }} onClick={onCleanSelected}>
-                取消选择
-              </a>
-            </span>
-          </Space>
-        );
-      }}
-      tableAlertOptionRender={(values) => {
-        return (
-          <Space size={16}>
-            <Button
-              danger
-              loading={loadingDelete}
-              onClick={() => {
-                getCourseList();//点击按钮，此时请求到所有课程。
-                setVisiable(true);
-                setImportIDlist(values.selectedRows.map((element) => element.id));
-                console.log(importIDlist);
-              }}
-            >
-              导入课程
-            </Button>
-
-            <Button
-              danger
-              loading={loadingDelete}
-              onClick={() => {
-                if (window.confirm('确定要删除吗')) {
-                  deleteUserListAdaptor(values.selectedRows.map((element) => element.id));
-                }
-              }}
-            >
-              批量删除
-            </Button>
-
-            
-          </Space>
-        );
-      }}
-      scroll={{ x: 400 }}
-      options={false}
-      pagination={{
-        defaultPageSize: 8,
-        size: 'default',
-        showQuickJumper: true,
-        showSizeChanger: true,
-        pageSizeOptions: [8, 12, 16],
-        showTotal: showTotal,
-      }}
-      rowKey="id"
-      headerTitle="用户管理"
-      toolBarRender={() => {
-        return [
-          <Space>
-            <AddUser
-              onClose={() => {
-                setRefreshKey((prevKey) => prevKey + 1);
-              }}
-            ></AddUser>
-          </Space>,
-        ];
-      }}
-    />
+              <Button
+                danger
+                loading={loadingDelete}
+                onClick={() => {
+                  if (window.confirm('确定要删除吗')) {
+                    deleteUserListAdaptor(values.selectedRows.map((element) => element.id));
+                  }
+                }}
+              >
+                批量删除
+              </Button>
+            </Space>
+          );
+        }}
+        scroll={{ x: 400 }}
+        options={false}
+        pagination={{
+          defaultPageSize: 8,
+          size: 'default',
+          showQuickJumper: true,
+          showSizeChanger: true,
+          pageSizeOptions: [8, 12, 16],
+          showTotal: showTotal,
+        }}
+        rowKey="id"
+        headerTitle="用户管理"
+        toolBarRender={() => {
+          return [
+            <Space>
+              <AddUser
+                onClose={() => {
+                  setRefreshKey((prevKey) => prevKey + 1);
+                }}
+              ></AddUser>
+            </Space>,
+          ];
+        }}
+      />
     </>
   );
 };
