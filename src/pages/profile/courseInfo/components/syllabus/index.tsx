@@ -17,8 +17,6 @@ interface CourseIDParam {
   courseID: string;
 }
 
-
-
 const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
   const [loadingForCheckIn, setLoadingForCheckIn] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -30,7 +28,9 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
   useEffect(() => {
     let socket: WebSocket | null = null;
 
-    socket = new WebSocket(`ws://192.168.193.193:8081/api/ws/refreshCheckIn/${initialState?.currentUser?.id}`);
+    socket = new WebSocket(
+      `ws://192.168.193.193:8081/api/ws/refreshCheckIn/${initialState?.currentUser?.id}`,
+    );
 
     socket.onopen = () => {
       // message.success('实时签到更新已开始');
@@ -68,7 +68,7 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
     setLoadingDelete(false);
   }
 
-  function refresh(){
+  function refresh() {
     setRefreshKey((prevKey) => prevKey + 1);
   }
 
@@ -79,9 +79,9 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
         const list = result.data.list.map((item) => ({
           title: item.title,
           subTitle:
-          
-          initialState?.currentUser?.access == 'admin'?'':
-            initialState?.currentUser?.access == 'student' ? (
+            initialState?.currentUser?.access == 'admin' ? (
+              ''
+            ) : initialState?.currentUser?.access == 'student' ? (
               <Space size={0}>
                 {item.isCheckedIn == 0 ? (
                   <Tag color="blue" key="1">
@@ -136,8 +136,9 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
                   >
                     签到
                   </Button>
+                ) : initialState?.currentUser?.access == 'admin' ? (
+                  ''
                 ) : (
-                  initialState?.currentUser?.access == 'admin'?'':
                   <CheckInManageModal
                     parentRefresh={refresh}
                     syllabusID={item.syllabusID}
@@ -184,8 +185,9 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
                   课程资料待上传
                 </Button>
               )}
-              {
-          initialState?.currentUser?.access == 'admin'?'':initialState?.currentUser?.access === 'teacher' ? (
+              {initialState?.currentUser?.access == 'admin' ? (
+                ''
+              ) : initialState?.currentUser?.access === 'teacher' ? (
                 item.haveHomework ? (
                   <Link to={`/profile/homework-info/${item.syllabusID}`}>
                     <Button type="text" style={{ marginRight: '5px' }}>
@@ -202,18 +204,15 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
                   />
                 )
               ) : item.haveHomework ? (
-                <HomeworkModal syllabusID={item.syllabusID} parentRefresh={refresh}/>
+                <HomeworkModal syllabusID={item.syllabusID} parentRefresh={refresh} />
               ) : (
                 <Button style={{ marginRight: '5px' }} type="text" disabled onClick={() => {}}>
                   作业待发布
                 </Button>
               )}
-              {
-                initialState?.currentUser?.access == 'student' ? (
-                  null
-                ) : (
-                  <Button
-                  type='link'
+              {initialState?.currentUser?.access == 'student' ? null : (
+                <Button
+                  type="link"
                   danger
                   onClick={() => {
                     if (window.confirm('确定要删除吗')) {
@@ -221,11 +220,10 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
                       setRefreshKey((prevKey) => prevKey + 1);
                     }
                   }}
-                  >
-                    删除
-                  </Button>
-                )
-              }
+                >
+                  删除
+                </Button>
+              )}
             </Space>
           ),
           avatar: 'https://gw.alipayobjects.com/zos/antfincdn/UCSiy1j6jx/xingzhuang.svg',
@@ -289,6 +287,7 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
           };
         }}
         pagination={{
+          defaultPageSize: 6,
           showQuickJumper: true,
           showSizeChanger: true,
           pageSizeOptions: [6, 12, 18, 24],

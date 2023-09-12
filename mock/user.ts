@@ -32,7 +32,7 @@ export default {
       data: {
         nickName: 'Serati Ma',
         id: 213213001,
-        imgUrl: 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png',
+        avatarUrl: 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png',
         access: getAccess(),
         phone: '0752-268888888',
         credit: 80,

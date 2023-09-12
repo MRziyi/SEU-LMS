@@ -1,17 +1,25 @@
 import { Modal, Button, Card, Row, Col, Input, Space, message } from 'antd';
 import { useEffect, useState } from 'react';
-import { CheckInStatus } from '../../../data';
 import { postStartCheckedIn, postStopCheckedIn } from '../../../service';
 import { useModel } from 'umi';
 
+export type CheckInStatus = {
+  isCheckedIn: number;
+  notCheckedIn: number;
+};
 interface modalCtrl {
   syllabusID: string;
   haveCheckedIn: number;
   onClose: () => void;
-  parentRefresh: ()=> void;
+  parentRefresh: () => void;
 }
 
-const CheckInManageModal: React.FC<modalCtrl> = ({ syllabusID, haveCheckedIn, onClose, parentRefresh }) => {
+const CheckInManageModal: React.FC<modalCtrl> = ({
+  syllabusID,
+  haveCheckedIn,
+  onClose,
+  parentRefresh,
+}) => {
   const [currentSyllabusID, setCurrentSyllabusID] = useState<string>('');
   const [checkInStatus, setCheckInStatus] = useState<CheckInStatus>();
   const [currentHaveCheckedIn, setCurrentHaveCheckedIn] = useState<number>(); //0:未签到；1：正在签到；2：停止签到
@@ -38,7 +46,7 @@ const CheckInManageModal: React.FC<modalCtrl> = ({ syllabusID, haveCheckedIn, on
       };
       socket.onopen = () => {
         if(socket){
-        // message.success('实时更新已开始');
+        //message.success('实时更新已开始');
         socket.send(syllabusID);
         }
         else
