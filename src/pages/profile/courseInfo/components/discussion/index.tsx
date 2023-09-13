@@ -37,6 +37,7 @@ const Discussion: React.FC<CourseIDParam> = ({ courseID }) => {
     changeDiscussionPage(currentPage, pageSize);
   }, []);
 
+  //换页函数
   async function changeDiscussionPage(_page: number, _pageSize: number) {
     setLoadingForPagigation(true);
     try {
@@ -51,6 +52,7 @@ const Discussion: React.FC<CourseIDParam> = ({ courseID }) => {
     setLoadingForPagigation(false);
   }
 
+  //回复函数
   async function sendReplyAdaptor(value: string, discussionID: string) {
     setLoadingForSendingReply(true);
     try {
@@ -65,6 +67,7 @@ const Discussion: React.FC<CourseIDParam> = ({ courseID }) => {
     setLoadingForSendingReply(false);
   }
 
+  //删除讨论
   async function deleteDiscussionAdaptor(discussionID: string) {
     setLoadingForSendingReply(true);
     try {
@@ -185,7 +188,7 @@ const Discussion: React.FC<CourseIDParam> = ({ courseID }) => {
           courseID={courseID}
           refresh={() => {
             changeDiscussionPage(currentPage, pageSize);
-            setRefreshKey((prevKey) => prevKey + 1);
+            setRefreshKey((prevKey) => prevKey + 1);//列表刷新
           }}
         ></PublishDiscussionModal>
       </div>

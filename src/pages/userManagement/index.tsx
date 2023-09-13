@@ -24,6 +24,7 @@ const UserManagement: FC = () => {
     return `${range[0]}-${range[1]} 共 ${total} 条`;
   }
 
+  //根据string数组进行用户删除
   async function deleteUserListAdaptor(IDList: string[]) {
     setLoadingDelete(true);
     try {
@@ -40,6 +41,7 @@ const UserManagement: FC = () => {
     setLoadingDelete(false);
   }
 
+  //请求课程列表
   async function getCourseList() {
     setLoading(true);
     const courseResult = await queryCourseList();
@@ -57,6 +59,7 @@ const UserManagement: FC = () => {
     setVisiable(false);
   }
 
+  //支持搜索与选择同时存在
   const filterOption = (input: string, option?: { label: string; value: string }) =>
     (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
 

@@ -15,6 +15,7 @@ const SendCoursePM: React.FC<UserInfoProps> = ({ id, nickName, courseName }) => 
   const [currentNickName, setCurrentNickName] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
 
+  //初始化id和昵称
   useEffect(() => {
     if (id && id !== '') setCurrentID(id);
     if (nickName && nickName !== '') setCurrentNickName(nickName);

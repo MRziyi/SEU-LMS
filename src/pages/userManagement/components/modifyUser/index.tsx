@@ -27,6 +27,7 @@ const ModifyUser: React.FC<UserInfoProps> = (props) => {
     setVisiable(false);
   };
 
+  //文件上传模块
   const normFile = (e: any) => {
     console.log('Upload event:', e);
     if (Array.isArray(e)) {
