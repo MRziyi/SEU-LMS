@@ -40,6 +40,7 @@ const MyCalendar: React.FC = () => {
     else return type;
   };
 
+  //渲染日历
   const dateCellRender = (value: Moment) => {
     const events = getEventsForDate(value);
     return (

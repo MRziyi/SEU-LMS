@@ -28,6 +28,7 @@ const Syllabus: React.FC<CourseIDParam> = ({ courseID }) => {
   useEffect(() => {
     let socket: WebSocket | null = null;
 
+    //创建websocket，对牵到按钮进行刷新
     socket = new WebSocket(
       `ws://192.168.193.193:8081/api/ws/refreshCheckIn/${initialState?.currentUser?.id}`,
     );

@@ -14,6 +14,7 @@ interface CourseInfoProps {
   courseID: string;
 }
 
+//课程描述组件
 const CourseInfo: FC<CourseInfoProps> = (props) => {
   const [visiable, setVisiable] = useState(false);
   const [loading, setLoading] = useState(false);

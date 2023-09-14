@@ -26,6 +26,7 @@ const PasswordChange: React.FC = () => {
               'Content-Type': 'application/json',
             },
           });
+          //进行反馈数据判断
           if (response.data === 1) {
             message.success('修改成功');
             setInitialState((s) => ({ ...s, currentUser: undefined }));

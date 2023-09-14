@@ -10,6 +10,7 @@ import CourseStatistics from './chartForAdmin/courseStatistics';
 import TeacherStatistics from './chartForAdmin/teacherStatistics';
 
 const DataVisualize: React.FC<RouteChildrenProps> = () => {
+  //身份判断并获取数据
   useEffect(() => {
     if (initialState?.currentUser?.access == 'teacher') {
       getTeacherTab();
@@ -30,6 +31,7 @@ const DataVisualize: React.FC<RouteChildrenProps> = () => {
   const [currentTeacherValue, setCurrentTeacherValue] = useState<string>('');
   const [currentCourseValue, setCurrentCourseValue] = useState<string>('');
 
+  //渲染教师tab
   async function getTeacherTab() {
     setLoadingForTab(true);
     try {

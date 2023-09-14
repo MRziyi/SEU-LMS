@@ -2,6 +2,7 @@ import { Card } from 'antd';
 import type { GaugeChartData } from '../../data';
 import { Gauge } from '@ant-design/charts';
 
+//仪表盘组件
 const GaugeCard = ({ data, loading }: { data: GaugeChartData | null; loading: boolean }) => (
   <Card loading={loading} title={data?.name}>
     <Gauge

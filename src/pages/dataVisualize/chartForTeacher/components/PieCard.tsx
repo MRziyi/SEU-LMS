@@ -2,6 +2,7 @@ import { Card } from 'antd';
 import { Pie } from '@ant-design/charts';
 import type { PieChartData } from '../../data';
 
+//饼图组件
 const PieCard = ({ loading, data }: { loading: boolean; data: PieChartData | null }) =>
   data ? (
     <Card

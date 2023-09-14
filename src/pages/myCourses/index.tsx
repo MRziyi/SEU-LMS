@@ -35,6 +35,7 @@ const MyCourses: FC = () => {
     changePage(1, pageSize);
   }, []);
 
+  //渲染分页切换效果
   async function changePage(_page: number, _pageSize: number) {
     setLoadingForPagigation(true);
     if (preSearchContent.current !== searchContent.current) _page = 1;
@@ -63,6 +64,7 @@ const MyCourses: FC = () => {
     setLoadingForPagigation(false);
   }
 
+  //分页查找
   async function onSearch(keyword: string) {
     setLoadingForSearch(true);
     try {
@@ -72,10 +74,12 @@ const MyCourses: FC = () => {
     setLoadingForSearch(false);
   }
 
+  //展示分页总条数
   function showTotal(total: number, range: [number, number]) {
     return `${range[0]}-${range[1]} 共 ${total} 条`;
   }
 
+  //渲染我的课程列表
   const cardList = listData && (
     <List<CourseListData>
       rowKey="courseID"
@@ -149,6 +153,7 @@ const MyCourses: FC = () => {
     />
   );
 
+  //页面渲染
   return (
     <div>
       <PageContainer

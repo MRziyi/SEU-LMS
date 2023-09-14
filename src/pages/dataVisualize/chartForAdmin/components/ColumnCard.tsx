@@ -2,6 +2,7 @@ import { Card } from 'antd';
 import { ColumnChartData } from '../../data';
 import { Column } from '@ant-design/charts';
 
+//柱状图组件
 const ColumnCard = ({ data, loading }: { data: ColumnChartData | null; loading: boolean }) =>
   data ? (
     <Card loading={loading} bordered={false} title={data.name}>

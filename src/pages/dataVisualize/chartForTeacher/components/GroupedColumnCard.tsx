@@ -2,6 +2,7 @@ import { Card } from 'antd';
 import { GroupedColumnChartData } from '../../data';
 import { GroupedColumn } from '@ant-design/charts';
 
+//组合组装图组件
 const GroupedColumnCard = ({
   data,
   loading,

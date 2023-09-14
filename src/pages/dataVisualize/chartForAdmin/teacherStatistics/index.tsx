@@ -7,6 +7,7 @@ import GaugeCard from '../components/GaugeCard';
 import PieCard from '../components/PieCard';
 import LineCard from '../components/LineCard';
 import ColumnCard from '../components/ColumnCard';
+//管理员页面教师统计可视化
 interface TeacherStatisticsInterface {
   teacherID: string;
 }
@@ -18,6 +19,7 @@ const TeacherStatistics: React.FC<TeacherStatisticsInterface> = ({ teacherID }) 
     queryTeacherStatisticsAdaptor();
   }, [teacherID]);
 
+  //数据获取
   async function queryTeacherStatisticsAdaptor() {
     setLoading(true);
     try {
@@ -44,6 +46,7 @@ const TeacherStatistics: React.FC<TeacherStatisticsInterface> = ({ teacherID }) 
     }
   };
 
+  //组合图表渲染
   return (
     <>
       <Row gutter={24} className="card-row">

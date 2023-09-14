@@ -5,6 +5,7 @@ import request from 'umi-request';
 import { Select } from 'antd';
 import { queryTeacherList } from '@/pages/dataVisualize/service';
 
+//添加课程组件
 interface modalCtrl {
   refresh: () => void;
 }

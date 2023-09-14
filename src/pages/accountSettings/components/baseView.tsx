@@ -34,6 +34,7 @@ const BaseView: React.FC = () => {
     imgWindow?.document.write(image.outerHTML);
   };
 
+  //获取数据
   useEffect(() => {
     console.log(initialState?.currentUser);
     if (initialState?.currentUser?.avatarUrl) {

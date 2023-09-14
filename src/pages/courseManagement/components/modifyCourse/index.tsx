@@ -5,6 +5,7 @@ import { UploadOutlined } from '@ant-design/icons';
 import request from 'umi-request';
 import { queryTeacherList } from '@/pages/dataVisualize/service';
 
+//修改课程组件
 interface CourseInfoProps {
   courseID: string;
   courseName: string;

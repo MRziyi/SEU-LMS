@@ -19,6 +19,7 @@ const CourseManagement: FC<Record<string, any>> = () => {
 
   const params = useParams<SearchParams>();
 
+  //封装删除课程的操作，并在删除完成后显示一个成功的消息提示
   async function deleteCourseAdaptor(courseID: string) {
     setLoadingDelete(true);
     try {
@@ -30,6 +31,7 @@ const CourseManagement: FC<Record<string, any>> = () => {
     setLoadingDelete(false);
   }
 
+  //查询课程列表的函数
   async function queryCourseListAdaptor(
     courseName: string,
     teacherName: string,
@@ -52,6 +54,7 @@ const CourseManagement: FC<Record<string, any>> = () => {
     return `${range[0]}-${range[1]} 共 ${total} 条`;
   }
 
+  //页面渲染
   return (
     <ProList<CourseListData, SearchParams>
       params={params}

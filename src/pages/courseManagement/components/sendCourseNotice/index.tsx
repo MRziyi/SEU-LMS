@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { Button, Modal, Input, message, Row, Col, Divider } from 'antd';
 import React from 'react';
 import { sendNotice } from '../../service';
+
+//发送课程通知组件
 interface UserInfoProps {
   courseID: string;
   courseName: string;

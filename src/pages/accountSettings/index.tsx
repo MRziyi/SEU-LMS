@@ -14,6 +14,7 @@ type SettingsState = {
 };
 
 const Settings: React.FC = () => {
+  //设置菜单栏
   const menuMap: Record<string, React.ReactNode> = {
     base: '基本设置',
     psw: '修改密码',
@@ -26,12 +27,14 @@ const Settings: React.FC = () => {
   const dom = useRef<HTMLDivElement>();
 
   const resize = () => {
+    // 使用 requestAnimationFrame 来在下一个动画帧执行代码块
     requestAnimationFrame(() => {
       if (!dom.current) {
         return;
       }
       let mode: 'inline' | 'horizontal' = 'inline';
       const { offsetWidth } = dom.current;
+      // 使用 requestAnimationFrame 来在下一个动画帧执行代码块
       if (dom.current.offsetWidth < 641 && offsetWidth > 400) {
         mode = 'horizontal';
       }
@@ -42,6 +45,7 @@ const Settings: React.FC = () => {
     });
   };
 
+  // 在组件挂载和卸载时执行一些操作
   useLayoutEffect(() => {
     if (dom.current) {
       window.addEventListener('resize', resize);
@@ -58,6 +62,7 @@ const Settings: React.FC = () => {
 
   const renderChildren = () => {
     const { selectKey } = initConfig;
+    // 使用 switch 语句根据 selectKey 的值来决定要渲染的子组件
     switch (selectKey) {
       case 'base':
         return <BaseView />;
@@ -89,6 +94,7 @@ const Settings: React.FC = () => {
               });
             }}
           >
+            {/* 渲染菜单项 */}
             {getMenu()}
           </Menu>
         </div>

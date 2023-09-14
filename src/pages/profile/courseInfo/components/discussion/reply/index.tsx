@@ -20,6 +20,7 @@ const ReplyList: React.FC<DiscussionIDParam> = ({ discussionID, refreshFlag }) =
     changeReplyPage(currentPage, pageSize);
   }, [refreshFlag]);
 
+  //切换回复页
   async function changeReplyPage(_page: number, _pageSize: number) {
     setLoadingForPagigation(true);
     try {

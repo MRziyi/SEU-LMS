@@ -8,6 +8,7 @@ import LineCard from '../components/LineCard';
 import ColumnCard from '../components/ColumnCard';
 import './index.less';
 
+//管理员页面总体概览可视化
 const GeneralOverview: React.FC = () => {
   const [generalOverviewData, setGeneralOverviewData] = useState<GeneralOverviewData>();
   const [loading, setLoding] = useState<boolean>(false);
@@ -16,6 +17,7 @@ const GeneralOverview: React.FC = () => {
     queryGeneralOverviewAdaptor();
   }, []);
 
+  //数据获取
   async function queryGeneralOverviewAdaptor() {
     setLoding(true);
     try {
@@ -28,6 +30,7 @@ const GeneralOverview: React.FC = () => {
     setLoding(false);
   }
 
+  //组合图表渲染
   return (
     <>
       <Row gutter={24} className="card-row">

@@ -10,6 +10,7 @@ import LineCard from './components/LineCard';
 import GroupedColumnCard from './components/GroupedColumnCard';
 import { DataItem } from '@antv/g2plot/esm/interface/config';
 
+//教师界面课程统计可视化
 interface ChartForTeacherInterface {
   courseID: string;
   loadingFather: boolean;

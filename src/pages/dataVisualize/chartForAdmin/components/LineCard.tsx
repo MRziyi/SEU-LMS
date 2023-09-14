@@ -2,6 +2,7 @@ import { Card } from 'antd';
 import { LineChartData } from '../../data';
 import { Line } from '@ant-design/charts';
 
+//折线图组件
 const LineCard = ({ loading, data }: { loading: boolean; data: LineChartData | null }) =>
   data ? (
     <Card loading={loading} bordered={false} title={data.name}>

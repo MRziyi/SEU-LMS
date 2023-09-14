@@ -7,6 +7,8 @@ import GaugeCard from '../components/GaugeCard';
 import PieCard from '../components/PieCard';
 import LineCard from '../components/LineCard';
 import ColumnCard from '../components/ColumnCard';
+
+//管理员页面课程统计可视化
 interface CourseStatisticsInterface {
   courseName: string;
 }
@@ -18,6 +20,7 @@ const CourseStatistics: React.FC<CourseStatisticsInterface> = ({ courseName }) =
     queryCourseStatisticsAdaptor();
   }, [courseName]);
 
+  //获取数据
   async function queryCourseStatisticsAdaptor() {
     setLoading(true);
     try {
@@ -44,6 +47,7 @@ const CourseStatistics: React.FC<CourseStatisticsInterface> = ({ courseName }) =
     }
   };
 
+  //渲染组合的图表页面
   return (
     <>
       <Row gutter={24} className="card-row">
